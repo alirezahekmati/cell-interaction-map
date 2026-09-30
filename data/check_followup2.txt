@@ -1,0 +1,213 @@
+<stdin>:22: DeprecationWarning: In Polars 2.0, the default behavior for `empty_as_null` will change to `False`. To keep the current behavior, explicitly set `empty_as_null=True`.
+== OmniPath rows by COMPLEX endpoint, and whether any non-SIGNOR resource reports them ==
+shape: (8, 3)
+┌────────┬────────────────┬───────┐
+│ cx     ┆ has_non_signor ┆ len   │
+│ ---    ┆ ---            ┆ ---   │
+│ str    ┆ bool           ┆ u32   │
+╞════════╪════════════════╪═══════╡
+│ both   ┆ false          ┆ 303   │
+│ both   ┆ true           ┆ 407   │
+│ none   ┆ false          ┆ 4080  │
+│ none   ┆ true           ┆ 28201 │
+│ source ┆ false          ┆ 49617 │
+│ source ┆ true           ┆ 952   │
+│ target ┆ false          ┆ 652   │
+│ target ┆ true           ┆ 1005  │
+└────────┴────────────────┴───────┘
+
+== random COMPLEX rows ==
+shape: (10, 6)
+┌───────────────────────┬────────────────────────────────────────────────┬───────────────────┬────────────────────────────────────────────────┬────────────────────────┬──────────────┐
+│ source                ┆ target                                         ┆ source_genesymbol ┆ target_genesymbol                              ┆ sources                ┆ n_references │
+│ ---                   ┆ ---                                            ┆ ---               ┆ ---                                            ┆ ---                    ┆ ---          │
+│ str                   ┆ str                                            ┆ str               ┆ str                                            ┆ str                    ┆ i64          │
+╞═══════════════════════╪════════════════════════════════════════════════╪═══════════════════╪════════════════════════════════════════════════╪════════════════════════╪══════════════╡
+│ COMPLEX:O14933_P0CG47 ┆ Q7Z6J0                                         ┆ UBB_UBE2L6        ┆ SH3RF1                                         ┆ SIGNOR                 ┆ 1            │
+│ COMPLEX:P62987_P68036 ┆ Q96F44                                         ┆ UBA52_UBE2L3      ┆ TRIM11                                         ┆ SIGNOR                 ┆ 1            │
+│ COMPLEX:P0CG48_Q7Z7E8 ┆ Q03112                                         ┆ UBC_UBE2Q1        ┆ MECOM                                          ┆ SIGNOR                 ┆ 1            │
+│ COMPLEX:P0CG47_Q15819 ┆ Q96F44                                         ┆ UBB_UBE2V2        ┆ TRIM11                                         ┆ SIGNOR                 ┆ 1            │
+│ O95149                ┆ COMPLEX:O43719_O75533_P08579_P09661_P14678_P6… ┆ SNUPN             ┆ BUD13_DDX46_HTATSF1_PHF5A_RBMX2_SF3A1_SF3A2_S… ┆ SIGNOR                 ┆ 1            │
+│ COMPLEX:P62979_Q9H832 ┆ Q96T88                                         ┆ RPS27A_UBE2Z      ┆ UHRF1                                          ┆ SIGNOR                 ┆ 1            │
+│ COMPLEX:Q8NDX2_Q9UI32 ┆ P48058                                         ┆ GLS2_SLC17A8      ┆ GRIA4                                          ┆ CellPhoneDB;CellChatDB ┆ 2            │
+│ COMPLEX:P0CG47_Q96B02 ┆ Q8NHG8                                         ┆ UBB_UBE2W         ┆ ZNRF2                                          ┆ SIGNOR                 ┆ 1            │
+│ COMPLEX:P0CG47_Q9Y385 ┆ Q86XN8                                         ┆ UBB_UBE2J1        ┆ MEX3D                                          ┆ SIGNOR                 ┆ 1            │
+│ COMPLEX:O14933_P0CG48 ┆ A6NGJ6                                         ┆ UBC_UBE2L6        ┆ TRIM64                                         ┆ SIGNOR                 ┆ 1            │
+└───────────────────────┴────────────────────────────────────────────────┴───────────────────┴────────────────────────────────────────────────┴────────────────────────┴──────────────┘
+
+== top resources, COMPLEX rows ==
+shape: (12, 2)
+┌───────────────────────┬───────┐
+│ r                     ┆ len   │
+│ ---                   ┆ ---   │
+│ str                   ┆ u32   │
+╞═══════════════════════╪═══════╡
+│ SIGNOR                ┆ 50677 │
+│ CellChatDB            ┆ 1573  │
+│ CellPhoneDB           ┆ 1513  │
+│ ICELLNET              ┆ 663   │
+│ Cellinker             ┆ 477   │
+│ SPIKE_LC              ┆ 416   │
+│ SPIKE                 ┆ 414   │
+│ KEGG-MEDICUS          ┆ 142   │
+│ HPMR_Cellinker        ┆ 130   │
+│ DLRP_Cellinker        ┆ 88    │
+│ CellPhoneDB_Cellinker ┆ 86    │
+│ Baccin2019            ┆ 71    │
+└───────────────────────┴───────┘
+
+== top resources, other rows ==
+shape: (12, 2)
+┌────────────────────────┬───────┐
+│ r                      ┆ len   │
+│ ---                    ┆ ---   │
+│ str                    ┆ u32   │
+╞════════════════════════╪═══════╡
+│ SIGNOR                 ┆ 14855 │
+│ ProtMapper             ┆ 8274  │
+│ HPRD                   ┆ 8160  │
+│ Wang                   ┆ 7771  │
+│ KEA                    ┆ 6931  │
+│ SPIKE_LC               ┆ 6722  │
+│ iPTMnet                ┆ 5952  │
+│ PhosphoSite_ProtMapper ┆ 5348  │
+│ HINT                   ┆ 4934  │
+│ SPIKE                  ┆ 4843  │
+│ MIMP                   ┆ 4612  │
+│ PhosphoSite_MIMP       ┆ 4423  │
+└────────────────────────┴───────┘
+
+== sign flags vs consensus flags ==
+shape: (9, 6)
+┌────────────────┬───────────────┬─────────────────────┬───────────────────────┬──────────────────────┬───────┐
+│ is_stimulation ┆ is_inhibition ┆ consensus_direction ┆ consensus_stimulation ┆ consensus_inhibition ┆ len   │
+│ ---            ┆ ---           ┆ ---                 ┆ ---                   ┆ ---                  ┆ ---   │
+│ bool           ┆ bool          ┆ bool                ┆ bool                  ┆ bool                 ┆ u32   │
+╞════════════════╪═══════════════╪═════════════════════╪═══════════════════════╪══════════════════════╪═══════╡
+│ true           ┆ false         ┆ true                ┆ true                  ┆ false                ┆ 63340 │
+│ false          ┆ false         ┆ false               ┆ false                 ┆ false                ┆ 13063 │
+│ false          ┆ true          ┆ true                ┆ false                 ┆ true                 ┆ 6462  │
+│ true           ┆ false         ┆ false               ┆ false                 ┆ false                ┆ 700   │
+│ true           ┆ true          ┆ true                ┆ false                 ┆ true                 ┆ 647   │
+│ true           ┆ true          ┆ true                ┆ true                  ┆ false                ┆ 556   │
+│ false          ┆ true          ┆ false               ┆ false                 ┆ false                ┆ 234   │
+│ true           ┆ true          ┆ true                ┆ true                  ┆ true                 ┆ 134   │
+│ true           ┆ true          ┆ false               ┆ false                 ┆ false                ┆ 81    │
+└────────────────┴───────────────┴─────────────────────┴───────────────────────┴──────────────────────┴───────┘
+
+== TSC2->RHEB and DDIT4->TSC2 in OmniPath ==
+shape: (2, 8)
+┌───────────────────┬───────────────────┬────────────────┬───────────────┬─────────────────────┬───────────────────────┬──────────────────────┬────────────────────────────────────────────────┐
+│ source_genesymbol ┆ target_genesymbol ┆ is_stimulation ┆ is_inhibition ┆ consensus_direction ┆ consensus_stimulation ┆ consensus_inhibition ┆ sources                                        │
+│ ---               ┆ ---               ┆ ---            ┆ ---           ┆ ---                 ┆ ---                   ┆ ---                  ┆ ---                                            │
+│ str               ┆ str               ┆ bool           ┆ bool          ┆ bool                ┆ bool                  ┆ bool                 ┆ str                                            │
+╞═══════════════════╪═══════════════════╪════════════════╪═══════════════╪═════════════════════╪═══════════════════════╪══════════════════════╪════════════════════════════════════════════════╡
+│ TSC2              ┆ RHEB              ┆ true           ┆ true          ┆ true                ┆ false                 ┆ true                 ┆ Wang;ARN;SIGNOR;HPRD;HINT;SignaLink3;BioGRID;… │
+│ DDIT4             ┆ TSC2              ┆ true           ┆ true          ┆ true                ┆ true                  ┆ true                 ┆ SIGNOR;ACSN                                    │
+└───────────────────┴───────────────────┴────────────────┴───────────────┴─────────────────────┴───────────────────────┴──────────────────────┴────────────────────────────────────────────────┘
+
+== top metabolites (look for leftover duplicates) ==
+shape: (45, 4)
+┌────────────────────────────────────────────────┬────────────────────────────────────┬──────────────────┬─────────┐
+│ label                                          ┆ chebi                              ┆ gem_compartments ┆ deg_all │
+│ ---                                            ┆ ---                                ┆ ---              ┆ ---     │
+│ str                                            ┆ str                                ┆ str              ┆ u32     │
+╞════════════════════════════════════════════════╪════════════════════════════════════╪══════════════════╪═════════╡
+│ calcium(2+)                                    ┆ CHEBI:29108                        ┆ ce               ┆ 107     │
+│ 2-oxoglutarate(2-)                             ┆ CHEBI:16810                        ┆                  ┆ 42      │
+│ glutamic acid                                  ┆ CHEBI:18237                        ┆                  ┆ 41      │
+│ ATP                                            ┆ CHEBI:15422;CHEBI:30616            ┆ ceglmnrx         ┆ 41      │
+│ AMP                                            ┆ CHEBI:16027;CHEBI:456215           ┆ ceglmnrx         ┆ 37      │
+│ sodium(1+)                                     ┆ CHEBI:29101                        ┆ cegrx            ┆ 33      │
+│ glucose                                        ┆ CHEBI:17234;CHEBI:17925;CHEBI:4167 ┆ ceglnr           ┆ 30      │
+│ coenzyme A(4-)                                 ┆ CHEBI:57287                        ┆                  ┆ 30      │
+│ acetyl-CoA                                     ┆ CHEBI:15351;CHEBI:57288            ┆ cgmnrx           ┆ 29      │
+│ 3',5'-cyclic AMP                               ┆ CHEBI:17489                        ┆ ceg              ┆ 26      │
+│ PIP3                                           ┆ CHEBI:16618                        ┆ cgnr             ┆ 25      │
+│ serotonin                                      ┆ CHEBI:28790;CHEBI:350546           ┆ ce               ┆ 24      │
+│ messenger RNA                                  ┆ CHEBI:33699                        ┆                  ┆ 24      │
+│ chloride                                       ┆ CHEBI:17996                        ┆                  ┆ 24      │
+│ all-trans-retinoic acid                        ┆ CHEBI:15367                        ┆ cenr             ┆ 23      │
+│ L-aspartate(1-)                                ┆ CHEBI:29991                        ┆                  ┆ 23      │
+│ L-glutamate(1-)                                ┆ CHEBI:29985                        ┆                  ┆ 22      │
+│ L-glutamine zwitterion                         ┆ CHEBI:58359                        ┆                  ┆ 22      │
+│ ADP                                            ┆ CHEBI:16761;CHEBI:456216           ┆ ceglmnrx         ┆ 21      │
+│ potassium(1+)                                  ┆ CHEBI:29103                        ┆                  ┆ 21      │
+│ superoxide                                     ┆ CHEBI:18421                        ┆ cemnx            ┆ 20      │
+│ alpha-D-glucose 6-phosphate(2-)                ┆ CHEBI:58225                        ┆                  ┆ 20      │
+│ D-glyceraldehyde 3-phosphate(2-)               ┆ CHEBI:59776                        ┆                  ┆ 20      │
+│ 17beta-estradiol                               ┆ CHEBI:16469                        ┆ cer              ┆ 20      │
+│ IMP                                            ┆ CHEBI:17202                        ┆ cem              ┆ 19      │
+│ phosphatidic acid                              ┆ CHEBI:16337                        ┆ cegmnr           ┆ 19      │
+│ palmitoyl-CoA                                  ┆ CHEBI:15525;CHEBI:57379            ┆ cmrx             ┆ 18      │
+│ glycine                                        ┆ CHEBI:15428;CHEBI:57305            ┆ celmrx           ┆ 18      │
+│ acetylcholine                                  ┆ CHEBI:15355                        ┆ cen              ┆ 18      │
+│ iron-sulfur cluster                            ┆ CHEBI:30408                        ┆                  ┆ 18      │
+│ hydron                                         ┆ CHEBI:15378                        ┆                  ┆ 17      │
+│ pyruvate                                       ┆ CHEBI:15361                        ┆                  ┆ 17      │
+│ β-D-fructose 6-phosphate                       ┆ CHEBI:57634                        ┆                  ┆ 17      │
+│ hydrogencarbonate                              ┆ CHEBI:17544                        ┆ cem              ┆ 16      │
+│ oxaloacetate(2-)                               ┆ CHEBI:16452                        ┆                  ┆ 16      │
+│ 1,2-diacyl-sn-glycerol                         ┆ CHEBI:17815                        ┆ cegnr            ┆ 16      │
+│ adenosine                                      ┆ CHEBI:16335                        ┆ celm             ┆ 16      │
+│ 3,3',5'-triiodothyronine                       ┆ CHEBI:28774                        ┆ cer              ┆ 16      │
+│ nitric oxide                                   ┆ CHEBI:16480                        ┆ ce               ┆ 15      │
+│ diphosphate(3-)                                ┆ CHEBI:33019                        ┆ cegmnrx          ┆ 15      │
+│ dopamine                                       ┆ CHEBI:18243                        ┆ ceglmx           ┆ 15      │
+│ 1-phosphatidyl-1D-myo-inositol 4,5-bisphospha… ┆ CHEBI:18348;CHEBI:58456            ┆                  ┆ 15      │
+│ gamma-aminobutyric acid                        ┆ CHEBI:16865                        ┆ celmn            ┆ 15      │
+│ 3-phosphonato-D-glycerate(3-)                  ┆ CHEBI:58272                        ┆                  ┆ 14      │
+│ NAD(+)                                         ┆ CHEBI:15846;CHEBI:57540            ┆ cemnrx           ┆ 14      │
+└────────────────────────────────────────────────┴────────────────────────────────────┴──────────────────┴─────────┘
+
+== top 'chemical' nodes (any endogenous ones hiding here?) ==
+shape: (40, 3)
+┌────────────────────────────────────────────────┬──────────────┬─────────┐
+│ label                                          ┆ chebi        ┆ deg_all │
+│ ---                                            ┆ ---          ┆ ---     │
+│ str                                            ┆ str          ┆ u32     │
+╞════════════════════════════════════════════════╪══════════════╪═════════╡
+│ regorafenib                                    ┆ CHEBI:68647  ┆ 22      │
+│ ponatinib                                      ┆ CHEBI:78543  ┆ 16      │
+│ 4-(2,6-dichlorobenzamido)-N-(piperidin-4-yl)-… ┆ CHEBI:91326  ┆ 13      │
+│ pazopanib hydrochloride                        ┆ CHEBI:71217  ┆ 12      │
+│ (-)-anisomycin                                 ┆ CHEBI:338412 ┆ 11      │
+│ sorafenib tosylate                             ┆ CHEBI:50928  ┆ 11      │
+│ sirolimus                                      ┆ CHEBI:9168   ┆ 11      │
+│ CUDC-101                                       ┆              ┆ 11      │
+│ 6-(1,3-dioxo-2-benzo[de]isoquinolinyl)-N-hydr… ┆ CHEBI:92401  ┆ 9       │
+│ N-[4-[(hydroxyamino)-oxomethyl]phenyl]carbami… ┆ CHEBI:94187  ┆ 9       │
+│ romidepsin                                     ┆ CHEBI:61080  ┆ 9       │
+│ nintedanib                                     ┆ CHEBI:85164  ┆ 9       │
+│ belinostat                                     ┆ CHEBI:61076  ┆ 9       │
+│ trichostatin A                                 ┆ CHEBI:46024  ┆ 9       │
+│ N-hydroxy-3-[4-[[2-hydroxyethyl-[2-(1H-indol-… ┆ CHEBI:94063  ┆ 9       │
+│ vorinostat                                     ┆ CHEBI:45716  ┆ 9       │
+│ panobinostat                                   ┆ CHEBI:85990  ┆ 8       │
+│ sunitinib                                      ┆ CHEBI:38940  ┆ 8       │
+│ linifanib                                      ┆ CHEBI:91435  ┆ 7       │
+│ 4-[[5-amino-1-[(2,6-difluorophenyl)-oxomethyl… ┆ CHEBI:94506  ┆ 7       │
+│ PP121                                          ┆ CHEBI:50915  ┆ 7       │
+│ 9-(1-Methyl-4-pyrazolyl)-1-[1-(1-oxoprop-2-en… ┆              ┆ 7       │
+│ pazopanib                                      ┆ CHEBI:71219  ┆ 7       │
+│ clofarabine                                    ┆ CHEBI:681569 ┆ 7       │
+│ PI-103                                         ┆ CHEBI:90524  ┆ 7       │
+│ alvocidib                                      ┆ CHEBI:47344  ┆ 7       │
+│ dabrafenib                                     ┆ CHEBI:75045  ┆ 7       │
+│ anthra[1,9-cd]pyrazol-6(2H)-one                ┆ CHEBI:90695  ┆ 7       │
+│ seliciclib                                     ┆ CHEBI:45307  ┆ 7       │
+│ CH5132799                                      ┆              ┆ 7       │
+│ MK-2461                                        ┆              ┆ 6       │
+│ axitinib                                       ┆ CHEBI:66910  ┆ 6       │
+│ N-[[3-fluoro-4-[[2-(1-methyl-4-imidazolyl)-7-… ┆ CHEBI:91393  ┆ 6       │
+│ dexamethasone                                  ┆ CHEBI:41879  ┆ 6       │
+│ 1-[4-[[2-(2-amino-5-pyrimidinyl)-7-methyl-4-(… ┆ CHEBI:93753  ┆ 6       │
+│ cabozantinib                                   ┆ CHEBI:72317  ┆ 6       │
+│ 2-Hydroxy-3-[N-[4-[methyl-[2-(4-methylpiperaz… ┆              ┆ 6       │
+│ cyclosporin A                                  ┆ CHEBI:4031   ┆ 6       │
+│ vincaleukoblastine sulfate                     ┆ CHEBI:9984   ┆ 6       │
+│ (S)-N-Hydroxy-4-(3-methyl-2-phenylbutanamido)… ┆              ┆ 6       │
+└────────────────────────────────────────────────┴──────────────┴─────────┘
+
+== GO rows in the UniProt idmapping? (count, then TNF = P01375) ==
+0

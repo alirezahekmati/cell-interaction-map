@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cell interaction map</title>
+</head>
+<body>
+<div id="app">
+  <aside id="side">
+    <h1>Cell interaction map</h1>
+    <input id="q" type="search" placeholder="Search protein / metabolite…" autocomplete="off">
+    <div id="results"></div>
+    <p class="hint">Click a node to draw its edges · Shift-click adds · Esc clears · drag rotates, right-drag pans, wheel zooms</p>
+
+    <h2>Edge layers</h2>
+    <div id="cls"></div>
+    <h2>Sign</h2>
+    <div id="net"></div>
+    <label class="row2">Min evidence rows <input id="minEv" type="number" min="1" value="1"></label>
+    <label class="row2">Min resources <input id="minRes" type="number" min="1" value="1"></label>
+    <label class="row2">Scope
+      <select id="scope">
+        <option value="sel">Selected node(s) only</option>
+        <option value="nbh">Also edges among neighbours</option>
+      </select>
+    </label>
+
+    <h2>Nodes</h2>
+    <div id="kinds"></div>
+    <label class="chk"><input type="checkbox" id="noise"><span>Show noise hubs (Ca²⁺, Na⁺, hydron …)</span></label>
+
+    <h2>Compartments</h2>
+    <label class="chk"><input type="checkbox" id="shells" checked><span>Draw compartment outlines</span></label>
+    <div id="regions"></div>
+
+    <h2>Display</h2>
+    <label class="row2">Node size <input id="size" type="range" min="0.4" max="3" step="0.1" value="1"></label>
+    <label class="row2">Colour by
+      <select id="colorby">
+        <option value="region">compartment</option>
+        <option value="kind">node type</option>
+      </select>
+    </label>
+    <label class="chk"><input type="checkbox" id="labels" checked><span>Labels on selection</span></label>
+    <h2>About</h2>
+    <div id="about" class="hint">Signed, directed interactions merged from SIGNOR (CC BY 4.0) and OmniPath (an aggregator; see the licences of its resources). Compartments come from the Human Protein Atlas, UniProt and Human-GEM, plus some manual overrides. Positions are schematic, not physical, and a line means "reported", not "verified". Not peer reviewed.</div>
+  </aside>
+  <main id="view">
+    <canvas id="c"></canvas>
+    <div id="labelbox"></div>
+    <div id="tip" hidden></div>
+    <div id="status">loading…</div>
+  </main>
+  <aside id="detail" hidden></aside>
+</div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

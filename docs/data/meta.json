@@ -1,0 +1,81 @@
+{
+ "n_nodes": 12231,
+ "n_edges": 52407,
+ "cls": [
+  "regulation",
+  "binding",
+  "membership",
+  "substrate_product",
+  "transport"
+ ],
+ "net": [
+  "unsigned",
+  "stim",
+  "inhib",
+  "mixed"
+ ],
+ "edge_record": {
+  "bytes": 20,
+  "little_endian": true,
+  "fields": [
+   [
+    "src",
+    "u32"
+   ],
+   [
+    "tgt",
+    "u32"
+   ],
+   [
+    "cls",
+    "u8"
+   ],
+   [
+    "net",
+    "u8"
+   ],
+   [
+    "directed",
+    "u8"
+   ],
+   [
+    "pad",
+    "u8"
+   ],
+   [
+    "n_ev",
+    "u16"
+   ],
+   [
+    "n_res",
+    "u16"
+   ],
+   [
+    "score",
+    "f32"
+   ]
+  ]
+ },
+ "net_colors": {
+  "stim": "#2ecc71",
+  "inhib": "#e74c3c",
+  "mixed": "#f5a623",
+  "unsigned": "#8a8f98"
+ },
+ "region_colors": {
+  "extracellular": "#9aa5b1",
+  "plasma_membrane": "#e6b800",
+  "cytosol": "#4dabf7",
+  "nucleus": "#9775fa",
+  "mitochondrion": "#ff922b",
+  "er": "#20c997",
+  "golgi": "#f06595",
+  "lysosome": "#fa5252",
+  "vesicle": "#94d82d",
+  "peroxisome": "#15aabf"
+ },
+ "hidden_codes": {
+  "1": "chemical",
+  "2": "noise"
+ }
+}

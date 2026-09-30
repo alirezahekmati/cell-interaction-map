@@ -1,0 +1,7 @@
+data/raw/
+data/processed/
+data/export/
+node_modules/
+.venv/
+__pycache__/
+*.bak*

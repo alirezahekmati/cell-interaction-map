@@ -1,0 +1,343 @@
+
+===== SIGNOR_complexes.csv =====
+691 lines
+"SIGNOR ID";"COMPLEX NAME";"LIST OF ENTITIES"
+SIGNOR-C1;NFY;"P23511,  P25208,  Q13952"
+SIGNOR-C2;mTORC2;"P42345,  P68104,  P85299,  Q6R327,  Q8TB45,  Q9BVC4"
+
+===== SIGNOR_PF.csv =====
+93 lines
+"SIGNOR ID";"PROT. FAMILY NAME";"LIST OF ENTITIES"
+SIGNOR-PF1;ERK1/2;"P27361,  P28482"
+SIGNOR-PF2;LPAR;"Q92633,  Q9HBW0,  Q9UBY5"
+
+===== SIGNOR-PH.csv =====
+1857 lines
+"SIGNOR ID";"PHENOTYPE NAME";"PHENOTYPE DESCRIPTION"
+SIGNOR-PH1;Skeletal_muscle_differentiation;"The process in which a relatively unspecialized cell acquires specialized features of a skeletal muscle cell, a somatic cell located in skeletal muscle"
+SIGNOR-PH1;Skeletal_muscle_differentiation;"The process in which a relatively unspecialized cell acquires specialized features of a skeletal muscle cell, a somatic cell located in skeletal muscle"
+
+===== SIGNOR-ST.csv =====
+250 lines
+"SIGNOR ID";"STIMULUS NAME";"STIMULUS DESCRIPTION"
+SIGNOR-ST1;DNA_damage;"DNA Damage"
+SIGNOR-ST1;DNA_damage;"DNA Damage"
+
+===== entity types (unique entities) =====
+shape: (11, 2)
+┌────────────────┬──────┐
+│ type           ┆ len  │
+│ ---            ┆ ---  │
+│ str            ┆ u32  │
+╞════════════════╪══════╡
+│ protein        ┆ 8294 │
+│ chemical       ┆ 1013 │
+│ complex        ┆ 692  │
+│ smallmolecule  ┆ 560  │
+│ phenotype      ┆ 226  │
+│ mirna          ┆ 157  │
+│ proteinfamily  ┆ 93   │
+│ stimulus       ┆ 27   │
+│ antibody       ┆ 25   │
+│ fusion protein ┆ 15   │
+│ ncrna          ┆ 6    │
+└────────────────┴──────┘
+
+===== metabolite-like entities (name, id, type, n edges) =====
+shape: (60, 4)
+┌────────────────────────────────────────────────┬──────────────┬───────────────┬─────┐
+│ name                                           ┆ id           ┆ type          ┆ len │
+│ ---                                            ┆ ---          ┆ ---           ┆ --- │
+│ str                                            ┆ str          ┆ str           ┆ u32 │
+╞════════════════════════════════════════════════╪══════════════╪═══════════════╪═════╡
+│ calcium(2+)                                    ┆ CHEBI:29108  ┆ smallmolecule ┆ 123 │
+│ AMP                                            ┆ CHEBI:456215 ┆ smallmolecule ┆ 47  │
+│ ATP(4-)                                        ┆ CHEBI:30616  ┆ smallmolecule ┆ 40  │
+│ 3',5'-cyclic AMP                               ┆ CHEBI:17489  ┆ smallmolecule ┆ 29  │
+│ beta-D-fructofuranose 1,6-bisphosphate(4-)     ┆ CHEBI:32966  ┆ smallmolecule ┆ 24  │
+│ D-glyceraldehyde 3-phosphate(2-)               ┆ CHEBI:59776  ┆ smallmolecule ┆ 24  │
+│ β-D-fructose 6-phosphate                       ┆ CHEBI:57634  ┆ smallmolecule ┆ 23  │
+│ alpha-D-glucose 6-phosphate(2-)                ┆ CHEBI:58225  ┆ smallmolecule ┆ 23  │
+│ diphosphate(3-)                                ┆ CHEBI:33019  ┆ smallmolecule ┆ 22  │
+│ adenosine                                      ┆ CHEBI:16335  ┆ smallmolecule ┆ 21  │
+│ α-D-glucose                                    ┆ CHEBI:17925  ┆ smallmolecule ┆ 21  │
+│ acetyl-CoA(4-)                                 ┆ CHEBI:57288  ┆ smallmolecule ┆ 18  │
+│ alpha-D-glucose 1-phosphate(2-)                ┆ CHEBI:58601  ┆ smallmolecule ┆ 18  │
+│ ADP(3-)                                        ┆ CHEBI:456216 ┆ smallmolecule ┆ 17  │
+│ acetyl-CoA                                     ┆ CHEBI:15351  ┆ smallmolecule ┆ 17  │
+│ hydron                                         ┆ CHEBI:15378  ┆ chemical      ┆ 16  │
+│ 5-phospho-α-D-ribose 1-diphosphate             ┆ CHEBI:58017  ┆ smallmolecule ┆ 14  │
+│ D-ribofuranose 5-phosphate(2-)                 ┆ CHEBI:78346  ┆ smallmolecule ┆ 14  │
+│ NADPH(4-)                                      ┆ CHEBI:57783  ┆ smallmolecule ┆ 14  │
+│ acetoacetyl-CoA(4-)                            ┆ CHEBI:57286  ┆ smallmolecule ┆ 13  │
+│ sphingosine 1-phosphate                        ┆ CHEBI:37550  ┆ smallmolecule ┆ 13  │
+│ glycerone phosphate(2-)                        ┆ CHEBI:57642  ┆ smallmolecule ┆ 12  │
+│ cytidine 5'-monophosphate(2-)                  ┆ CHEBI:60377  ┆ smallmolecule ┆ 11  │
+│ UDP-alpha-D-glucose(2-)                        ┆ CHEBI:58885  ┆ chemical      ┆ 11  │
+│ NADP(3-)                                       ┆ CHEBI:58349  ┆ smallmolecule ┆ 11  │
+│ glucose                                        ┆ CHEBI:17234  ┆ chemical      ┆ 11  │
+│ ATP                                            ┆ CHEBI:15422  ┆ smallmolecule ┆ 11  │
+│ NAD(1-)                                        ┆ CHEBI:57540  ┆ smallmolecule ┆ 11  │
+│ 1D-myo-inositol 1,4,5-trisphosphate            ┆ CHEBI:16595  ┆ smallmolecule ┆ 11  │
+│ beta-D-fructofuranose 2,6-bisphosphate         ┆ CHEBI:28602  ┆ smallmolecule ┆ 10  │
+│ 3-phosphonato-D-glyceroyl phosphate(4-)        ┆ CHEBI:57604  ┆ smallmolecule ┆ 10  │
+│ uridine 5'-monophosphate(2-)                   ┆ CHEBI:57865  ┆ smallmolecule ┆ 9   │
+│ 1-phosphatidyl-1D-myo-inositol 4,5-bisphospha… ┆ CHEBI:18348  ┆ smallmolecule ┆ 9   │
+│ D-ribulose 5-phosphate                         ┆ CHEBI:17363  ┆ smallmolecule ┆ 8   │
+│ phosphatidylinositol bisphosphate              ┆ CHEBI:37328  ┆ smallmolecule ┆ 8   │
+│ sedoheptulose 7-phosphate                      ┆ CHEBI:15721  ┆ smallmolecule ┆ 8   │
+│ GDP                                            ┆ CHEBI:17552  ┆ smallmolecule ┆ 8   │
+│ D-xylulose 5-phosphate(2-)                     ┆ CHEBI:57737  ┆ smallmolecule ┆ 7   │
+│ carbamoyl phosphate(2-)                        ┆ CHEBI:58228  ┆ smallmolecule ┆ 7   │
+│ ADP                                            ┆ CHEBI:16761  ┆ chemical      ┆ 6   │
+│ alpha-D-ribose 1-phosphate(2-)                 ┆ CHEBI:57720  ┆ smallmolecule ┆ 6   │
+│ GTP                                            ┆ CHEBI:15996  ┆ smallmolecule ┆ 6   │
+│ 1-acyl-sn-glycerol 3-phosphate(2-)             ┆ CHEBI:57970  ┆ smallmolecule ┆ 6   │
+│ NADH                                           ┆ CHEBI:16908  ┆ smallmolecule ┆ 6   │
+│ 2'-deoxycytosine 5'-monophosphate(2-)          ┆ CHEBI:57566  ┆ smallmolecule ┆ 6   │
+│ guanosine 5'-monophosphate(2-)                 ┆ CHEBI:58115  ┆ smallmolecule ┆ 5   │
+│ orotidine 5'-phosphate(3-)                     ┆ CHEBI:57538  ┆ smallmolecule ┆ 5   │
+│ phosphatidylinositol 4-phosphate               ┆ CHEBI:37530  ┆ smallmolecule ┆ 5   │
+│ phosphate(3-)                                  ┆ CHEBI:18367  ┆ smallmolecule ┆ 5   │
+│ 1-phosphatidyl-1D-myo-inositol 5-phosphate(3-… ┆ CHEBI:57795  ┆ smallmolecule ┆ 5   │
+│ beta-D-fructofuranose 1-phosphate(2-)          ┆ CHEBI:138881 ┆ smallmolecule ┆ 5   │
+│ NADH(2-)                                       ┆ CHEBI:57945  ┆ smallmolecule ┆ 5   │
+│ sphingosine 1-phosphate(1-)                    ┆ CHEBI:60119  ┆ smallmolecule ┆ 4   │
+│ 1-phosphatidyl-1D-myo-inositol 4,5-bisphospha… ┆ CHEBI:58456  ┆ smallmolecule ┆ 4   │
+│ 2'-deoxyadenosine                              ┆ CHEBI:17256  ┆ smallmolecule ┆ 4   │
+│ 2-deoxy-D-ribofuranose 1-phosphate(2-)         ┆ CHEBI:58576  ┆ smallmolecule ┆ 4   │
+│ 2'-deoxyguanosine 5'-monophosphate(2-)         ┆ CHEBI:57673  ┆ smallmolecule ┆ 4   │
+│ 1-phosphatidyl-1D-myo-inositol 4-phosphate     ┆ CHEBI:17526  ┆ smallmolecule ┆ 4   │
+│ 3',5'-cyclic GMP                               ┆ CHEBI:16356  ┆ smallmolecule ┆ 4   │
+│ 2'-deoxyadenosine 5'-monophosphate(2-)         ┆ CHEBI:58245  ┆ smallmolecule ┆ 4   │
+└────────────────────────────────────────────────┴──────────────┴───────────────┴─────┘
+
+===== edges touching those: 866; by mechanism =====
+shape: (8, 2)
+┌───────────────────────┬─────┐
+│ MECHANISM             ┆ len │
+│ ---                   ┆ --- │
+│ str                   ┆ u32 │
+╞═══════════════════════╪═════╡
+│ chemical modification ┆ 429 │
+│ precursor of          ┆ 168 │
+│ chemical activation   ┆ 93  │
+│ relocalization        ┆ 91  │
+│ null                  ┆ 32  │
+│ binding               ┆ 26  │
+│ chemical inhibition   ┆ 26  │
+│ phosphorylation       ┆ 1   │
+└───────────────────────┴─────┘
+
+===== regulation-type edges only (not modification/precursor) =====
+237
+shape: (70, 4)
+┌─────────────────────────┬─────────────────────────┬────────────────────────┬─────────────────────┐
+│ ENTITYA                 ┆ ENTITYB                 ┆ EFFECT                 ┆ MECHANISM           │
+│ ---                     ┆ ---                     ┆ ---                    ┆ ---                 │
+│ str                     ┆ str                     ┆ str                    ┆ str                 │
+╞═════════════════════════╪═════════════════════════╪════════════════════════╪═════════════════════╡
+│ KCNN4                   ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ calcium(2+)             ┆ CDH16                   ┆ up-regulates activity  ┆ chemical activation │
+│ NAD(1-)                 ┆ SIRT1                   ┆ up-regulates activity  ┆ binding             │
+│ calcium(2+)             ┆ Calcineurin             ┆ up-regulates           ┆ chemical activation │
+│ SLC34A3                 ┆ phosphate(3-)           ┆ up-regulates quantity  ┆ relocalization      │
+│ ATP                     ┆ PRKAG1                  ┆ down-regulates         ┆ chemical inhibition │
+│ MCU_MICU3_variant       ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ 4-{[(5,5,8,8-tetramethy ┆ RARB                    ┆ up-regulates activity  ┆ chemical activation │
+│ l-5,6,7,8-tetrahydrona… ┆                         ┆                        ┆                     │
+│ 7-(dipropylamino)-5,6,7 ┆ DRD2                    ┆ up-regulates activity  ┆ chemical activation │
+│ ,8-tetrahydronaphthale… ┆                         ┆                        ┆                     │
+│ calcium(2+)             ┆ CDH3                    ┆ up-regulates activity  ┆ chemical activation │
+│ 3',5'-cyclic AMP        ┆ PRKAR1A                 ┆ down-regulates         ┆ chemical inhibition │
+│                         ┆                         ┆ activity               ┆                     │
+│ GRM3                    ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ calcium(2+)             ┆ CALM1                   ┆ up-regulates           ┆ chemical activation │
+│ GTP                     ┆ EEF1A:GTP:aa-tRNA       ┆ form complex           ┆ binding             │
+│ SLC9A4                  ┆ hydron                  ┆ down-regulates         ┆ relocalization      │
+│                         ┆                         ┆ quantity               ┆                     │
+│ GDP                     ┆ GNAI1                   ┆ down-regulates         ┆ chemical inhibition │
+│ NADH-ubiquinone oxidore ┆ hydron                  ┆ up-regulates quantity  ┆ relocalization      │
+│ ductase-Mitochondrial … ┆                         ┆                        ┆                     │
+│ GRM6                    ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ SLC24A1                 ┆ calcium(2+)             ┆ down-regulates         ┆ relocalization      │
+│                         ┆                         ┆ quantity               ┆                     │
+│ AMP                     ┆ ETF                     ┆ form complex           ┆ binding             │
+│ GRM8                    ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ phosphatidylinositol    ┆ WASL                    ┆ up-regulates activity  ┆ chemical activation │
+│ bisphosphate            ┆                         ┆                        ┆                     │
+│ sphingosine 1-phosphate ┆ S1PR3                   ┆ up-regulates activity  ┆ chemical activation │
+│ GRID2                   ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ ruxolitinib phosphate   ┆ JAK1                    ┆ down-regulates         ┆ chemical inhibition │
+│                         ┆                         ┆ activity               ┆                     │
+│ SLC9A8                  ┆ hydron                  ┆ down-regulates         ┆ relocalization      │
+│                         ┆                         ┆ quantity               ┆                     │
+│ GRIA3                   ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ ADP                     ┆ P2RY1                   ┆ up-regulates activity  ┆ chemical activation │
+│ GRIK5                   ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ calcium(2+)             ┆ PPP3CA                  ┆ up-regulates           ┆ chemical activation │
+│ GRM2                    ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ calcium(2+)             ┆ CDH22                   ┆ up-regulates activity  ┆ chemical activation │
+│ SLC24A3                 ┆ calcium(2+)             ┆ down-regulates         ┆ relocalization      │
+│                         ┆                         ┆ quantity               ┆                     │
+│ 1D-myo-inositol         ┆ CAPZA1                  ┆ down-regulates         ┆ chemical inhibition │
+│ 1,4,5-trisphosphate     ┆                         ┆ activity               ┆                     │
+│ GDP                     ┆ GNAQ                    ┆ down-regulates         ┆ chemical inhibition │
+│ GDP                     ┆ PRPS1                   ┆ down-regulates         ┆ chemical inhibition │
+│                         ┆                         ┆ activity               ┆                     │
+│ adenosine               ┆ ADORA2A                 ┆ up-regulates activity  ┆ chemical activation │
+│ calcium(2+)             ┆ CDH17                   ┆ up-regulates activity  ┆ chemical activation │
+│ AMP                     ┆ PRPS1                   ┆ down-regulates         ┆ chemical inhibition │
+│                         ┆                         ┆ activity               ┆                     │
+│ 1D-myo-inositol         ┆ ITPR1                   ┆ up-regulates activity  ┆ chemical activation │
+│ 1,4,5-trisphosphate     ┆                         ┆                        ┆                     │
+│ calcium(2+)             ┆ CDH13                   ┆ up-regulates activity  ┆ chemical activation │
+│ calcium(2+)             ┆ CALM1                   ┆ up-regulates           ┆ chemical activation │
+│ CoQ-cytochrome c        ┆ hydron                  ┆ up-regulates quantity  ┆ relocalization      │
+│ reductase-Mitochondrial ┆                         ┆                        ┆                     │
+│ resp…                   ┆                         ┆                        ┆                     │
+│ NMDA                    ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ 7-(dipropylamino)-5,6,7 ┆ DRD3                    ┆ up-regulates activity  ┆ chemical activation │
+│ ,8-tetrahydronaphthale… ┆                         ┆                        ┆                     │
+│ 1-phosphatidyl-1D-myo-i ┆ SPOP                    ┆ up-regulates activity  ┆ binding             │
+│ nositol 5-phosphate(3-… ┆                         ┆                        ┆                     │
+│ sphingosine 1-phosphate ┆ S1PR2                   ┆ up-regulates           ┆ chemical activation │
+│ ceramide                ┆ PRKCA                   ┆ up-regulates activity  ┆ chemical activation │
+│ 1-phosphate(2-)         ┆                         ┆                        ┆                     │
+│ OSBPL9-OSBPL10          ┆ phosphatidylinositol    ┆ up-regulates quantity  ┆ relocalization      │
+│ oxysterol-binding       ┆ 4-phosphate             ┆                        ┆                     │
+│ protein-rela…           ┆                         ┆                        ┆                     │
+│ calcium(2+)             ┆ PRKCA                   ┆ up-regulates           ┆ chemical activation │
+│ calcium(2+)             ┆ CAMK2G                  ┆ up-regulates           ┆ chemical activation │
+│ ATP(4-)                 ┆ P2RY4                   ┆ up-regulates activity  ┆ chemical activation │
+│ calcium(2+)             ┆ CALM2                   ┆ up-regulates           ┆ chemical activation │
+│ 4-{[(5,5,8,8-tetramethy ┆ RARG                    ┆ up-regulates activity  ┆ chemical activation │
+│ l-5,6,7,8-tetrahydrona… ┆                         ┆                        ┆                     │
+│ calcium(2+)             ┆ Calprotectin complex    ┆ up-regulates activity  ┆ chemical activation │
+│ calcium(2+)             ┆ CALM3                   ┆ up-regulates           ┆ chemical activation │
+│ GRIK2                   ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ sphingosine 1-phosphate ┆ S1PR3                   ┆ up-regulates           ┆ chemical activation │
+│ CACNA1C                 ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ sphingosine             ┆ S1PR5                   ┆ up-regulates activity  ┆ chemical activation │
+│ 1-phosphate(1-)         ┆                         ┆                        ┆                     │
+│ beta-D-fructofuranose   ┆ PFKL                    ┆ up-regulates activity  ┆ binding             │
+│ 2,6-bisphosphate        ┆                         ┆                        ┆                     │
+│ UDP-D-glucose           ┆ P2RY14                  ┆ up-regulates activity  ┆ chemical activation │
+│ adenosine               ┆ ADORA3                  ┆ up-regulates activity  ┆ chemical activation │
+│ ATP(4-)                 ┆ P2RY2                   ┆ up-regulates activity  ┆ chemical activation │
+│ calcium(2+)             ┆ S100A9                  ┆ up-regulates activity  ┆ chemical activation │
+│ calcium(2+)             ┆ CDH5                    ┆ up-regulates activity  ┆ chemical activation │
+│ calcium(2+)             ┆ GSN                     ┆ up-regulates activity  ┆ chemical activation │
+│ SLC2A1                  ┆ glucose                 ┆ up-regulates quantity  ┆ relocalization      │
+│ CACNA1E                 ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+│ GRIK4                   ┆ calcium(2+)             ┆ up-regulates quantity  ┆ relocalization      │
+└─────────────────────────┴─────────────────────────┴────────────────────────┴─────────────────────┘/home/bio/projects/3d-biology-space/scripts/03_inspect2.py:48: DeprecationWarning: In Polars 2.0, the default behavior for `empty_as_null` will change to `False`. To keep the current behavior, explicitly set `empty_as_null=True`.
+  print(hpa["Main location"].drop_nulls().str.split(";").explode().value_counts(sort=True))
+
+
+===== Human-GEM reactions =====
+(12877, 15)
+{'rxns': 'MAR03905', 'rxnKEGGID': 'R00754', 'rxnBiGGID': 'ALCD2x', 'rxnEHMNID': 'R00754C', 'rxnHepatoNET1ID': 'r0187', 'rxnREACTOMEID': None, 'rxnRecon3DID': 'ALCD2if', 'rxnMetaNetXID': 'MNXR95725', 'rxnHMR2ID': 'HMR_3905', 'rxnRatconID': 'RCR11018', 'rxnTCDBID': None, 'spontaneous': '0', 'rxnRheaID': 'RHEA:25291', 'rxnRheaMasterID': 'RHEA:25290', 'rxnRetired': 'HMR_3905'}
+
+===== Human-GEM genes =====
+(2848, 10)
+{'"genes"': '"ENSG00000000419"', '"geneENSTID"': '"ENST00000466152;ENST00000371582;ENST00000683048;ENST00000371588;ENST0', '"geneENSPID"': '"ENSP00000507119;ENSP00000360638;ENSP00000506986;ENSP00000360644;ENSP0', '"geneUniProtID"': '"O60762"', '"geneSymbols"': '"DPM1"', '"geneEntrezID"': '"8813"', '"geneNames"': '"dolichyl-phosphate mannosyltransferase subunit 1, catalytic"', '"geneAliases"': '"CDGIE;MPDS"', '"compartments"': '"Endoplasmic reticulum"', '"compDataSource"': '"SwissProt"'}
+
+===== HPA =====
+(13603, 14) ['Gene', 'Gene name', 'Reliability', 'Main location', 'Additional location', 'Extracellular location', 'Enhanced', 'Supported', 'Approved', 'Uncertain', 'Single-cell variation intensity', 'Single-cell variation spatial', 'Cell cycle dependency', 'GO id']
+shape: (49, 2)
+┌────────────────────────────────┬───────┐
+│ Main location                  ┆ count │
+│ ---                            ┆ ---   │
+│ str                            ┆ u32   │
+╞════════════════════════════════╪═══════╡
+│ Nucleoplasm                    ┆ 4897  │
+│ Cytosol                        ┆ 3087  │
+│ Vesicles                       ┆ 1661  │
+│ Plasma membrane                ┆ 1648  │
+│ Mitochondria                   ┆ 974   │
+│ Golgi apparatus                ┆ 886   │
+│ Nucleoli                       ┆ 638   │
+│ Endoplasmic reticulum          ┆ 486   │
+│ Nuclear speckles               ┆ 412   │
+│ Nuclear bodies                 ┆ 326   │
+│ Centrosome                     ┆ 248   │
+│ Microtubules                   ┆ 237   │
+│ Nucleoli fibrillar center      ┆ 193   │
+│ Nuclear membrane               ┆ 193   │
+│ Cell Junctions                 ┆ 192   │
+│ Mid piece                      ┆ 151   │
+│ Principal piece                ┆ 140   │
+│ Primary cilium                 ┆ 140   │
+│ Basal body                     ┆ 139   │
+│ Actin filaments                ┆ 138   │
+│ Nucleoli rim                   ┆ 125   │
+│ Centriolar satellite           ┆ 107   │
+│ Intermediate filaments         ┆ 96    │
+│ Focal adhesion sites           ┆ 90    │
+│ End piece                      ┆ 77    │
+│ Flagellar centriole            ┆ 60    │
+│ Acrosome                       ┆ 54    │
+│ Cytoplasmic bodies             ┆ 43    │
+│ Connecting piece               ┆ 33    │
+│ Cytokinetic bridge             ┆ 30    │
+│ Equatorial segment             ┆ 29    │
+│ Annulus                        ┆ 27    │
+│ Lipid droplets                 ┆ 26    │
+│ Mitotic spindle                ┆ 26    │
+│ Mitotic chromosome             ┆ 25    │
+│ Peroxisomes                    ┆ 23    │
+│ Primary cilium transition zone ┆ 23    │
+│ Lysosomes                      ┆ 18    │
+│ Midbody                        ┆ 16    │
+│ Endosomes                      ┆ 15    │
+│ Calyx                          ┆ 14    │
+│ Primary cilium tip             ┆ 13    │
+│ Perinuclear theca              ┆ 10    │
+│ Rods & Rings                   ┆ 7     │
+│ Midbody ring                   ┆ 5     │
+│ Microtubule ends               ┆ 5     │
+│ Aggresome                      ┆ 3     │
+│ Kinetochore                    ┆ 2     │
+│ Cleavage furrow                ┆ 1     │
+└────────────────────────────────┴───────┘
+
+===== UniProt idmapping =====
+(5834882, 3)
+shape: (30, 2)
+┌──────────────┬────────┐
+│ type         ┆ count  │
+│ ---          ┆ ---    │
+│ str          ┆ u32    │
+╞══════════════╪════════╡
+│ GI           ┆ 842658 │
+│ EMBL         ┆ 523513 │
+│ EMBL-CDS     ┆ 383137 │
+│ Ensembl_TRS  ┆ 246698 │
+│ Ensembl_PRO  ┆ 246697 │
+│ UniParc      ┆ 243753 │
+│ UniProtKB-ID ┆ 210706 │
+│ UniRef100    ┆ 210706 │
+│ NCBI_TaxID   ┆ 210706 │
+│ CRC64        ┆ 210706 │
+│ UniRef90     ┆ 210367 │
+│ UniRef50     ┆ 210367 │
+│ Gene_Name    ┆ 171838 │
+│ Ensembl      ┆ 153633 │
+│ HGNC         ┆ 146604 │
+│ GeneTree     ┆ 145207 │
+│ PDB          ┆ 131952 │
+│ RefSeq       ┆ 113282 │
+│ RefSeq_NT    ┆ 113282 │
+│ OpenTargets  ┆ 103417 │
+│ OrthoDB      ┆ 98474  │
+│ ChiTaRS      ┆ 79046  │
+│ VEuPathDB    ┆ 73825  │
+│ ProteomicsDB ┆ 65867  │
+│ UCSC         ┆ 62617  │
+│ EMDB         ┆ 58205  │
+│ HOGENOM      ┆ 49371  │
+│ Reactome     ┆ 48102  │
+│ GeneID       ┆ 39878  │
+│ OMA          ┆ 33908  │
+└──────────────┴────────┘

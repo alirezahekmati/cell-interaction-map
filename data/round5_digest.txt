@@ -1,0 +1,167 @@
+##### UniProt loader + protein summary
+===== UniProt subcellular location =====
+16164 reviewed entries with a mappable location
+--
+9677 proteins: 7975 single-region, 1459 multi-region, 243 with no location data
+
+
+##### figure check
+OK        AKT/AKT1 -> TSC2/TSC               expected inhib  found inhib    stim=0 inhib=8  [AKT1>TSC2, AKT2>TSC2]
+OK        MAPK1/MAPK3 -> TSC2/TSC            expected inhib  found inhib    stim=0 inhib=6  [ERK1/2>TSC2, MAPK1>TSC2, MAPK3>TSC2]
+OK        RPS6KA1/RPS6KA3 -> TSC2/TSC        expected inhib  found inhib    stim=0 inhib=4  [RPS6KA1>TSC, RPS6KA1>TSC2, RPS6KA3>TSC2]
+OK        IKBKB -> TSC1/TSC2                 expected inhib  found inhib    stim=0 inhib=5  [IKBKB>TSC1]
+OK        AMPK/PRKAA1 -> TSC2/TSC            expected stim   found stim     stim=5 inhib=0  [AMPK>TSC2, PRKAA1>TSC2, PRKAA2>TSC2]
+OK        STK11 -> AMPK/PRKAA1               expected stim   found stim     stim=9 inhib=0  [STK11>AMPK, STK11>PRKAA1, STK11>PRKAA2]
+MIXED     DDIT4 -> TSC2/TSC                  expected stim   found mixed    stim=2 inhib=1  [DDIT4>TSC2]
+OK        PDPK1 -> AKT/AKT1                  expected stim   found stim     stim=18 inhib=0  [PDPK1>AKT, PDPK1>AKT1, PDPK1>AKT2, PDPK1>AKT3]
+OK        mTORC2 -> AKT/AKT1                 expected stim   found stim     stim=10 inhib=0  [mTORC2>AKT, mTORC2>AKT1]
+OK        TSC2/TSC -> RHEB                   expected inhib  found inhib    stim=0 inhib=3  [TSC2>RHEB, TSC>RHEB]
+OK        RHEB -> mTORC1/MTOR                expected stim   found stim     stim=4 inhib=0  [RHEB>MTOR, RHEB>mTORC1]
+OK        AMPK/PRKAA1 -> RPTOR/mTORC1        expected inhib  found inhib    stim=0 inhib=8  [AMPK>MTOR, AMPK>mTORC1, PRKAA1>MTOR, PRKAA1>RPTOR]
+MISS      AMP -> AMPK/PRKAG1                 expected stim
+OK        ADP -> AMPK/PRKAG1                 expected stim   found stim     stim=2 inhib=0  [ADP>AMPK, ADP>PRKAG1]
+OK        ATP -> AMPK/PRKAG1                 expected inhib  found inhib    stim=0 inhib=3  [ATP>AMPK, ATP>PRKAG1]
+
+##### edges by class/net
+===== Edges by class and net sign =====
+shape: (11, 3)
+┌───────────────────┬──────────┬───────┐
+│ cls               ┆ net      ┆ len   │
+│ ---               ┆ ---      ┆ ---   │
+│ str               ┆ str      ┆ u32   │
+╞═══════════════════╪══════════╪═══════╡
+│ binding           ┆ unsigned ┆ 2741  │
+│ membership        ┆ unsigned ┆ 3906  │
+│ regulation        ┆ inhib    ┆ 10570 │
+│ regulation        ┆ mixed    ┆ 600   │
+│ regulation        ┆ stim     ┆ 21230 │
+│ regulation        ┆ unsigned ┆ 11353 │
+│ substrate_product ┆ inhib    ┆ 536   │
+│ substrate_product ┆ mixed    ┆ 36    │
+│ substrate_product ┆ stim     ┆ 1130  │
+│ transport         ┆ inhib    ┆ 45    │
+│ transport         ┆ stim     ┆ 260   │
+└───────────────────┴──────────┴───────┘
+
+===== Metabolite nodes that merged several SIGNOR entries (check these look right) =====
+
+##### region_source for proteins + spot check + still-unplaced
+===== How each node got its region =====
+shape: (27, 3)
+┌────────────────┬───────────────┬──────┐
+│ kind           ┆ region_source ┆ len  │
+│ ---            ┆ ---           ┆ ---  │
+│ str            ┆ str           ┆ u32  │
+╞════════════════╪═══════════════╪══════╡
+│ antibody       ┆ nbr           ┆ 25   │
+│ chemical       ┆ nbr           ┆ 815  │
+│ chemical       ┆ default       ┆ 3    │
+│ complex        ┆ members       ┆ 688  │
+│ complex        ┆ nbr           ┆ 3    │
+│ complex        ┆ default       ┆ 1    │
+│ family         ┆ members       ┆ 92   │
+│ family         ┆ nbr           ┆ 1    │
+│ fusion_protein ┆ nbr           ┆ 15   │
+│ metabolite     ┆ gem_default   ┆ 478  │
+│ metabolite     ┆ nbr_strong    ┆ 36   │
+│ metabolite     ┆ gem_only      ┆ 16   │
+│ metabolite     ┆ gem           ┆ 1    │
+│ mirna          ┆ rule          ┆ 136  │
+│ ncrna          ┆ nbr           ┆ 6    │
+│ phenotype      ┆ nbr           ┆ 213  │
+│ protein        ┆ hpa           ┆ 5755 │
+│ protein        ┆ uniprot       ┆ 1894 │
+│ protein        ┆ hpa_vote      ┆ 752  │
+│ protein        ┆ hpa_priority  ┆ 617  │
+│ protein        ┆ gem           ┆ 291  │
+│ protein        ┆ nbr           ┆ 204  │
+│ protein        ┆ override      ┆ 48   │
+│ protein        ┆ gem_priority  ┆ 42   │
+│ protein        ┆ default       ┆ 39   │
+│ protein        ┆ gem_vote      ┆ 35   │
+│ stimulus       ┆ rule          ┆ 25   │
+└────────────────┴───────────────┴──────┘
+
+===== Spot check: mTOR figure players =====
+shape: (33, 5)
+┌─────────┬────────────┬─────────────────┬───────────────┬───────────────────────────────────────────┐
+│ label   ┆ kind       ┆ region          ┆ region_source ┆ regions_all                               │
+│ ---     ┆ ---        ┆ ---             ┆ ---           ┆ ---                                       │
+│ str     ┆ str        ┆ str             ┆ str           ┆ str                                       │
+╞═════════╪════════════╪═════════════════╪═══════════════╪═══════════════════════════════════════════╡
+│ ADP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ ADRA2A  ┆ protein    ┆ plasma_membrane ┆ uniprot       ┆ plasma_membrane                           │
+│ AKT1    ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ AMP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ AMPK    ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+│ ATP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ CXCR4   ┆ protein    ┆ plasma_membrane ┆ uniprot       ┆ lysosome,plasma_membrane,vesicle          │
+│ DEPDC5  ┆ protein    ┆ lysosome        ┆ override      ┆ cytosol,lysosome                          │
+│ EGFR    ┆ protein    ┆ plasma_membrane ┆ hpa_vote      ┆ cytosol,golgi,plasma_membrane             │
+│ FLCN    ┆ protein    ┆ lysosome        ┆ override      ┆ cytosol,plasma_membrane,vesicle           │
+│ FN1     ┆ protein    ┆ extracellular   ┆ uniprot       ┆ extracellular                             │
+│ INSR    ┆ protein    ┆ plasma_membrane ┆ hpa_vote      ┆ cytosol,plasma_membrane,vesicle           │
+│ LAMTOR1 ┆ protein    ┆ lysosome        ┆ override      ┆ golgi,plasma_membrane,vesicle             │
+│ LRP6    ┆ protein    ┆ plasma_membrane ┆ uniprot       ┆ er,plasma_membrane                        │
+│ MTNR1A  ┆ protein    ┆ plasma_membrane ┆ uniprot       ┆ plasma_membrane                           │
+│ MTOR    ┆ protein    ┆ cytosol         ┆ hpa_vote      ┆ cytosol,golgi                             │
+│ NPRL2   ┆ protein    ┆ lysosome        ┆ override      ┆ lysosome                                  │
+│ PDPK1   ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ PPP2CA  ┆ protein    ┆ cytosol         ┆ uniprot       ┆ cytosol,nucleus                           │
+│ PRKAA1  ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ PRKAG1  ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ RHEB    ┆ protein    ┆ lysosome        ┆ override      ┆ cytosol,er,golgi,lysosome                 │
+│ RPTOR   ┆ protein    ┆ vesicle         ┆ hpa_vote      ┆ cytosol,lysosome,vesicle                  │
+│ RRAGA   ┆ protein    ┆ lysosome        ┆ override      ┆ golgi,vesicle                             │
+│ SESN2   ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ SLC38A9 ┆ protein    ┆ lysosome        ┆ override      ┆ vesicle                                   │
+│ STK11   ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ TNF     ┆ protein    ┆ plasma_membrane ┆ uniprot       ┆ plasma_membrane                           │
+│ TSC     ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+│ TSC1    ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ TSC2    ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ mTORC1  ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+│ mTORC2  ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+└─────────┴────────────┴─────────────────┴───────────────┴───────────────────────────────────────────┘
+labels not found: []
+
+===== Well-connected proteins placed without location data =====
+shape: (15, 4)
+┌─────────┬─────────┬─────────────────┬───────────────┐
+│ label   ┆ deg_all ┆ region          ┆ region_source │
+│ ---     ┆ ---     ┆ ---             ┆ ---           │
+│ str     ┆ u32     ┆ str             ┆ str           │
+╞═════════╪═════════╪═════════════════╪═══════════════╡
+│ GNA15   ┆ 133     ┆ plasma_membrane ┆ nbr           │
+│ GNA14   ┆ 104     ┆ plasma_membrane ┆ nbr           │
+│ JAK1    ┆ 89      ┆ plasma_membrane ┆ nbr           │
+│ ITGA2   ┆ 37      ┆ extracellular   ┆ nbr           │
+│ ACVR1   ┆ 30      ┆ vesicle         ┆ nbr           │
+│ HBA1    ┆ 27      ┆ nucleus         ┆ nbr           │
+│ HBB     ┆ 26      ┆ nucleus         ┆ nbr           │
+│ MIR17HG ┆ 21      ┆ nucleus         ┆ nbr           │
+│ S       ┆ 20      ┆ plasma_membrane ┆ nbr           │
+│ EGF     ┆ 18      ┆ plasma_membrane ┆ nbr           │
+│ SIRPA   ┆ 17      ┆ plasma_membrane ┆ nbr           │
+│ N       ┆ 16      ┆ nucleus         ┆ nbr           │
+│ VAV3    ┆ 16      ┆ plasma_membrane ┆ nbr           │
+│ PPP1R1A ┆ 16      ┆ cytosol         ┆ nbr           │
+│ PTPRO   ┆ 15      ┆ plasma_membrane ┆ nbr           │
+└─────────┴─────────┴─────────────────┴───────────────┘
+
+Wrote data/processed/compartments.parquet
+
+##### glutamate/aspartate/glutamine/UDP-gal nodes
+shape: (6, 4)
+┌───────────────────────────┬─────────────────────────────┬─────────────────────────┬─────────┐
+│ key                       ┆ label                       ┆ chebi                   ┆ deg_all │
+│ ---                       ┆ ---                         ┆ ---                     ┆ ---     │
+│ str                       ┆ str                         ┆ str                     ┆ u32     │
+╞═══════════════════════════╪═════════════════════════════╪═════════════════════════╪═════════╡
+│ C:l-glutamate             ┆ glutamic acid               ┆ CHEBI:18237;CHEBI:29985 ┆ 61      │
+│ C:udp-alpha-d-galactose   ┆ UDP-D-galactose             ┆ CHEBI:18307;CHEBI:66914 ┆ 9       │
+│ C:n-carbamoyl-l-aspartate ┆ N-carbamoyl-L-aspartate(2-) ┆ CHEBI:32814             ┆ 4       │
+│ C:l-glutamine             ┆ glutamine                   ┆ CHEBI:28300;CHEBI:58359 ┆ 26      │
+│ C:n-acetyl-l-aspartate    ┆ N-acetyl-L-aspartate(2-)    ┆ CHEBI:16953             ┆ 7       │
+│ C:l-aspartate             ┆ aspartic acid               ┆ CHEBI:22660;CHEBI:29991 ┆ 28      │
+└───────────────────────────┴─────────────────────────────┴─────────────────────────┴─────────┘

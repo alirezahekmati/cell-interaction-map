@@ -1,0 +1,259 @@
+
+===== Human-GEM metabolites =====
+2133 distinct ChEBI ids in Human-GEM
+
+===== UniProt ID mapping =====
+171713 accessions with a gene symbol
+
+===== SIGNOR =====
+all_data_30_09_26.tsv: 43718 rows -> 39309 after keeping human / unspecified species
+SIGNOR evidence rows by class:
+shape: (4, 2)
+┌───────────────────┬───────┐
+│ cls               ┆ count │
+│ ---               ┆ ---   │
+│ str               ┆ u32   │
+╞═══════════════════╪═══════╡
+│ regulation        ┆ 34279 │
+│ binding           ┆ 2767  │
+│ substrate_product ┆ 1941  │
+│ transport         ┆ 322   │
+└───────────────────┴───────┘
+
+===== OmniPath =====
+85217 rows; dropped 4080 that are SIGNOR-only (already loaded directly); 28201 kept
+OmniPath evidence rows: 28394; 1377 records flagged both signs, 1184 of them resolved to one sign by consensus
+
+===== Complex and family membership =====
+782 complexes/families, 3906 membership links; unmatched member ids by prefix: {}
+
+===== Merging =====
+70968 evidence rows -> 52407 merged edges
+
+===== Nodes by kind =====
+shape: (11, 2)
+┌────────────────┬───────┐
+│ kind           ┆ count │
+│ ---            ┆ ---   │
+│ str            ┆ u32   │
+╞════════════════╪═══════╡
+│ protein        ┆ 9677  │
+│ chemical       ┆ 818   │
+│ complex        ┆ 692   │
+│ metabolite     ┆ 531   │
+│ phenotype      ┆ 213   │
+│ mirna          ┆ 136   │
+│ family         ┆ 93    │
+│ stimulus       ┆ 25    │
+│ antibody       ┆ 25    │
+│ fusion_protein ┆ 15    │
+│ ncrna          ┆ 6     │
+└────────────────┴───────┘
+
+===== Edges by class and net sign =====
+shape: (11, 3)
+┌───────────────────┬──────────┬───────┐
+│ cls               ┆ net      ┆ len   │
+│ ---               ┆ ---      ┆ ---   │
+│ str               ┆ str      ┆ u32   │
+╞═══════════════════╪══════════╪═══════╡
+│ binding           ┆ unsigned ┆ 2741  │
+│ membership        ┆ unsigned ┆ 3906  │
+│ regulation        ┆ inhib    ┆ 10570 │
+│ regulation        ┆ mixed    ┆ 600   │
+│ regulation        ┆ stim     ┆ 21230 │
+│ regulation        ┆ unsigned ┆ 11353 │
+│ substrate_product ┆ inhib    ┆ 536   │
+│ substrate_product ┆ mixed    ┆ 36    │
+│ substrate_product ┆ stim     ┆ 1130  │
+│ transport         ┆ inhib    ┆ 45    │
+│ transport         ┆ stim     ┆ 260   │
+└───────────────────┴──────────┴───────┘
+
+===== Metabolite nodes that merged several SIGNOR entries (check these look right) =====
+glucose                      names=['D-glucopyranose', 'glucose', 'α-D-glucose']  chebi=['CHEBI:17234', 'CHEBI:17925', 'CHEBI:4167']  gem=ceglnr
+AMP                          names=['AMP', "adenosine 5'-monophosphate", "adenosine 5'-monophosphate(2-)"]  chebi=['CHEBI:16027', 'CHEBI:456215']  gem=ceglmnrx
+1-phosphatidyl-1D-myo-inositol names=['1-phosphatidyl-1D-myo-inositol', '1-phosphatidyl-1D-myo-inositol(1-)']  chebi=['CHEBI:16749', 'CHEBI:57880']  gem=ceglnr
+ATP                          names=['ATP', 'ATP(4-)']  chebi=['CHEBI:15422', 'CHEBI:30616']  gem=ceglmnrx
+dolichyl beta-D-mannosyl phosphate names=['dolichyl beta-D-mannosyl phosphate', 'dolichyl beta-D-mannosyl phosphate(1-)']  chebi=['CHEBI:17624', 'CHEBI:58211']  gem=
+acyl-CoA                     names=['acyl-CoA', 'acyl-CoA(4-)']  chebi=['CHEBI:17984', 'CHEBI:58342']  gem=cgmx
+NADP(+)                      names=['NADP(+)', 'NADP(3-)']  chebi=['CHEBI:18009', 'CHEBI:58349']  gem=cegilmnrx
+glutamic acid                names=['L-glutamate(1-)', 'glutamic acid']  chebi=['CHEBI:18237', 'CHEBI:29985']  gem=
+1-phosphatidyl-1D-myo-inositol 3-phosphate names=['1-phosphatidyl-1D-myo-inositol 3-phosphate', '1-phosphatidyl-1D-myo-inositol 3-phosphate(3-)']  chebi=['CHEBI:17283', 'CHEBI:58088']  gem=cgnr
+(3S)-3-hydroxy-3-methylglutaryl-CoA names=['(3S)-3-hydroxy-3-methylglutaryl-CoA', '(3S)-3-hydroxy-3-methylglutaryl-CoA(5-)']  chebi=['CHEBI:15467', 'CHEBI:43074']  gem=cmrx
+serotonin                    names=['serotonin', 'serotonin(1+)']  chebi=['CHEBI:28790', 'CHEBI:350546']  gem=ce
+prostaglandin F2alpha        names=['prostaglandin F2alpha', 'prostaglandin F2alpha(1-)']  chebi=['CHEBI:15553', 'CHEBI:57404']  gem=ce
+sphingosine 1-phosphate      names=['sphingosine 1-phosphate', 'sphingosine 1-phosphate(1-)']  chebi=['CHEBI:37550', 'CHEBI:60119']  gem=cenr
+UDP-D-galactose              names=['UDP-D-galactose', 'UDP-alpha-D-galactose(2-)']  chebi=['CHEBI:18307', 'CHEBI:66914']  gem=
+FADH2                        names=['FADH2', 'FADH2(2-)']  chebi=['CHEBI:17877', 'CHEBI:58307']  gem=cmrx
+leukotriene A4               names=['leukotriene A4', 'leukotriene A4(1-)']  chebi=['CHEBI:15651', 'CHEBI:57463']  gem=cenr
+ADP                          names=['ADP', 'ADP(3-)']  chebi=['CHEBI:16761', 'CHEBI:456216']  gem=ceglmnrx
+glutamine                    names=['L-glutamine zwitterion', 'glutamine']  chebi=['CHEBI:28300', 'CHEBI:58359']  gem=
+1-acyl-sn-glycerol 3-phosphate names=['1-acyl-sn-glycerol 3-phosphate', '1-acyl-sn-glycerol 3-phosphate(2-)']  chebi=['CHEBI:16975', 'CHEBI:57970']  gem=cem
+NAD(+)                       names=['NAD(+)', 'NAD(1-)']  chebi=['CHEBI:15846', 'CHEBI:57540']  gem=cemnrx
+L-serine                     names=['L-serine', 'L-serine zwitterion']  chebi=['CHEBI:17115', 'CHEBI:33384']  gem=ceglmrx
+palmitoyl-CoA                names=['palmitoyl-CoA', 'palmitoyl-CoA(4-)']  chebi=['CHEBI:15525', 'CHEBI:57379']  gem=cmrx
+prostaglandin D2             names=['prostaglandin D2', 'prostaglandin D2(1-)']  chebi=['CHEBI:15555', 'CHEBI:57406']  gem=cer
+FAD                          names=['FAD', 'FAD(3-)']  chebi=['CHEBI:16238', 'CHEBI:57692']  gem=cemrx
+1-phosphatidyl-1D-myo-inositol 4,5-bisphosphate names=['1-phosphatidyl-1D-myo-inositol 4,5-bisphosphate', '1-phosphatidyl-1D-myo-inositol 4,5-bisphosphate(5-)']  chebi=['CHEBI:18348', 'CHEBI:58456']  gem=
+
+===== Hubs: regulation edges in and out =====
+
+[ATP] nodes=['C:atp'] edges by class={'regulation': 7, 'substrate_product': 34}
+shape: (7, 7)
+┌───────────┬───────────┬───────┬────────┬─────────┬─────────┬───────────┐
+│ src_label ┆ tgt_label ┆ net   ┆ n_stim ┆ n_inhib ┆ n_pmids ┆ resources │
+│ ---       ┆ ---       ┆ ---   ┆ ---    ┆ ---     ┆ ---     ┆ ---       │
+│ str       ┆ str       ┆ str   ┆ u32    ┆ u32     ┆ u32     ┆ str       │
+╞═══════════╪═══════════╪═══════╪════════╪═════════╪═════════╪═══════════╡
+│ ATP       ┆ PRKAG1    ┆ inhib ┆ 0      ┆ 2       ┆ 2       ┆ SIGNOR    │
+│ STOML2    ┆ ATP       ┆ stim  ┆ 1      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ ATP       ┆ P2RX7     ┆ stim  ┆ 1      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ ATP       ┆ AMPK      ┆ inhib ┆ 0      ┆ 1       ┆ 1       ┆ SIGNOR    │
+│ ATP       ┆ P2RY11    ┆ stim  ┆ 1      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ ATP       ┆ P2RY4     ┆ stim  ┆ 1      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ ATP       ┆ P2RY2     ┆ stim  ┆ 1      ┆ 0       ┆ 1       ┆ SIGNOR    │
+└───────────┴───────────┴───────┴────────┴─────────┴─────────┴───────────┘
+
+[AMP] nodes=['C:amp'] edges by class={'regulation': 2, 'substrate_product': 33, 'binding': 1, 'membership': 1}
+shape: (2, 7)
+┌───────────┬───────────┬───────┬────────┬─────────┬─────────┬───────────┐
+│ src_label ┆ tgt_label ┆ net   ┆ n_stim ┆ n_inhib ┆ n_pmids ┆ resources │
+│ ---       ┆ ---       ┆ ---   ┆ ---    ┆ ---     ┆ ---     ┆ ---       │
+│ str       ┆ str       ┆ str   ┆ u32    ┆ u32     ┆ u32     ┆ str       │
+╞═══════════╪═══════════╪═══════╪════════╪═════════╪═════════╪═══════════╡
+│ glucose   ┆ AMP       ┆ inhib ┆ 0      ┆ 1       ┆ 1       ┆ SIGNOR    │
+│ AMP       ┆ PRPS1     ┆ inhib ┆ 0      ┆ 1       ┆ 1       ┆ SIGNOR    │
+└───────────┴───────────┴───────┴────────┴─────────┴─────────┴───────────┘
+
+[ADP] nodes=['C:adp'] edges by class={'substrate_product': 15, 'regulation': 6}
+shape: (6, 7)
+┌───────────┬───────────┬───────┬────────┬─────────┬─────────┬───────────┐
+│ src_label ┆ tgt_label ┆ net   ┆ n_stim ┆ n_inhib ┆ n_pmids ┆ resources │
+│ ---       ┆ ---       ┆ ---   ┆ ---    ┆ ---     ┆ ---     ┆ ---       │
+│ str       ┆ str       ┆ str   ┆ u32    ┆ u32     ┆ u32     ┆ str       │
+╞═══════════╪═══════════╪═══════╪════════╪═════════╪═════════╪═══════════╡
+│ ADP       ┆ PRPS1     ┆ inhib ┆ 0      ┆ 1       ┆ 1       ┆ SIGNOR    │
+│ ADP       ┆ PRKAG1    ┆ stim  ┆ 1      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ ADP       ┆ P2RY13    ┆ stim  ┆ 1      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ ADP       ┆ P2RY12    ┆ stim  ┆ 1      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ ADP       ┆ P2RY1     ┆ stim  ┆ 1      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ ADP       ┆ AMPK      ┆ stim  ┆ 1      ┆ 0       ┆ 1       ┆ SIGNOR    │
+└───────────┴───────────┴───────┴────────┴─────────┴─────────┴───────────┘
+
+[AMPK] nodes=['SIGNOR-C15'] edges by class={'binding': 7, 'membership': 7, 'regulation': 98}
+shape: (25, 7)
+┌────────────┬───────────┬───────┬────────┬─────────┬─────────┬───────────┐
+│ src_label  ┆ tgt_label ┆ net   ┆ n_stim ┆ n_inhib ┆ n_pmids ┆ resources │
+│ ---        ┆ ---       ┆ ---   ┆ ---    ┆ ---     ┆ ---     ┆ ---       │
+│ str        ┆ str       ┆ str   ┆ u32    ┆ u32     ┆ u32     ┆ str       │
+╞════════════╪═══════════╪═══════╪════════╪═════════╪═════════╪═══════════╡
+│ AMPK       ┆ FOXO3     ┆ stim  ┆ 13     ┆ 0       ┆ 2       ┆ SIGNOR    │
+│ AMPK       ┆ FOXO      ┆ stim  ┆ 8      ┆ 0       ┆ 2       ┆ SIGNOR    │
+│ AMPK       ┆ ULK1      ┆ stim  ┆ 7      ┆ 0       ┆ 3       ┆ SIGNOR    │
+│ AMPK       ┆ MAPT      ┆ inhib ┆ 0      ┆ 6       ┆ 1       ┆ SIGNOR    │
+│ AMPK       ┆ PDHA1     ┆ stim  ┆ 4      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ AMPK       ┆ CTH       ┆ stim  ┆ 4      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ AMPK       ┆ PPARGC1A  ┆ stim  ┆ 4      ┆ 0       ┆ 2       ┆ SIGNOR    │
+│ AMPK       ┆ GLI1      ┆ inhib ┆ 0      ┆ 4       ┆ 2       ┆ SIGNOR    │
+│ STK11      ┆ AMPK      ┆ stim  ┆ 3      ┆ 0       ┆ 2       ┆ SIGNOR    │
+│ AMPK       ┆ CRY1      ┆ inhib ┆ 0      ┆ 3       ┆ 2       ┆ SIGNOR    │
+│ AMPK       ┆ NEDD4L    ┆ stim  ┆ 3      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ AMPK       ┆ NOS3      ┆ mixed ┆ 2      ┆ 1       ┆ 3       ┆ SIGNOR    │
+│ AMPK       ┆ ARMC10    ┆ stim  ┆ 3      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ AMPK       ┆ EPM2A     ┆ stim  ┆ 3      ┆ 0       ┆ 2       ┆ SIGNOR    │
+│ AMPK       ┆ mTORC1    ┆ inhib ┆ 0      ┆ 3       ┆ 3       ┆ SIGNOR    │
+│ AMPK       ┆ HIPK2     ┆ inhib ┆ 0      ┆ 3       ┆ 1       ┆ SIGNOR    │
+│ AMPK       ┆ BAIAP2    ┆ inhib ┆ 0      ┆ 2       ┆ 2       ┆ SIGNOR    │
+│ AMPK       ┆ ACACA     ┆ inhib ┆ 0      ┆ 2       ┆ 2       ┆ SIGNOR    │
+│ AMPK       ┆ HNF4A     ┆ inhib ┆ 0      ┆ 2       ┆ 1       ┆ SIGNOR    │
+│ AMPK       ┆ CFTR      ┆ inhib ┆ 0      ┆ 2       ┆ 1       ┆ SIGNOR    │
+│ AMPK       ┆ VASP      ┆ inhib ┆ 0      ┆ 2       ┆ 2       ┆ SIGNOR    │
+│ AMPK       ┆ HDAC7     ┆ inhib ┆ 0      ┆ 2       ┆ 1       ┆ SIGNOR    │
+│ AMPK       ┆ RAF1      ┆ mixed ┆ 1      ┆ 1       ┆ 2       ┆ SIGNOR    │
+│ Starvation ┆ AMPK      ┆ stim  ┆ 2      ┆ 0       ┆ 2       ┆ SIGNOR    │
+│ AMPK       ┆ TSC1      ┆ stim  ┆ 2      ┆ 0       ┆ 2       ┆ SIGNOR    │
+└────────────┴───────────┴───────┴────────┴─────────┴─────────┴───────────┘
+
+[TSC2] nodes=['P:P49815'] edges by class={'binding': 1, 'regulation': 37, 'membership': 1}
+shape: (25, 7)
+┌───────────────┬───────────┬──────────┬────────┬─────────┬─────────┬──────────────────────────────┐
+│ src_label     ┆ tgt_label ┆ net      ┆ n_stim ┆ n_inhib ┆ n_pmids ┆ resources                    │
+│ ---           ┆ ---       ┆ ---      ┆ ---    ┆ ---     ┆ ---     ┆ ---                          │
+│ str           ┆ str       ┆ str      ┆ u32    ┆ u32     ┆ u32     ┆ str                          │
+╞═══════════════╪═══════════╪══════════╪════════╪═════════╪═════════╪══════════════════════════════╡
+│ AKT2          ┆ TSC2      ┆ inhib    ┆ 0      ┆ 7       ┆ 4       ┆ ACSN;HPRD;PhosphoPoint;ProtM │
+│               ┆           ┆          ┆        ┆         ┆         ┆ apper;Reacto…                │
+│ SGK1          ┆ TSC2      ┆ inhib    ┆ 0      ┆ 3       ┆ 1       ┆ Lit-BM-17;PhosphoSite_ProtMa │
+│               ┆           ┆          ┆        ┆         ┆         ┆ pper;Phospho…                │
+│ DDIT4         ┆ TSC2      ┆ mixed    ┆ 2      ┆ 1       ┆ 2       ┆ ACSN;SIGNOR                  │
+│ PRKCD         ┆ TSC2      ┆ inhib    ┆ 0      ┆ 3       ┆ 1       ┆ PhosphoSite;PhosphoSite_Prot │
+│               ┆           ┆          ┆        ┆         ┆         ┆ Mapper;ProtM…                │
+│ GSK3A         ┆ TSC2      ┆ stim     ┆ 3      ┆ 0       ┆ 3       ┆ SIGNOR;SignaLink3            │
+│ PRKAA2        ┆ TSC2      ┆ stim     ┆ 2      ┆ 0       ┆ 5       ┆ ACSN;ProtMapper;REACH_ProtMa │
+│               ┆           ┆          ┆        ┆         ┆         ┆ pper;SIGNOR;…                │
+│ MYCBP2        ┆ TSC2      ┆ inhib    ┆ 0      ┆ 2       ┆ 3       ┆ HINT;InnateDB;SIGNOR         │
+│ ERK1/2        ┆ TSC2      ┆ inhib    ┆ 0      ┆ 2       ┆ 2       ┆ SIGNOR                       │
+│ MAPK3         ┆ TSC2      ┆ inhib    ┆ 0      ┆ 2       ┆ 5       ┆ ACSN;BEL-Large-Corpus_ProtMa │
+│               ┆           ┆          ┆        ┆         ┆         ┆ pper;HPRD;HP…                │
+│ MAPKAPK2      ┆ TSC2      ┆ inhib    ┆ 0      ┆ 1       ┆ 4       ┆ HPRD;HPRD_KEA;HPRD_MIMP;KEA; │
+│               ┆           ┆          ┆        ┆         ┆         ┆ MIMP;Phospho…                │
+│ PRKAA1        ┆ TSC2      ┆ stim     ┆ 2      ┆ 0       ┆ 11      ┆ ACSN;BioGRID;HINT;PhosphoSit │
+│               ┆           ┆          ┆        ┆         ┆         ┆ e;PhosphoSit…                │
+│ MAPK1         ┆ TSC2      ┆ inhib    ┆ 0      ┆ 2       ┆ 3       ┆ ACSN;BEL-Large-Corpus_ProtMa │
+│               ┆           ┆          ┆        ┆         ┆         ┆ pper;HPRD;HP…                │
+│ CyclinD/CDK4  ┆ TSC2      ┆ stim     ┆ 2      ┆ 0       ┆ 1       ┆ SIGNOR                       │
+│ TSC2          ┆ RHEB      ┆ inhib    ┆ 0      ┆ 2       ┆ 15      ┆ ACSN;ARN;BioGRID;HINT;HPRD;I │
+│               ┆           ┆          ┆        ┆         ┆         ┆ nnateDB;SIGN…                │
+│ SGK3          ┆ TSC2      ┆ stim     ┆ 2      ┆ 0       ┆ 2       ┆ ProtMapper;RLIMS-P_ProtMappe │
+│               ┆           ┆          ┆        ┆         ┆         ┆ r;SIGNOR                     │
+│ CyclinD1/CDK6 ┆ TSC2      ┆ stim     ┆ 2      ┆ 0       ┆ 1       ┆ SIGNOR                       │
+│ RPS6KA1       ┆ TSC2      ┆ inhib    ┆ 0      ┆ 2       ┆ 18      ┆ ACSN;BioGRID;HINT;HPRD;HPRD- │
+│               ┆           ┆          ┆        ┆         ┆         ┆ phos;HPRD_KE…                │
+│ TSC2          ┆ TSC1      ┆ stim     ┆ 2      ┆ 0       ┆ 36      ┆ BioGRID;Cui2007;HINT;HPRD;In │
+│               ┆           ┆          ┆        ┆         ┆         ┆ nateDB;IntAc…                │
+│ UBE3A         ┆ TSC2      ┆ inhib    ┆ 0      ┆ 2       ┆ 2       ┆ BioGRID;HINT;SIGNOR;Wang     │
+│ PRKAB1        ┆ TSC2      ┆ stim     ┆ 1      ┆ 0       ┆ 3       ┆ ACSN;Wang;dbPTM              │
+│ RPS6KA2       ┆ TSC2      ┆ inhib    ┆ 0      ┆ 1       ┆ 1       ┆ ACSN;HPRD_MIMP;KEA;MIMP;Phos │
+│               ┆           ┆          ┆        ┆         ┆         ┆ phoPoint;Pho…                │
+│ CDK6          ┆ TSC2      ┆ unsigned ┆ 0      ┆ 0       ┆ 1       ┆ PhosphoSite;PhosphoSite_Prot │
+│               ┆           ┆          ┆        ┆         ┆         ┆ Mapper;ProtM…                │
+│ ERBB2         ┆ TSC2      ┆ unsigned ┆ 0      ┆ 0       ┆ 1       ┆ KEA;NetworKIN_KEA            │
+│ PRKCA         ┆ TSC2      ┆ unsigned ┆ 0      ┆ 0       ┆ 1       ┆ KEA;NetworKIN_KEA            │
+│ TSC1          ┆ TSC2      ┆ stim     ┆ 1      ┆ 0       ┆ 34      ┆ BioGRID;HINT;HPRD;InnateDB;I │
+│               ┆           ┆          ┆        ┆         ┆         ┆ ntAct;Lit-BM…                │
+└───────────────┴───────────┴──────────┴────────┴─────────┴─────────┴──────────────────────────────┘
+
+[TSC] nodes=['SIGNOR-C101'] edges by class={'membership': 2, 'regulation': 6, 'binding': 2}
+shape: (6, 7)
+┌───────────┬───────────┬───────┬────────┬─────────┬─────────┬───────────┐
+│ src_label ┆ tgt_label ┆ net   ┆ n_stim ┆ n_inhib ┆ n_pmids ┆ resources │
+│ ---       ┆ ---       ┆ ---   ┆ ---    ┆ ---     ┆ ---     ┆ ---       │
+│ str       ┆ str       ┆ str   ┆ u32    ┆ u32     ┆ u32     ┆ str       │
+╞═══════════╪═══════════╪═══════╪════════╪═════════╪═════════╪═══════════╡
+│ TSC       ┆ MTOR      ┆ inhib ┆ 0      ┆ 1       ┆ 1       ┆ SIGNOR    │
+│ TSC       ┆ mTORC1    ┆ inhib ┆ 0      ┆ 1       ┆ 1       ┆ SIGNOR    │
+│ WDR45B    ┆ TSC       ┆ stim  ┆ 1      ┆ 0       ┆ 1       ┆ SIGNOR    │
+│ RPS6KA1   ┆ TSC       ┆ inhib ┆ 0      ┆ 1       ┆ 1       ┆ SIGNOR    │
+│ TSC       ┆ RHEB      ┆ inhib ┆ 0      ┆ 1       ┆ 1       ┆ SIGNOR    │
+│ RPS6K     ┆ TSC       ┆ inhib ┆ 0      ┆ 1       ┆ 1       ┆ SIGNOR    │
+└───────────┴───────────┴───────┴────────┴─────────┴─────────┴───────────┘
+
+===== Check against the mTOR figure (expected sign from the figure / textbook biology) =====
+OK        AKT/AKT1 -> TSC2/TSC               expected inhib  found inhib    stim=0 inhib=8  [AKT1>TSC2, AKT2>TSC2]
+OK        MAPK1/MAPK3 -> TSC2/TSC            expected inhib  found inhib    stim=0 inhib=6  [ERK1/2>TSC2, MAPK1>TSC2, MAPK3>TSC2]
+OK        RPS6KA1/RPS6KA3 -> TSC2/TSC        expected inhib  found inhib    stim=0 inhib=4  [RPS6KA1>TSC, RPS6KA1>TSC2, RPS6KA3>TSC2]
+OK        IKBKB -> TSC1/TSC2                 expected inhib  found inhib    stim=0 inhib=5  [IKBKB>TSC1]
+OK        AMPK/PRKAA1 -> TSC2/TSC            expected stim   found stim     stim=5 inhib=0  [AMPK>TSC2, PRKAA1>TSC2, PRKAA2>TSC2]
+OK        STK11 -> AMPK/PRKAA1               expected stim   found stim     stim=9 inhib=0  [STK11>AMPK, STK11>PRKAA1, STK11>PRKAA2]
+MIXED     DDIT4 -> TSC2/TSC                  expected stim   found mixed    stim=2 inhib=1  [DDIT4>TSC2]
+OK        PDPK1 -> AKT/AKT1                  expected stim   found stim     stim=18 inhib=0  [PDPK1>AKT, PDPK1>AKT1, PDPK1>AKT2, PDPK1>AKT3]
+OK        mTORC2 -> AKT/AKT1                 expected stim   found stim     stim=10 inhib=0  [mTORC2>AKT, mTORC2>AKT1]
+OK        TSC2/TSC -> RHEB                   expected inhib  found inhib    stim=0 inhib=3  [TSC2>RHEB, TSC>RHEB]
+OK        RHEB -> mTORC1/MTOR                expected stim   found stim     stim=4 inhib=0  [RHEB>MTOR, RHEB>mTORC1]
+OK        AMPK/PRKAA1 -> RPTOR/mTORC1        expected inhib  found inhib    stim=0 inhib=8  [AMPK>MTOR, AMPK>mTORC1, PRKAA1>MTOR, PRKAA1>RPTOR]
+MISS      AMP -> AMPK/PRKAG1                 expected stim
+OK        ADP -> AMPK/PRKAG1                 expected stim   found stim     stim=2 inhib=0  [ADP>AMPK, ADP>PRKAG1]
+OK        ATP -> AMPK/PRKAG1                 expected inhib  found inhib    stim=0 inhib=3  [ATP>AMPK, ATP>PRKAG1]
+
+Wrote nodes/edges/evidence parquet to data/processed

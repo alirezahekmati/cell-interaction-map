@@ -1,0 +1,120 @@
+== AMP/ADP/ATP evidence outside substrate_product ==
+shape: (18, 7)
+┌───────────┬───────────┬────────────┬──────┬─────────────────────┬─────────────────────────┬──────────────────┐
+│ src_label ┆ tgt_label ┆ cls        ┆ sign ┆ mechanism           ┆ effect                  ┆ resource         │
+│ ---       ┆ ---       ┆ ---        ┆ ---  ┆ ---                 ┆ ---                     ┆ ---              │
+│ str       ┆ str       ┆ str        ┆ i8   ┆ str                 ┆ str                     ┆ str              │
+╞═══════════╪═══════════╪════════════╪══════╪═════════════════════╪═════════════════════════╪══════════════════╡
+│ AMP       ┆ ETF       ┆ binding    ┆ 0    ┆ binding             ┆ form complex            ┆ SIGNOR           │
+│ ETF       ┆ AMP       ┆ membership ┆ 0    ┆ membership          ┆                         ┆ SIGNOR-complexes │
+│ ADP       ┆ AMPK      ┆ regulation ┆ 1    ┆ chemical activation ┆ up-regulates            ┆ SIGNOR           │
+│ ADP       ┆ P2RY1     ┆ regulation ┆ 1    ┆ chemical activation ┆ up-regulates activity   ┆ SIGNOR           │
+│ ADP       ┆ P2RY12    ┆ regulation ┆ 1    ┆ chemical activation ┆ up-regulates activity   ┆ SIGNOR           │
+│ ADP       ┆ P2RY13    ┆ regulation ┆ 1    ┆ chemical activation ┆ up-regulates activity   ┆ SIGNOR           │
+│ ADP       ┆ PRKAG1    ┆ regulation ┆ 1    ┆ chemical activation ┆ up-regulates            ┆ SIGNOR           │
+│ ADP       ┆ PRPS1     ┆ regulation ┆ -1   ┆ chemical inhibition ┆ down-regulates activity ┆ SIGNOR           │
+│ AMP       ┆ PRPS1     ┆ regulation ┆ -1   ┆ chemical inhibition ┆ down-regulates activity ┆ SIGNOR           │
+│ ATP       ┆ AMPK      ┆ regulation ┆ -1   ┆ chemical inhibition ┆ down-regulates          ┆ SIGNOR           │
+│ ATP       ┆ P2RX7     ┆ regulation ┆ 1    ┆ chemical activation ┆ up-regulates            ┆ SIGNOR           │
+│ ATP       ┆ P2RY11    ┆ regulation ┆ 1    ┆ chemical activation ┆ up-regulates activity   ┆ SIGNOR           │
+│ ATP       ┆ P2RY2     ┆ regulation ┆ 1    ┆ chemical activation ┆ up-regulates activity   ┆ SIGNOR           │
+│ ATP       ┆ P2RY4     ┆ regulation ┆ 1    ┆ chemical activation ┆ up-regulates activity   ┆ SIGNOR           │
+│ ATP       ┆ PRKAG1    ┆ regulation ┆ -1   ┆ chemical inhibition ┆ down-regulates          ┆ SIGNOR           │
+│ ATP       ┆ PRKAG1    ┆ regulation ┆ -1   ┆ chemical inhibition ┆ down-regulates          ┆ SIGNOR           │
+│ STOML2    ┆ ATP       ┆ regulation ┆ 1    ┆                     ┆ up-regulates quantity   ┆ SIGNOR           │
+│ glucose   ┆ AMP       ┆ regulation ┆ -1   ┆                     ┆ down-regulates          ┆ SIGNOR           │
+└───────────┴───────────┴────────────┴──────┴─────────────────────┴─────────────────────────┴──────────────────┘
+
+== raw SIGNOR: AMP -> AMPK subunits / MLXIPL (with species) ==
+shape: (6, 7)
+┌─────────┬─────────┬─────────────────────────┬─────────────────────┬────────┬─────────────┬──────────┐
+│ ENTITYA ┆ ENTITYB ┆ EFFECT                  ┆ MECHANISM           ┆ TAX_ID ┆ CELL_DATA   ┆ PMID     │
+│ ---     ┆ ---     ┆ ---                     ┆ ---                 ┆ ---    ┆ ---         ┆ ---      │
+│ str     ┆ str     ┆ str                     ┆ str                 ┆ str    ┆ str         ┆ str      │
+╞═════════╪═════════╪═════════════════════════╪═════════════════════╪════════╪═════════════╪══════════╡
+│ AMPK    ┆ AMPK    ┆ unknown                 ┆ phosphorylation     ┆ 9606   ┆ BTO:0000007 ┆ 11171104 │
+│ AMPK    ┆ MLXIPL  ┆ down-regulates          ┆ phosphorylation     ┆ 10116  ┆ null        ┆ 11724780 │
+│ AMP     ┆ MLXIPL  ┆ down-regulates activity ┆ chemical inhibition ┆ 10116  ┆ null        ┆ 26984404 │
+│ AMPK    ┆ MLXIPL  ┆ down-regulates          ┆ phosphorylation     ┆ 10116  ┆ null        ┆ 21892142 │
+│ AMPK    ┆ AMPK    ┆ up-regulates activity   ┆ phosphorylation     ┆ 9606   ┆ BTO:0000007 ┆ 17728241 │
+│ AMPK    ┆ PRKAA1  ┆ down-regulates activity ┆ phosphorylation     ┆ -1     ┆ null        ┆ 17023420 │
+└─────────┴─────────┴─────────────────────────┴─────────────────────┴────────┴─────────────┴──────────┘
+
+== raw SIGNOR: TAX_ID of all rows with AMP/ADP/ATP as regulator ==
+shape: (4, 2)
+┌────────┬─────┐
+│ TAX_ID ┆ len │
+│ ---    ┆ --- │
+│ str    ┆ u32 │
+╞════════╪═════╡
+│ 9606   ┆ 21  │
+│ null   ┆ 3   │
+│ -1     ┆ 2   │
+│ 10116  ┆ 1   │
+└────────┴─────┘
+
+== possible leftover duplicates among metabolites ==
+shape: (26, 4)
+┌────────────────────────────────────┬──────────────────────────────────┬─────────────────────────┬─────────┐
+│ key                                ┆ label                            ┆ chebi                   ┆ deg_all │
+│ ---                                ┆ ---                              ┆ ---                     ┆ ---     │
+│ str                                ┆ str                              ┆ str                     ┆ u32     │
+╞════════════════════════════════════╪══════════════════════════════════╪═════════════════════════╪═════════╡
+│ C:d-glyceraldehyde                 ┆ D-glyceraldehyde                 ┆ CHEBI:17378             ┆ 6       │
+│ C:d-glyceraldehyde 3-phosphate     ┆ D-glyceraldehyde 3-phosphate(2-) ┆ CHEBI:59776             ┆ 20      │
+│ C:fad                              ┆ FAD                              ┆ CHEBI:16238;CHEBI:57692 ┆ 8       │
+│ C:fadh2                            ┆ FADH2                            ┆ CHEBI:17877;CHEBI:58307 ┆ 6       │
+│ C:l-aspartate                      ┆ L-aspartate(1-)                  ┆ CHEBI:29991             ┆ 23      │
+│ C:l-glutamate                      ┆ L-glutamate(1-)                  ┆ CHEBI:29985             ┆ 22      │
+│ C:l-glutamine                      ┆ L-glutamine zwitterion           ┆ CHEBI:58359             ┆ 22      │
+│ C:n-acetyl-l-aspartate             ┆ N-acetyl-L-aspartate(2-)         ┆ CHEBI:16953             ┆ 7       │
+│ C:n-carbamoyl-l-aspartate          ┆ N-carbamoyl-L-aspartate(2-)      ┆ CHEBI:32814             ┆ 4       │
+│ C:nad                              ┆ NAD(+)                           ┆ CHEBI:15846;CHEBI:57540 ┆ 14      │
+│ C:nadh                             ┆ NADH                             ┆ CHEBI:16908;CHEBI:57945 ┆ 12      │
+│ C:nadp                             ┆ NADP(+)                          ┆ CHEBI:18009;CHEBI:58349 ┆ 12      │
+│ C:nadph                            ┆ NADPH(4-)                        ┆ CHEBI:57783             ┆ 13      │
+│ C:pip3                             ┆ PIP3                             ┆ CHEBI:16618             ┆ 25      │
+│ C:pipp                             ┆ PIPP                             ┆                         ┆ 2       │
+│ C:udp                              ┆ UDP(3-)                          ┆ CHEBI:58223             ┆ 7       │
+│ C:udp-d-galactose                  ┆ UDP-D-galactose                  ┆ CHEBI:18307             ┆ 5       │
+│ C:udp-alpha-d-glucose              ┆ UDP-D-glucose                    ┆ CHEBI:18066;CHEBI:58885 ┆ 13      │
+│ C:udp-n-acetyl-alpha-d-glucosamine ┆ UDP-N-acetyl-alpha-D-glucosamine ┆ CHEBI:16264;CHEBI:57705 ┆ 4       │
+│ C:udp-alpha-d-galactose            ┆ UDP-alpha-D-galactose(2-)        ┆ CHEBI:66914             ┆ 4       │
+│ C:aspartic acid                    ┆ aspartic acid                    ┆ CHEBI:22660             ┆ 5       │
+│ C:coenzyme a                       ┆ coenzyme A(4-)                   ┆ CHEBI:57287             ┆ 30      │
+│ C:coenzyme q10                     ┆ coenzyme Q10                     ┆ CHEBI:46245             ┆ 9       │
+│ C:glutamic acid                    ┆ glutamic acid                    ┆ CHEBI:18237             ┆ 41      │
+│ C:glutamine                        ┆ glutamine                        ┆ CHEBI:28300             ┆ 8       │
+│ C:β-d-fructose 6-phosphate         ┆ β-D-fructose 6-phosphate         ┆ CHEBI:57634             ┆ 17      │
+└────────────────────────────────────┴──────────────────────────────────┴─────────────────────────┴─────────┘
+
+== UniProt subcellular location file ==
+['Entry', 'Gene Names (primary)', 'Subcellular location [CC]'] 20263
+17301 of 20263 entries have location text; 1992 of 2137 unplaced proteins are covered
+shape: (20, 4)
+┌─────────┬─────────┬─────────────────┬───────────────────────────────────────────────────────────────┐
+│ label   ┆ deg_all ┆ region          ┆ loc                                                           │
+│ ---     ┆ ---     ┆ ---             ┆ ---                                                           │
+│ str     ┆ u32     ┆ str             ┆ str                                                           │
+╞═════════╪═════════╪═════════════════╪═══════════════════════════════════════════════════════════════╡
+│ CSNK2A2 ┆ 240     ┆ nucleus         ┆ SUBCELLULAR LOCATION: Nucleus {ECO:0000250|UniProtKB:O54833}… │
+│ PLK1    ┆ 194     ┆ nucleus         ┆ SUBCELLULAR LOCATION: Nucleus. Chromosome, centromere, kinet… │
+│ GNAO1   ┆ 171     ┆ plasma_membrane ┆ SUBCELLULAR LOCATION: Cell membrane {ECO:0000269|PubMed:3468… │
+│ PPP2CA  ┆ 168     ┆ nucleus         ┆ SUBCELLULAR LOCATION: Cytoplasm {ECO:0000269|PubMed:16541025… │
+│ GNA15   ┆ 133     ┆ plasma_membrane ┆ null                                                          │
+│ GNA14   ┆ 104     ┆ plasma_membrane ┆ null                                                          │
+│ JAK1    ┆ 89      ┆ cytosol         ┆ SUBCELLULAR LOCATION: Endomembrane system; Peripheral membra… │
+│ LRP6    ┆ 86      ┆ nucleus         ┆ SUBCELLULAR LOCATION: Cell membrane {ECO:0000269|PubMed:2137… │
+│ TNF     ┆ 84      ┆ nucleus         ┆ SUBCELLULAR LOCATION: Cell membrane {ECO:0000269|PubMed:1682… │
+│ ADRA2A  ┆ 76      ┆ cytosol         ┆ SUBCELLULAR LOCATION: Cell membrane {ECO:0000269|PubMed:2310… │
+│ TWIST1  ┆ 69      ┆ nucleus         ┆ SUBCELLULAR LOCATION: Nucleus.                                │
+│ ROCK1   ┆ 69      ┆ cytosol         ┆ SUBCELLULAR LOCATION: Cytoplasm {ECO:0000269|PubMed:8617235}… │
+│ MTNR1A  ┆ 63      ┆ cytosol         ┆ SUBCELLULAR LOCATION: Cell membrane; Multi-pass membrane pro… │
+│ FGFR4   ┆ 57      ┆ plasma_membrane ┆ SUBCELLULAR LOCATION: Cell membrane; Single-pass type I memb… │
+│ FN1     ┆ 54      ┆ plasma_membrane ┆ SUBCELLULAR LOCATION: Secreted, extracellular space, extrace… │
+│ H4C1    ┆ 53      ┆ nucleus         ┆ SUBCELLULAR LOCATION: Nucleus {ECO:0000250|UniProtKB:P62806}… │
+│ ACTB    ┆ 51      ┆ cytosol         ┆ SUBCELLULAR LOCATION: Cytoplasm, cytoskeleton {ECO:0000269|P… │
+│ CXCR4   ┆ 51      ┆ cytosol         ┆ SUBCELLULAR LOCATION: Cell membrane {ECO:0000269|PubMed:1045… │
+│ F2R     ┆ 51      ┆ cytosol         ┆ SUBCELLULAR LOCATION: Cell membrane {ECO:0000250|UniProtKB:P… │
+│ PRKCG   ┆ 51      ┆ cytosol         ┆ SUBCELLULAR LOCATION: Cytoplasm {ECO:0000250|UniProtKB:P6331… │
+└─────────┴─────────┴─────────────────┴───────────────────────────────────────────────────────────────┘

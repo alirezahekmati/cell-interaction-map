@@ -1,0 +1,12 @@
+[project]
+name = "3d-biology-space"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "omnipath>=1.0.12",
+    "pandas>=3.0.6",
+    "polars>=1.44.2",
+    "pyarrow>=25.0.1",
+    "python-igraph>=1.0.0",
+]

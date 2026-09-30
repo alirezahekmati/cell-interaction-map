@@ -1,0 +1,76 @@
+/home/bio/projects/3d-biology-space/scripts/07_export.py:88: DeprecationWarning: `is_in` with a collection of the same datatype is ambiguous and deprecated.
+Please use `implode` to return to previous behavior.
+
+See https://github.com/pola-rs/polars/issues/22149 for more information.
+  assert ed.filter(~pl.col("src").is_in(known) | ~pl.col("tgt").is_in(known)).height == 0, "edge endpoint missing"
+
+===== Files (bytes raw / gzip) =====
+  edge_details.json     4,293,752 /    649,754
+  edges.bin             1,048,140 /    391,327
+  meta.json                 1,015 /        464
+  nodes.json            1,710,575 /    343,716
+  regions.json              1,843 /        629
+
+===== Round trip: edges.bin vs parquet =====
+  regulation         file  43753  parquet  43753
+  binding            file   2741  parquet   2741
+  membership         file   3906  parquet   3906
+  substrate_product  file   1702  parquet   1702
+  transport          file    305  parquet    305
+  edges with both endpoints visible by default: 50433 of 52407
+
+===== Hidden by default =====
+  chemical (h=1): 818   noise (h=2): 7
+shape: (7, 3)
+┌─────────────────────┬────────────┬─────┐
+│ l                   ┆ t          ┆ d   │
+│ ---                 ┆ ---        ┆ --- │
+│ str                 ┆ str        ┆ i64 │
+╞═════════════════════╪════════════╪═════╡
+│ calcium(2+)         ┆ metabolite ┆ 107 │
+│ sodium(1+)          ┆ metabolite ┆ 33  │
+│ chloride            ┆ metabolite ┆ 24  │
+│ messenger RNA       ┆ metabolite ┆ 24  │
+│ potassium(1+)       ┆ metabolite ┆ 21  │
+│ iron-sulfur cluster ┆ metabolite ┆ 18  │
+│ hydron              ┆ metabolite ┆ 17  │
+└─────────────────────┴────────────┴─────┘
+
+===== Label cleaning =====
+  120 labels changed; sample:
+    'biliverdin(2-)' -> 'biliverdin'
+    'carbamoyl phosphate(2-)' -> 'carbamoyl phosphate'
+    '(6S)-5-methyltetrahydrofolate(2-)' -> '(6S)-5-methyltetrahydrofolate'
+    'D-xylulose 5-phosphate(2-)' -> 'D-xylulose 5-phosphate'
+    'L-asparagine zwitterion' -> 'L-asparagine'
+    'glutamic acid' -> 'L-glutamate'
+    '10-formyltetrahydrofolate(2-)' -> '10-formyltetrahydrofolate'
+    '5-amino-1-(5-phosphonato-D-ribosyl)imidazolium-4-carboxylate(2-)' -> '5-amino-1-(5-phosphonato-D-ribosyl)imidazolium-4-carboxylate'
+    'dTMP(2-)' -> 'dTMP'
+    'Ac-Asp-Glu(3-)' -> 'Ac-Asp-Glu'
+    'O-phosphonato-L-serine(2-)' -> 'O-phosphonato-L-serine'
+    'L-homocysteine zwitterion' -> 'L-homocysteine'
+  duplicate cleaned metabolite labels: none
+
+===== Top visible metabolites by degree =====
+shape: (12, 3)
+┌──────────────────┬───────────────┬─────┐
+│ l                ┆ r             ┆ d   │
+│ ---              ┆ ---           ┆ --- │
+│ str              ┆ str           ┆ i64 │
+╞══════════════════╪═══════════════╪═════╡
+│ L-glutamate      ┆ cytosol       ┆ 61  │
+│ 2-oxoglutarate   ┆ nucleus       ┆ 42  │
+│ ATP              ┆ cytosol       ┆ 41  │
+│ AMP              ┆ cytosol       ┆ 37  │
+│ glucose          ┆ cytosol       ┆ 30  │
+│ coenzyme A       ┆ cytosol       ┆ 30  │
+│ acetyl-CoA       ┆ mitochondrion ┆ 29  │
+│ L-aspartate      ┆ cytosol       ┆ 28  │
+│ L-glutamine      ┆ cytosol       ┆ 26  │
+│ 3',5'-cyclic AMP ┆ cytosol       ┆ 26  │
+│ PIP3             ┆ cytosol       ┆ 25  │
+│ serotonin        ┆ cytosol       ┆ 24  │
+└──────────────────┴───────────────┴─────┘
+
+Wrote data/export/

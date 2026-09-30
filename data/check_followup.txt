@@ -1,0 +1,64 @@
+== possible duplicate metabolite/chemical nodes ==
+shape: (29, 5)
+┌─────────────────────────────────────────────────┬───────────────────────────────────────────────────┬────────────┬──────────────────────────┬─────────┐
+│ key                                             ┆ label                                             ┆ kind       ┆ chebi                    ┆ deg_all │
+│ ---                                             ┆ ---                                               ┆ ---        ┆ ---                      ┆ ---     │
+│ str                                             ┆ str                                               ┆ str        ┆ str                      ┆ u32     │
+╞═════════════════════════════════════════════════╪═══════════════════════════════════════════════════╪════════════╪══════════════════════════╪═════════╡
+│ C:2'-deoxyadenosine                             ┆ 2'-deoxyadenosine                                 ┆ metabolite ┆ CHEBI:17256              ┆ 3       │
+│ C:2'-deoxyadenosine 5'-monophosphate            ┆ 2'-deoxyadenosine 5'-monophosphate(2-)            ┆ metabolite ┆ CHEBI:58245              ┆ 3       │
+│ C:2'-deoxyguanosine                             ┆ 2'-deoxyguanosine                                 ┆ metabolite ┆ CHEBI:17172              ┆ 5       │
+│ C:2'-deoxyguanosine 5'-monophosphate            ┆ 2'-deoxyguanosine 5'-monophosphate(2-)            ┆ metabolite ┆ CHEBI:57673              ┆ 3       │
+│ C:2-ammonio-2-deoxy-d-glucopyranose 6-phosphate ┆ 2-ammonio-2-deoxy-D-glucopyranose 6-phosphate(1-) ┆ metabolite ┆ CHEBI:58725              ┆ 3       │
+│ C:5'-s-methyl-5'-thioadenosine                  ┆ 5'-S-methyl-5'-thioadenosine                      ┆ metabolite ┆ CHEBI:17509              ┆ 1       │
+│ C:adp                                           ┆ ADP                                               ┆ metabolite ┆ CHEBI:16761;CHEBI:456216 ┆ 21      │
+│ C:adp-d-ribose                                  ┆ ADP-D-ribose(2-)                                  ┆ metabolite ┆ CHEBI:57967              ┆ 2       │
+│ C:amp                                           ┆ AMP                                               ┆ metabolite ┆ CHEBI:456215             ┆ 36      │
+│ C:atp                                           ┆ ATP                                               ┆ metabolite ┆ CHEBI:15422;CHEBI:30616  ┆ 41      │
+│ C:d-glucopyranose                               ┆ D-glucopyranose                                   ┆ metabolite ┆ CHEBI:4167               ┆ 4       │
+│ C:nad                                           ┆ NAD(+)                                            ┆ metabolite ┆ CHEBI:15846;CHEBI:57540  ┆ 14      │
+│ C:nadh                                          ┆ NADH                                              ┆ metabolite ┆ CHEBI:16908;CHEBI:57945  ┆ 12      │
+│ C:nadp                                          ┆ NADP(+)                                           ┆ metabolite ┆ CHEBI:18009;CHEBI:58349  ┆ 12      │
+│ C:nadph                                         ┆ NADPH(4-)                                         ┆ metabolite ┆ CHEBI:57783              ┆ 13      │
+│ C:udp-d-glucose                                 ┆ UDP-D-glucose                                     ┆ metabolite ┆ CHEBI:18066              ┆ 1       │
+│ C:udp-alpha-d-glucose                           ┆ UDP-alpha-D-glucose(2-)                           ┆ chemical   ┆ CHEBI:58885              ┆ 12      │
+│ C:adenosine                                     ┆ adenosine                                         ┆ metabolite ┆ CHEBI:16335              ┆ 16      │
+│ C:adenosine 5'-monophosphate                    ┆ adenosine 5'-monophosphate                        ┆ metabolite ┆ CHEBI:16027              ┆ 3       │
+│ C:alpha-d-glucose 1-phosphate                   ┆ alpha-D-glucose 1-phosphate(2-)                   ┆ metabolite ┆ CHEBI:58601              ┆ 13      │
+│ C:alpha-d-glucose 6-phosphate                   ┆ alpha-D-glucose 6-phosphate(2-)                   ┆ metabolite ┆ CHEBI:58225              ┆ 20      │
+│ C:copper                                        ┆ copper(1+)                                        ┆ metabolite ┆ CHEBI:49552              ┆ 5       │
+│ C:glucose                                       ┆ glucose                                           ┆ metabolite ┆ CHEBI:17234;CHEBI:17925  ┆ 26      │
+│ C:guanosine                                     ┆ guanosine                                         ┆ metabolite ┆ CHEBI:16750              ┆ 2       │
+│ C:guanosine 5'-monophosphate                    ┆ guanosine 5'-monophosphate                        ┆ metabolite ┆ CHEBI:17345;CHEBI:58115  ┆ 8       │
+│ C:guanosine 5'-monophosphate(1-) residue        ┆ guanosine 5'-monophosphate(1-) residue            ┆ metabolite ┆ CHEBI:74269              ┆ 1       │
+│ C:iron                                          ┆ iron(2+)                                          ┆ metabolite ┆ CHEBI:29033;CHEBI:29034  ┆ 4       │
+│ C:iron-sulfur cluster                           ┆ iron-sulfur cluster                               ┆ metabolite ┆ CHEBI:30408              ┆ 18      │
+│ C:zinc                                          ┆ zinc(2+)                                          ┆ metabolite ┆ CHEBI:29105              ┆ 12      │
+└─────────────────────────────────────────────────┴───────────────────────────────────────────────────┴────────────┴──────────────────────────┴─────────┘
+
+== ['TSC2', 'TSC'] -> ['RHEB'] ==
+shape: (4, 8)
+┌─────────────┬──────────┬────────────┬──────┬───────────────────────────┬─────────────────────────┬─────────────────────────────────────────────────┬─────────────────────────────────────────────────┐
+│ src         ┆ tgt      ┆ cls        ┆ sign ┆ mechanism                 ┆ effect                  ┆ resource                                        ┆ pmids                                           │
+│ ---         ┆ ---      ┆ ---        ┆ ---  ┆ ---                       ┆ ---                     ┆ ---                                             ┆ ---                                             │
+│ str         ┆ str      ┆ str        ┆ i8   ┆ str                       ┆ str                     ┆ str                                             ┆ str                                             │
+╞═════════════╪══════════╪════════════╪══════╪═══════════════════════════╪═════════════════════════╪═════════════════════════════════════════════════╪═════════════════════════════════════════════════╡
+│ SIGNOR-C101 ┆ P:Q15382 ┆ regulation ┆ -1   ┆ gtpase-activating protein ┆ down-regulates activity ┆ SIGNOR                                          ┆ 15340059                                        │
+│ P:P49815    ┆ P:Q15382 ┆ regulation ┆ -1   ┆ gtpase-activating protein ┆ down-regulates activity ┆ SIGNOR                                          ┆ 15340059                                        │
+│ P:P49815    ┆ P:Q15382 ┆ regulation ┆ -1   ┆                           ┆ inhibition              ┆ Wang;ARN;HPRD;HINT;SignaLink3;BioGRID;ACSN;Inna ┆ 12771962;12820960;12842888;12869586;12906785;15 │
+│             ┆          ┆            ┆      ┆                           ┆                         ┆ teD…                                            ┆ 340…                                            │
+│ P:P49815    ┆ P:Q15382 ┆ regulation ┆ 1    ┆                           ┆ stimulation             ┆ Wang;ARN;HPRD;HINT;SignaLink3;BioGRID;ACSN;Inna ┆ 12771962;12820960;12842888;12869586;12906785;15 │
+│             ┆          ┆            ┆      ┆                           ┆                         ┆ teD…                                            ┆ 340…                                            │
+└─────────────┴──────────┴────────────┴──────┴───────────────────────────┴─────────────────────────┴─────────────────────────────────────────────────┴─────────────────────────────────────────────────┘
+
+== ['DDIT4'] -> ['TSC2', 'TSC'] ==
+shape: (3, 8)
+┌──────────┬──────────┬────────────┬──────┬───────────┬───────────────────────┬──────────┬───────────────────┐
+│ src      ┆ tgt      ┆ cls        ┆ sign ┆ mechanism ┆ effect                ┆ resource ┆ pmids             │
+│ ---      ┆ ---      ┆ ---        ┆ ---  ┆ ---       ┆ ---                   ┆ ---      ┆ ---               │
+│ str      ┆ str      ┆ str        ┆ i8   ┆ str       ┆ str                   ┆ str      ┆ str               │
+╞══════════╪══════════╪════════════╪══════╪═══════════╪═══════════════════════╪══════════╪═══════════════════╡
+│ P:Q9NX09 ┆ P:P49815 ┆ regulation ┆ -1   ┆           ┆ inhibition            ┆ ACSN     ┆ 18198340;21460850 │
+│ P:Q9NX09 ┆ P:P49815 ┆ regulation ┆ 1    ┆ binding   ┆ up-regulates activity ┆ SIGNOR   ┆ 21460850          │
+│ P:Q9NX09 ┆ P:P49815 ┆ regulation ┆ 1    ┆           ┆ stimulation           ┆ ACSN     ┆ 18198340;21460850 │
+└──────────┴──────────┴────────────┴──────┴───────────┴───────────────────────┴──────────┴───────────────────┘

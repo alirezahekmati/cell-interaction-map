@@ -1,0 +1,165 @@
+### 04 merges (AMP should hold both names; iron should be gone)
+AMP                          names=['AMP', "adenosine 5'-monophosphate", "adenosine 5'-monophosphate(2-)"]  chebi=['CHEBI:16027', 'CHEBI:456215']  gem=ceglmnrx
+glucose                      names=['D-glucopyranose', 'glucose', 'α-D-glucose']  chebi=['CHEBI:17234', 'CHEBI:17925', 'CHEBI:4167']  gem=ceglnr
+
+### 04 AMP hub
+[AMP] nodes=['C:amp'] edges by class={'regulation': 2, 'membership': 1, 'binding': 1, 'substrate_product': 33}
+shape: (2, 7)
+┌───────────┬───────────┬───────┬────────┬─────────┬─────────┬───────────┐
+│ src_label ┆ tgt_label ┆ net   ┆ n_stim ┆ n_inhib ┆ n_pmids ┆ resources │
+│ ---       ┆ ---       ┆ ---   ┆ ---    ┆ ---     ┆ ---     ┆ ---       │
+│ str       ┆ str       ┆ str   ┆ u32    ┆ u32     ┆ u32     ┆ str       │
+╞═══════════╪═══════════╪═══════╪════════╪═════════╪═════════╪═══════════╡
+│ glucose   ┆ AMP       ┆ inhib ┆ 0      ┆ 1       ┆ 1       ┆ SIGNOR    │
+│ AMP       ┆ PRPS1     ┆ inhib ┆ 0      ┆ 1       ┆ 1       ┆ SIGNOR    │
+└───────────┴───────────┴───────┴────────┴─────────┴─────────┴───────────┘
+
+[ADP] nodes=['C:adp'] edges by class={'substrate_product': 15, 'regulation': 6}
+shape: (6, 7)
+┌───────────┬───────────┬───────┬────────┬─────────┬─────────┬───────────┐
+│ src_label ┆ tgt_label ┆ net   ┆ n_stim ┆ n_inhib ┆ n_pmids ┆ resources │
+│ ---       ┆ ---       ┆ ---   ┆ ---    ┆ ---     ┆ ---     ┆ ---       │
+│ str       ┆ str       ┆ str   ┆ u32    ┆ u32     ┆ u32     ┆ str       │
+
+===== Check against the mTOR figure (expected sign from the figure / textbook biology) =====
+OK        AKT/AKT1 -> TSC2/TSC               expected inhib  found inhib    stim=0 inhib=8  [AKT1>TSC2, AKT2>TSC2]
+OK        MAPK1/MAPK3 -> TSC2/TSC            expected inhib  found inhib    stim=0 inhib=6  [ERK1/2>TSC2, MAPK1>TSC2, MAPK3>TSC2]
+OK        RPS6KA1/RPS6KA3 -> TSC2/TSC        expected inhib  found inhib    stim=0 inhib=4  [RPS6KA1>TSC, RPS6KA1>TSC2, RPS6KA3>TSC2]
+OK        IKBKB -> TSC1/TSC2                 expected inhib  found inhib    stim=0 inhib=5  [IKBKB>TSC1]
+OK        AMPK/PRKAA1 -> TSC2/TSC            expected stim   found stim     stim=5 inhib=0  [AMPK>TSC2, PRKAA1>TSC2, PRKAA2>TSC2]
+OK        STK11 -> AMPK/PRKAA1               expected stim   found stim     stim=9 inhib=0  [STK11>AMPK, STK11>PRKAA1, STK11>PRKAA2]
+MIXED     DDIT4 -> TSC2/TSC                  expected stim   found mixed    stim=2 inhib=1  [DDIT4>TSC2]
+OK        PDPK1 -> AKT/AKT1                  expected stim   found stim     stim=18 inhib=0  [PDPK1>AKT, PDPK1>AKT1, PDPK1>AKT2, PDPK1>AKT3]
+OK        mTORC2 -> AKT/AKT1                 expected stim   found stim     stim=10 inhib=0  [mTORC2>AKT, mTORC2>AKT1]
+MIXED     TSC2/TSC -> RHEB                   expected inhib  found mixed    stim=1 inhib=3  [TSC2>RHEB, TSC>RHEB]
+OK        RHEB -> mTORC1/MTOR                expected stim   found stim     stim=4 inhib=0  [RHEB>MTOR, RHEB>mTORC1]
+OK        AMPK/PRKAA1 -> RPTOR/mTORC1        expected inhib  found inhib    stim=0 inhib=8  [AMPK>MTOR, AMPK>mTORC1, PRKAA1>MTOR, PRKAA1>RPTOR]
+MISS      AMP -> AMPK/PRKAG1                 expected stim
+OK        ADP -> AMPK/PRKAG1                 expected stim   found stim     stim=2 inhib=0  [ADP>AMPK, ADP>PRKAG1]
+OK        ATP -> AMPK/PRKAG1                 expected inhib  found inhib    stim=0 inhib=3  [ATP>AMPK, ATP>PRKAG1]
+
+Wrote nodes/edges/evidence parquet to data/processed
+
+### 05
+===== Proteins =====
+lysosome overrides: 36 placed; names not found: ['KICS2']
+9677 proteins: 6076 single-region, 1459 multi-region, 2142 with no location data
+
+785 complexes/families: 780 placed from members, 5 left for neighbours
+
+===== Nodes per kind and region =====
+shape: (11, 11)
+┌────────────────┬─────────┬───────────────┬─────────────────┬─────┬───────┬─────────┬─────────┬──────────┬────────────┬───────────────┐
+│ kind           ┆ vesicle ┆ mitochondrion ┆ plasma_membrane ┆ er  ┆ golgi ┆ nucleus ┆ cytosol ┆ lysosome ┆ peroxisome ┆ extracellular │
+│ ---            ┆ ---     ┆ ---           ┆ ---             ┆ --- ┆ ---   ┆ ---     ┆ ---     ┆ ---      ┆ ---        ┆ ---           │
+│ str            ┆ u32     ┆ u32           ┆ u32             ┆ u32 ┆ u32   ┆ u32     ┆ u32     ┆ u32      ┆ u32        ┆ u32           │
+╞════════════════╪═════════╪═══════════════╪═════════════════╪═════╪═══════╪═════════╪═════════╪══════════╪════════════╪═══════════════╡
+│ chemical       ┆ 61      ┆ 34            ┆ 162             ┆ 27  ┆ 56    ┆ 194     ┆ 277     ┆ 4        ┆ 0          ┆ 3             │
+│ protein        ┆ 845     ┆ 565           ┆ 1346            ┆ 367 ┆ 481   ┆ 3323    ┆ 2641    ┆ 76       ┆ 13         ┆ 20            │
+│ complex        ┆ 56      ┆ 57            ┆ 91              ┆ 25  ┆ 29    ┆ 248     ┆ 176     ┆ 10       ┆ 0          ┆ 0             │
+│ phenotype      ┆ 13      ┆ 12            ┆ 19              ┆ 4   ┆ 11    ┆ 69      ┆ 84      ┆ 0        ┆ 1          ┆ 0             │
+│ metabolite     ┆ 0       ┆ 28            ┆ 2               ┆ 2   ┆ 2     ┆ 12      ┆ 488     ┆ 0        ┆ 0          ┆ 1             │
+│ family         ┆ 9       ┆ 4             ┆ 16              ┆ 5   ┆ 0     ┆ 22      ┆ 37      ┆ 0        ┆ 0          ┆ 0             │
+│ fusion_protein ┆ 0       ┆ 0             ┆ 2               ┆ 0   ┆ 0     ┆ 10      ┆ 3       ┆ 0        ┆ 0          ┆ 0             │
+│ ncrna          ┆ 1       ┆ 0             ┆ 0               ┆ 0   ┆ 0     ┆ 4       ┆ 1       ┆ 0        ┆ 0          ┆ 0             │
+│ antibody       ┆ 2       ┆ 0             ┆ 13              ┆ 0   ┆ 1     ┆ 8       ┆ 1       ┆ 0        ┆ 0          ┆ 0             │
+│ stimulus       ┆ 0       ┆ 0             ┆ 0               ┆ 0   ┆ 0     ┆ 0       ┆ 0       ┆ 0        ┆ 0          ┆ 25            │
+│ mirna          ┆ 0       ┆ 0             ┆ 0               ┆ 0   ┆ 0     ┆ 0       ┆ 136     ┆ 0        ┆ 0          ┆ 0             │
+└────────────────┴─────────┴───────────────┴─────────────────┴─────┴───────┴─────────┴─────────┴──────────┴────────────┴───────────────┘
+
+===== How each node got its region =====
+shape: (26, 3)
+┌────────────────┬───────────────┬──────┐
+│ kind           ┆ region_source ┆ len  │
+│ ---            ┆ ---           ┆ ---  │
+│ str            ┆ str           ┆ u32  │
+╞════════════════╪═══════════════╪══════╡
+│ antibody       ┆ nbr           ┆ 25   │
+│ chemical       ┆ nbr           ┆ 815  │
+│ chemical       ┆ default       ┆ 3    │
+│ complex        ┆ members       ┆ 688  │
+│ complex        ┆ nbr           ┆ 3    │
+│ complex        ┆ default       ┆ 1    │
+│ family         ┆ members       ┆ 92   │
+│ family         ┆ nbr           ┆ 1    │
+│ fusion_protein ┆ nbr           ┆ 15   │
+│ metabolite     ┆ gem_default   ┆ 488  │
+│ metabolite     ┆ nbr_strong    ┆ 30   │
+│ metabolite     ┆ gem_only      ┆ 16   │
+│ metabolite     ┆ gem           ┆ 1    │
+│ mirna          ┆ rule          ┆ 136  │
+│ ncrna          ┆ nbr           ┆ 6    │
+│ phenotype      ┆ nbr           ┆ 213  │
+│ protein        ┆ hpa           ┆ 5762 │
+│ protein        ┆ nbr           ┆ 1803 │
+│ protein        ┆ hpa_vote      ┆ 695  │
+│ protein        ┆ hpa_priority  ┆ 679  │
+│ protein        ┆ default       ┆ 334  │
+│ protein        ┆ gem           ┆ 291  │
+│ protein        ┆ gem_priority  ┆ 44   │
+│ protein        ┆ override      ┆ 36   │
+│ protein        ┆ gem_vote      ┆ 33   │
+│ stimulus       ┆ rule          ┆ 25   │
+└────────────────┴───────────────┴──────┘
+
+===== Spot check: mTOR figure players =====
+shape: (26, 5)
+┌─────────┬────────────┬─────────────────┬───────────────┬───────────────────────────────────────────┐
+│ label   ┆ kind       ┆ region          ┆ region_source ┆ regions_all                               │
+│ ---     ┆ ---        ┆ ---             ┆ ---           ┆ ---                                       │
+│ str     ┆ str        ┆ str             ┆ str           ┆ str                                       │
+╞═════════╪════════════╪═════════════════╪═══════════════╪═══════════════════════════════════════════╡
+│ ADP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ AKT1    ┆ protein    ┆ nucleus         ┆ hpa_vote      ┆ cytosol,nucleus                           │
+│ AMP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ AMPK    ┆ complex    ┆ nucleus         ┆ members       ┆                                           │
+│ ATP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ DEPDC5  ┆ protein    ┆ lysosome        ┆ override      ┆                                           │
+│ EGFR    ┆ protein    ┆ plasma_membrane ┆ hpa_vote      ┆ cytosol,golgi,plasma_membrane             │
+│ FLCN    ┆ protein    ┆ lysosome        ┆ override      ┆ cytosol,plasma_membrane,vesicle           │
+│ INSR    ┆ protein    ┆ plasma_membrane ┆ hpa_vote      ┆ cytosol,plasma_membrane,vesicle           │
+│ LAMTOR1 ┆ protein    ┆ lysosome        ┆ override      ┆ golgi,plasma_membrane,vesicle             │
+│ MTOR    ┆ protein    ┆ cytosol         ┆ hpa_vote      ┆ cytosol,golgi                             │
+│ NPRL2   ┆ protein    ┆ lysosome        ┆ override      ┆                                           │
+│ PDPK1   ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ PRKAA1  ┆ protein    ┆ nucleus         ┆ hpa           ┆ cytosol,nucleus                           │
+│ PRKAG1  ┆ protein    ┆ cytosol         ┆ hpa_priority  ┆ cytosol,nucleus                           │
+│ RHEB    ┆ protein    ┆ lysosome        ┆ override      ┆                                           │
+│ RPTOR   ┆ protein    ┆ lysosome        ┆ hpa_priority  ┆ cytosol,lysosome,vesicle                  │
+│ RRAGA   ┆ protein    ┆ lysosome        ┆ override      ┆ golgi,vesicle                             │
+│ SESN2   ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ SLC38A9 ┆ protein    ┆ lysosome        ┆ override      ┆ vesicle                                   │
+│ STK11   ┆ protein    ┆ nucleus         ┆ hpa           ┆ cytosol,nucleus                           │
+│ TSC     ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+│ TSC1    ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ TSC2    ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ mTORC1  ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+│ mTORC2  ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+└─────────┴────────────┴─────────────────┴───────────────┴───────────────────────────────────────────┘
+labels not found: []
+
+===== Well-connected proteins placed without location data =====
+shape: (15, 4)
+┌─────────┬─────────┬─────────────────┬───────────────┐
+│ label   ┆ deg_all ┆ region          ┆ region_source │
+│ ---     ┆ ---     ┆ ---             ┆ ---           │
+│ str     ┆ u32     ┆ str             ┆ str           │
+╞═════════╪═════════╪═════════════════╪═══════════════╡
+│ CSNK2A2 ┆ 240     ┆ nucleus         ┆ nbr           │
+│ PLK1    ┆ 194     ┆ nucleus         ┆ nbr           │
+│ GNAO1   ┆ 171     ┆ plasma_membrane ┆ nbr           │
+│ PPP2CA  ┆ 168     ┆ nucleus         ┆ nbr           │
+│ GNA15   ┆ 133     ┆ plasma_membrane ┆ nbr           │
+│ GNA14   ┆ 104     ┆ plasma_membrane ┆ nbr           │
+│ JAK1    ┆ 89      ┆ cytosol         ┆ nbr           │
+│ LRP6    ┆ 86      ┆ nucleus         ┆ nbr           │
+│ TNF     ┆ 84      ┆ nucleus         ┆ nbr           │
+│ ADRA2A  ┆ 76      ┆ cytosol         ┆ nbr           │
+│ ROCK1   ┆ 69      ┆ cytosol         ┆ nbr           │
+│ TWIST1  ┆ 69      ┆ nucleus         ┆ nbr           │
+│ MTNR1A  ┆ 63      ┆ cytosol         ┆ nbr           │
+│ FGFR4   ┆ 57      ┆ plasma_membrane ┆ nbr           │
+│ FN1     ┆ 54      ┆ plasma_membrane ┆ nbr           │
+└─────────┴─────────┴─────────────────┴───────────────┘
+
+Wrote data/processed/compartments.parquet

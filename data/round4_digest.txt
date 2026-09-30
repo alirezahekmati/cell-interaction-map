@@ -1,0 +1,82 @@
+===== OmniPath =====
+85217 rows; dropped 4080 that are SIGNOR-only (already loaded directly); 28201 kept
+OmniPath evidence rows: 28394; 1377 records flagged both signs, 1184 of them resolved to one sign by consensus
+
+===== Complex and family membership =====
+===== Edges by class and net sign =====
+shape: (11, 3)
+┌───────────────────┬──────────┬───────┐
+│ cls               ┆ net      ┆ len   │
+│ ---               ┆ ---      ┆ ---   │
+│ str               ┆ str      ┆ u32   │
+╞═══════════════════╪══════════╪═══════╡
+│ binding           ┆ unsigned ┆ 2741  │
+│ membership        ┆ unsigned ┆ 3906  │
+│ regulation        ┆ inhib    ┆ 10570 │
+│ regulation        ┆ mixed    ┆ 600   │
+│ regulation        ┆ stim     ┆ 21232 │
+│ regulation        ┆ unsigned ┆ 11353 │
+│ substrate_product ┆ inhib    ┆ 538   │
+│ substrate_product ┆ mixed    ┆ 36    │
+│ substrate_product ┆ stim     ┆ 1131  │
+│ transport         ┆ inhib    ┆ 45    │
+│ transport         ┆ stim     ┆ 260   │
+└───────────────────┴──────────┴───────┘
+
+===== Metabolite nodes that merged several SIGNOR entries (check these look right) =====
+===== Check against the mTOR figure (expected sign from the figure / textbook biology) =====
+OK        AKT/AKT1 -> TSC2/TSC               expected inhib  found inhib    stim=0 inhib=8  [AKT1>TSC2, AKT2>TSC2]
+OK        MAPK1/MAPK3 -> TSC2/TSC            expected inhib  found inhib    stim=0 inhib=6  [ERK1/2>TSC2, MAPK1>TSC2, MAPK3>TSC2]
+OK        RPS6KA1/RPS6KA3 -> TSC2/TSC        expected inhib  found inhib    stim=0 inhib=4  [RPS6KA1>TSC, RPS6KA1>TSC2, RPS6KA3>TSC2]
+OK        IKBKB -> TSC1/TSC2                 expected inhib  found inhib    stim=0 inhib=5  [IKBKB>TSC1]
+OK        AMPK/PRKAA1 -> TSC2/TSC            expected stim   found stim     stim=5 inhib=0  [AMPK>TSC2, PRKAA1>TSC2, PRKAA2>TSC2]
+OK        STK11 -> AMPK/PRKAA1               expected stim   found stim     stim=9 inhib=0  [STK11>AMPK, STK11>PRKAA1, STK11>PRKAA2]
+MIXED     DDIT4 -> TSC2/TSC                  expected stim   found mixed    stim=2 inhib=1  [DDIT4>TSC2]
+OK        PDPK1 -> AKT/AKT1                  expected stim   found stim     stim=18 inhib=0  [PDPK1>AKT, PDPK1>AKT1, PDPK1>AKT2, PDPK1>AKT3]
+OK        mTORC2 -> AKT/AKT1                 expected stim   found stim     stim=10 inhib=0  [mTORC2>AKT, mTORC2>AKT1]
+OK        TSC2/TSC -> RHEB                   expected inhib  found inhib    stim=0 inhib=3  [TSC2>RHEB, TSC>RHEB]
+OK        RHEB -> mTORC1/MTOR                expected stim   found stim     stim=4 inhib=0  [RHEB>MTOR, RHEB>mTORC1]
+OK        AMPK/PRKAA1 -> RPTOR/mTORC1        expected inhib  found inhib    stim=0 inhib=8  [AMPK>MTOR, AMPK>mTORC1, PRKAA1>MTOR, PRKAA1>RPTOR]
+MISS      AMP -> AMPK/PRKAG1                 expected stim
+OK        ADP -> AMPK/PRKAG1                 expected stim   found stim     stim=2 inhib=0  [ADP>AMPK, ADP>PRKAG1]
+OK        ATP -> AMPK/PRKAG1                 expected inhib  found inhib    stim=0 inhib=3  [ATP>AMPK, ATP>PRKAG1]
+
+Wrote nodes/edges/evidence parquet to data/processed
+
+lysosome overrides: 36 placed; names not found: ['KICS2']
+cytosol overrides: moved ['PRKAA1:nucleus', 'PRKAG2:nucleus', 'PRKAB2:nucleus', 'AKT1:nucleus', 'PRKAG3:mitochondrion', 'AKT3:nucleus', 'STRADA:nucleus', 'STK11:nucleus', 'PRKAA2:nucleus']
+===== Spot check: mTOR figure players =====
+shape: (26, 5)
+┌─────────┬────────────┬─────────────────┬───────────────┬───────────────────────────────────────────┐
+│ label   ┆ kind       ┆ region          ┆ region_source ┆ regions_all                               │
+│ ---     ┆ ---        ┆ ---             ┆ ---           ┆ ---                                       │
+│ str     ┆ str        ┆ str             ┆ str           ┆ str                                       │
+╞═════════╪════════════╪═════════════════╪═══════════════╪═══════════════════════════════════════════╡
+│ ADP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ AKT1    ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ AMP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ AMPK    ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+│ ATP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ DEPDC5  ┆ protein    ┆ lysosome        ┆ override      ┆                                           │
+│ EGFR    ┆ protein    ┆ plasma_membrane ┆ hpa_vote      ┆ cytosol,golgi,plasma_membrane             │
+│ FLCN    ┆ protein    ┆ lysosome        ┆ override      ┆ cytosol,plasma_membrane,vesicle           │
+│ INSR    ┆ protein    ┆ plasma_membrane ┆ hpa_vote      ┆ cytosol,plasma_membrane,vesicle           │
+│ LAMTOR1 ┆ protein    ┆ lysosome        ┆ override      ┆ golgi,plasma_membrane,vesicle             │
+│ MTOR    ┆ protein    ┆ cytosol         ┆ hpa_vote      ┆ cytosol,golgi                             │
+│ NPRL2   ┆ protein    ┆ lysosome        ┆ override      ┆                                           │
+│ PDPK1   ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ PRKAA1  ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ PRKAG1  ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ RHEB    ┆ protein    ┆ lysosome        ┆ override      ┆                                           │
+│ RPTOR   ┆ protein    ┆ lysosome        ┆ hpa_priority  ┆ cytosol,lysosome,vesicle                  │
+│ RRAGA   ┆ protein    ┆ lysosome        ┆ override      ┆ golgi,vesicle                             │
+│ SESN2   ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ SLC38A9 ┆ protein    ┆ lysosome        ┆ override      ┆ vesicle                                   │
+│ STK11   ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ TSC     ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+│ TSC1    ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ TSC2    ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ mTORC1  ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+│ mTORC2  ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+└─────────┴────────────┴─────────────────┴───────────────┴───────────────────────────────────────────┘
+labels not found: []

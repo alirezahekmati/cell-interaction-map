@@ -1,0 +1,39 @@
+
+===== Geometry =====
+cell radius 415; nucleus r=153 at origin
+  mitochondrion  r=   89  centre=(    -78,    220,   -135)
+  er             r=   79  centre=(    162,     93,    164)
+  golgi          r=   79  centre=(    176,    139,   -107)
+  lysosome       r=   48  centre=(   -172,     83,   -104)
+  vesicle        r=   94  centre=(     17,     92,   -254)
+  peroxisome     r=   26  centre=(   -194,     24,      4)
+
+===== Force layout per region =====
+peroxisome          18 nodes      3 edges    0.0s
+lysosome            94 nodes     58 edges    0.0s
+golgi              443 nodes    126 edges    0.9s
+er                 465 nodes    226 edges    0.9s
+extracellular      549 nodes    202 edges    1.1s
+mitochondrion      649 nodes    470 edges    1.4s
+vesicle            773 nodes    362 edges    2.1s
+plasma_membrane   1860 nodes   3439 edges   11.7s
+cytosol           2641 nodes   4057 edges   13.8s
+nucleus           3390 nodes  10369 edges   22.8s
+
+===== Metabolites and chemicals =====
+placed by same-region partners: 1149; by cross-region partners: 194; no partners: 6
+
+===== Sanity: edge lengths (units as above) =====
+median length, same-region edges:           52.7  (22174 edges)
+median length, random same-region pairs:    99.6   -> edges are 0.53x a random pair
+median length, cross-region edges:         355.0  (25781 edges)
+
+===== Sanity: mTOR figure pairs (distance) =====
+  RHEB     - MTORC1       6.9   (lysosome / lysosome)
+  RPTOR    - MTORC1       5.9   (lysosome / lysosome)
+  TSC2     - RHEB       425.0   (cytosol / lysosome)
+  AKT1     - TSC2        51.7   (cytosol / cytosol)
+  PRKAA1   - TSC2        50.1   (cytosol / cytosol)
+  EGFR     - AKT1       434.9   (plasma_membrane / cytosol)
+
+Wrote data/processed/layout.parquet and regions.json

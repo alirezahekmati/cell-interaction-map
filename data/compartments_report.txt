@@ -1,0 +1,200 @@
+
+===== Human Protein Atlas =====
+13603 genes with a location
+Main-location terms -> region   (* = collapsed into cytosol by default)
+   4897   Nucleoplasm                            nucleus
+   3087   Cytosol                                cytosol
+   1661   Vesicles                               vesicle
+   1648   Plasma membrane                        plasma_membrane
+    974   Mitochondria                           mitochondrion
+    886   Golgi apparatus                        golgi
+    638   Nucleoli                               nucleus
+    486   Endoplasmic reticulum                  er
+    412   Nuclear speckles                       nucleus
+    326   Nuclear bodies                         nucleus
+    248 * Centrosome                             cytosol
+    237 * Microtubules                           cytosol
+    193   Nucleoli fibrillar center              nucleus
+    193   Nuclear membrane                       nucleus
+    192   Cell Junctions                         plasma_membrane
+    151 * Mid piece                              cytosol
+    140 * Principal piece                        cytosol
+    140 * Primary cilium                         cytosol
+    139 * Basal body                             cytosol
+    138 * Actin filaments                        cytosol
+    125   Nucleoli rim                           nucleus
+    107 * Centriolar satellite                   cytosol
+     96 * Intermediate filaments                 cytosol
+     90   Focal adhesion sites                   plasma_membrane
+     77 * End piece                              cytosol
+     60 * Flagellar centriole                    cytosol
+     54 * Acrosome                               cytosol
+     43 * Cytoplasmic bodies                     cytosol
+     33 * Connecting piece                       cytosol
+     30 * Cytokinetic bridge                     cytosol
+     29 * Equatorial segment                     cytosol
+     27 * Annulus                                cytosol
+     26 * Lipid droplets                         cytosol
+     26 * Mitotic spindle                        cytosol
+     25   Mitotic chromosome                     nucleus
+     23   Peroxisomes                            peroxisome
+     23 * Primary cilium transition zone         cytosol
+     18   Lysosomes                              lysosome
+     16 * Midbody                                cytosol
+     15   Endosomes                              vesicle
+     14 * Calyx                                  cytosol
+     13 * Primary cilium tip                     cytosol
+     10   Perinuclear theca                      nucleus
+      7 * Rods & Rings                           cytosol
+      5 * Midbody ring                           cytosol
+      5 * Microtubule ends                       cytosol
+      3 * Aggresome                              cytosol
+      2 * Kinetochore                            cytosol
+      1 * Cleavage furrow                        cytosol
+
+===== UniProt map =====
+columns: ['acc', 'type', 'value']
+146517 accessions with Ensembl ids, 171713 with gene names
+
+===== Human-GEM genes =====
+columns: ['genes', 'geneENSTID', 'geneENSPID', 'geneUniProtID', 'geneSymbols', 'geneEntrezID', 'geneNames', 'geneAliases', 'compartments', 'compDataSource']
+2801 accessions with a compartment; first row: ('O60762', 'Endoplasmic reticulum')
+
+===== Graph =====
+12231 nodes, 52407 edges
+
+===== UniProt subcellular location =====
+16164 reviewed entries with a mappable location
+
+===== Proteins =====
+lysosome overrides: 36 placed; names not found: ['KICS2']
+cytosol overrides: moved ['STRADA:nucleus', 'PRKAA1:nucleus', 'AKT3:nucleus', 'AKT1:nucleus', 'STK11:nucleus', 'PRKAB2:nucleus', 'PRKAG3:mitochondrion', 'PRKAA2:nucleus', 'PRKAG2:nucleus']
+9677 proteins: 7975 single-region, 1459 multi-region, 243 with no location data
+
+785 complexes/families: 780 placed from members, 5 left for neighbours
+
+===== Nodes per kind and region =====
+shape: (11, 11)
+┌────────────────┬───────────────┬─────────┬──────────┬─────┬─────────┬─────────┬─────────────────┬───────┬───────────────┬────────────┐
+│ kind           ┆ mitochondrion ┆ vesicle ┆ lysosome ┆ er  ┆ nucleus ┆ cytosol ┆ plasma_membrane ┆ golgi ┆ extracellular ┆ peroxisome │
+│ ---            ┆ ---           ┆ ---     ┆ ---      ┆ --- ┆ ---     ┆ ---     ┆ ---             ┆ ---   ┆ ---           ┆ ---        │
+│ str            ┆ u32           ┆ u32     ┆ u32      ┆ u32 ┆ u32     ┆ u32     ┆ u32             ┆ u32   ┆ u32           ┆ u32        │
+╞════════════════╪═══════════════╪═════════╪══════════╪═════╪═════════╪═════════╪═════════════════╪═══════╪═══════════════╪════════════╡
+│ phenotype      ┆ 11            ┆ 16      ┆ 2        ┆ 11  ┆ 55      ┆ 67      ┆ 29              ┆ 14    ┆ 7             ┆ 1          │
+│ antibody       ┆ 0             ┆ 1       ┆ 0        ┆ 0   ┆ 0       ┆ 0       ┆ 22              ┆ 0     ┆ 2             ┆ 0          │
+│ complex        ┆ 57            ┆ 54      ┆ 11       ┆ 32  ┆ 250     ┆ 139     ┆ 110             ┆ 29    ┆ 10            ┆ 0          │
+│ chemical       ┆ 32            ┆ 55      ┆ 16       ┆ 31  ┆ 182     ┆ 201     ┆ 234             ┆ 46    ┆ 21            ┆ 0          │
+│ protein        ┆ 577           ┆ 694     ┆ 81       ┆ 416 ┆ 3052    ┆ 2266    ┆ 1674            ┆ 400   ┆ 500           ┆ 17         │
+│ metabolite     ┆ 28            ┆ 0       ┆ 0        ┆ 3   ┆ 12      ┆ 478     ┆ 7               ┆ 2     ┆ 1             ┆ 0          │
+│ family         ┆ 4             ┆ 7       ┆ 0        ┆ 6   ┆ 21      ┆ 27      ┆ 23              ┆ 0     ┆ 5             ┆ 0          │
+│ ncrna          ┆ 0             ┆ 1       ┆ 0        ┆ 0   ┆ 2       ┆ 3       ┆ 0               ┆ 0     ┆ 0             ┆ 0          │
+│ fusion_protein ┆ 0             ┆ 0       ┆ 0        ┆ 0   ┆ 10      ┆ 3       ┆ 2               ┆ 0     ┆ 0             ┆ 0          │
+│ stimulus       ┆ 0             ┆ 0       ┆ 0        ┆ 0   ┆ 0       ┆ 0       ┆ 0               ┆ 0     ┆ 25            ┆ 0          │
+│ mirna          ┆ 0             ┆ 0       ┆ 0        ┆ 0   ┆ 0       ┆ 136     ┆ 0               ┆ 0     ┆ 0             ┆ 0          │
+└────────────────┴───────────────┴─────────┴──────────┴─────┴─────────┴─────────┴─────────────────┴───────┴───────────────┴────────────┘
+
+===== How each node got its region =====
+shape: (28, 3)
+┌────────────────┬───────────────┬──────┐
+│ kind           ┆ region_source ┆ len  │
+│ ---            ┆ ---           ┆ ---  │
+│ str            ┆ str           ┆ u32  │
+╞════════════════╪═══════════════╪══════╡
+│ antibody       ┆ nbr           ┆ 25   │
+│ chemical       ┆ nbr           ┆ 815  │
+│ chemical       ┆ default       ┆ 3    │
+│ complex        ┆ members       ┆ 686  │
+│ complex        ┆ nbr           ┆ 3    │
+│ complex        ┆ override      ┆ 2    │
+│ complex        ┆ default       ┆ 1    │
+│ family         ┆ members       ┆ 92   │
+│ family         ┆ nbr           ┆ 1    │
+│ fusion_protein ┆ nbr           ┆ 15   │
+│ metabolite     ┆ gem_default   ┆ 478  │
+│ metabolite     ┆ nbr_strong    ┆ 36   │
+│ metabolite     ┆ gem_only      ┆ 16   │
+│ metabolite     ┆ gem           ┆ 1    │
+│ mirna          ┆ rule          ┆ 136  │
+│ ncrna          ┆ nbr           ┆ 6    │
+│ phenotype      ┆ nbr           ┆ 213  │
+│ protein        ┆ hpa           ┆ 5755 │
+│ protein        ┆ uniprot       ┆ 1894 │
+│ protein        ┆ hpa_vote      ┆ 750  │
+│ protein        ┆ hpa_priority  ┆ 617  │
+│ protein        ┆ gem           ┆ 291  │
+│ protein        ┆ nbr           ┆ 198  │
+│ protein        ┆ override      ┆ 56   │
+│ protein        ┆ gem_priority  ┆ 42   │
+│ protein        ┆ default       ┆ 39   │
+│ protein        ┆ gem_vote      ┆ 35   │
+│ stimulus       ┆ rule          ┆ 25   │
+└────────────────┴───────────────┴──────┘
+
+===== Spot check: mTOR figure players =====
+shape: (33, 5)
+┌─────────┬────────────┬─────────────────┬───────────────┬───────────────────────────────────────────┐
+│ label   ┆ kind       ┆ region          ┆ region_source ┆ regions_all                               │
+│ ---     ┆ ---        ┆ ---             ┆ ---           ┆ ---                                       │
+│ str     ┆ str        ┆ str             ┆ str           ┆ str                                       │
+╞═════════╪════════════╪═════════════════╪═══════════════╪═══════════════════════════════════════════╡
+│ ADP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ ADRA2A  ┆ protein    ┆ plasma_membrane ┆ uniprot       ┆ plasma_membrane                           │
+│ AKT1    ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ AMP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ AMPK    ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+│ ATP     ┆ metabolite ┆ cytosol         ┆ gem_default   ┆ cytosol,er,extracellular,golgi,lysosome,… │
+│ CXCR4   ┆ protein    ┆ plasma_membrane ┆ uniprot       ┆ lysosome,plasma_membrane,vesicle          │
+│ DEPDC5  ┆ protein    ┆ lysosome        ┆ override      ┆ cytosol,lysosome                          │
+│ EGFR    ┆ protein    ┆ plasma_membrane ┆ hpa_vote      ┆ cytosol,golgi,plasma_membrane             │
+│ FLCN    ┆ protein    ┆ lysosome        ┆ override      ┆ cytosol,plasma_membrane,vesicle           │
+│ FN1     ┆ protein    ┆ extracellular   ┆ uniprot       ┆ extracellular                             │
+│ INSR    ┆ protein    ┆ plasma_membrane ┆ hpa_vote      ┆ cytosol,plasma_membrane,vesicle           │
+│ LAMTOR1 ┆ protein    ┆ lysosome        ┆ override      ┆ golgi,plasma_membrane,vesicle             │
+│ LRP6    ┆ protein    ┆ plasma_membrane ┆ uniprot       ┆ er,plasma_membrane                        │
+│ MTNR1A  ┆ protein    ┆ plasma_membrane ┆ uniprot       ┆ plasma_membrane                           │
+│ MTOR    ┆ protein    ┆ lysosome        ┆ override      ┆ cytosol,golgi                             │
+│ NPRL2   ┆ protein    ┆ lysosome        ┆ override      ┆ lysosome                                  │
+│ PDPK1   ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ PPP2CA  ┆ protein    ┆ cytosol         ┆ uniprot       ┆ cytosol,nucleus                           │
+│ PRKAA1  ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ PRKAG1  ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ RHEB    ┆ protein    ┆ lysosome        ┆ override      ┆ cytosol,er,golgi,lysosome                 │
+│ RPTOR   ┆ protein    ┆ lysosome        ┆ override      ┆ cytosol,lysosome,vesicle                  │
+│ RRAGA   ┆ protein    ┆ lysosome        ┆ override      ┆ golgi,vesicle                             │
+│ SESN2   ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ SLC38A9 ┆ protein    ┆ lysosome        ┆ override      ┆ vesicle                                   │
+│ STK11   ┆ protein    ┆ cytosol         ┆ override      ┆ cytosol,nucleus                           │
+│ TNF     ┆ protein    ┆ plasma_membrane ┆ uniprot       ┆ plasma_membrane                           │
+│ TSC     ┆ complex    ┆ cytosol         ┆ members       ┆                                           │
+│ TSC1    ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ TSC2    ┆ protein    ┆ cytosol         ┆ hpa           ┆ cytosol                                   │
+│ mTORC1  ┆ complex    ┆ lysosome        ┆ override      ┆                                           │
+│ mTORC2  ┆ complex    ┆ cytosol         ┆ override      ┆                                           │
+└─────────┴────────────┴─────────────────┴───────────────┴───────────────────────────────────────────┘
+labels not found: []
+
+===== Well-connected proteins placed without location data =====
+shape: (15, 4)
+┌────────────────────────┬─────────┬─────────────────┬───────────────┐
+│ label                  ┆ deg_all ┆ region          ┆ region_source │
+│ ---                    ┆ ---     ┆ ---             ┆ ---           │
+│ str                    ┆ u32     ┆ str             ┆ str           │
+╞════════════════════════╪═════════╪═════════════════╪═══════════════╡
+│ GNA15                  ┆ 133     ┆ plasma_membrane ┆ nbr           │
+│ GNA14                  ┆ 104     ┆ plasma_membrane ┆ nbr           │
+│ MIR17HG                ┆ 21      ┆ nucleus         ┆ nbr           │
+│ S                      ┆ 20      ┆ plasma_membrane ┆ nbr           │
+│ SIRPA                  ┆ 17      ┆ plasma_membrane ┆ nbr           │
+│ N                      ┆ 16      ┆ nucleus         ┆ nbr           │
+│ VAV3                   ┆ 16      ┆ plasma_membrane ┆ nbr           │
+│ PPP1R1A                ┆ 16      ┆ cytosol         ┆ nbr           │
+│ PTPRO                  ┆ 15      ┆ plasma_membrane ┆ nbr           │
+│ RHO                    ┆ 15      ┆ nucleus         ┆ nbr           │
+│ SIGLEC9                ┆ 15      ┆ plasma_membrane ┆ nbr           │
+│ HGF                    ┆ 14      ┆ plasma_membrane ┆ nbr           │
+│ Papain-like proteinase ┆ 14      ┆ cytosol         ┆ nbr           │
+│ LILRA1                 ┆ 14      ┆ plasma_membrane ┆ nbr           │
+│ GP1BA                  ┆ 13      ┆ extracellular   ┆ nbr           │
+└────────────────────────┴─────────┴─────────────────┴───────────────┘
+
+Wrote data/processed/compartments.parquet
