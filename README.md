@@ -4,7 +4,7 @@ An interactive 3D map of signed, directed molecular interactions in a human cell
 Nodes sit in coarse cellular compartments; click a node to draw its edges
 (green = stimulating, red = inhibiting ⊣, amber = mixed, gray = unsigned).
 
-**Live viewer:** https://YOUR-USER.github.io/YOUR-REPO/
+**Live viewer:** https://alirezahekmati.github.io/cell-interaction-map/
 
 ## Read this first
 - Compartments are coarse and heuristic (HPA, UniProt, Human-GEM, plus a few manual overrides
