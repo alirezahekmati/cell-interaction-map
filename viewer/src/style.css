@@ -44,3 +44,15 @@ input[type=search], input[type=number], select { width: 100%; padding: 6px 8px; 
 .more { margin-top: 6px; padding: 6px 8px; background: #0b0e14; border-radius: 4px; font-size: 12px; }
 .more[hidden] { display: none; }
 .more div { margin: 2px 0; word-break: break-word; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; align-items: center; }
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 8px; background: #1d2635;
+  border: 1px solid #2b3442; border-radius: 12px; color: #fff; }
+.chip button { background: none; border: 0; color: #8a93a3; cursor: pointer; font-size: 14px; line-height: 1; padding: 0 4px; }
+.chip button:hover { color: #ff8787; }
+.clearall { background: none; border: 0; color: #8a93a3; cursor: pointer; text-decoration: underline; padding: 0 4px; }
+
+.desc { margin: 8px 0; padding: 8px; background: #0b0e14; border-radius: 4px; font-size: 12px; }
+.desc div { margin: 3px 0; }
+.desc .m { color: #6b7588; }
+#detail a[data-node] { color: #9ecbff; cursor: pointer; }

@@ -9,9 +9,21 @@ const BASE = import.meta.env.BASE_URL;
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 async function get(f, type = 'json') {
-  const r = await fetch(BASE + 'data/' + f);
-  if (!r.ok) throw new Error(`${f}: HTTP ${r.status}`);
-  return type === 'json' ? r.json() : r.arrayBuffer();
+  let last;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      // retries bypass the HTTP cache: some browsers return an empty body on the first request
+      const r = await fetch(BASE + 'data/' + f, attempt ? { cache: 'reload' } : undefined);
+      if (!r.ok) throw new Error(`${f}: HTTP ${r.status}`);
+      const buf = await r.arrayBuffer();
+      if (!buf.byteLength) throw new Error(`${f}: empty response`);
+      return type === 'json' ? JSON.parse(new TextDecoder().decode(buf)) : buf;
+    } catch (err) {
+      last = err;
+      await new Promise((res) => setTimeout(res, 300 * (attempt + 1)));
+    }
+  }
+  throw last;
 }
 
 const KIND_COLORS = {
@@ -206,6 +218,15 @@ async function main() {
     if (!S.selected.size) return [];
     const set = new Set();
     const add = (n) => { for (let q = adjOff[n]; q < adjOff[n + 1]; q++) { const e = inc[q]; if (edgePass(e)) set.add(e); } };
+    if (S.scope === 'among') {
+      S.selected.forEach((n) => {
+        for (let q = adjOff[n]; q < adjOff[n + 1]; q++) {
+          const e = inc[q];
+          if (S.selected.has(eSrc(e)) && S.selected.has(eTgt(e)) && edgePass(e)) set.add(e);
+        }
+      });
+      return [...set].sort((a, b) => eRes(b) - eRes(a) || eEv(b) - eEv(a));
+    }
     S.selected.forEach(add);
     if (S.scope === 'nbh') {
       const nb = new Set(S.selected);
@@ -261,17 +282,56 @@ async function main() {
 
   // ---------------------------------------------------------------- detail panel
   const DIRSYM = ['⇢', '→', '⊣', '±'];
+  function edgeSentence(e, d) {
+    const s = nodes[eSrc(e)].l, t = nodes[eTgt(e)].l, cls = meta.cls[eCls(e)], net = meta.net[eNet(e)];
+    const mech = (d.mech[e] || '').split(';').filter(Boolean).slice(0, 3).join(', ');
+    const via = mech ? ` (${mech})` : '';
+    if (cls === 'binding') return `${s} and ${t} bind each other${via}.`;
+    if (cls === 'membership') return `${s} has ${t} as a member.`;
+    if (cls === 'substrate_product') return `${s} and ${t} are linked as substrate and product${via}.`;
+    if (cls === 'transport') return `${s} and ${t}: relocalisation${via}.`;
+    const verb = { stim: 'activates', inhib: 'inhibits', mixed: 'activates or inhibits (reports conflict)',
+      unsigned: 'regulates (direction not given)' }[net];
+    return `${s} ${verb} ${t}${via}.`;
+  }
+  function nodeSummary(i) {
+    const cnt = { out: [0, 0, 0], in: [0, 0, 0] };            // [activate, inhibit, mixed/unsigned]
+    const top = { oS: [], oI: [], iS: [], iI: [] };
+    for (let q = adjOff[i]; q < adjOff[i + 1]; q++) {
+      const e = inc[q];
+      if (meta.cls[eCls(e)] !== 'regulation' || !eDir(e)) continue;
+      const nt = eNet(e), out = eSrc(e) === i, other = out ? eTgt(e) : eSrc(e);
+      const k = nt === 1 ? 0 : nt === 2 ? 1 : 2;
+      cnt[out ? 'out' : 'in'][k]++;
+      if (k < 2) top[(out ? 'o' : 'i') + (k ? 'I' : 'S')].push([other, eRes(e), eEv(e)]);
+    }
+    const names = (a) => a.sort((x, y) => y[1] - x[1] || y[2] - x[2]).slice(0, 4)
+      .map(([n]) => `<a data-node="${n}">${esc(nodes[n].l)}</a>`).join(', ');
+    const part = (c, tS, tI, label, vS, vI) => {
+      const tot = c[0] + c[1] + c[2];
+      if (!tot) return '';
+      let h = `<div><b>${label}</b> ${tot}: ${c[0]} activated, ${c[1]} inhibited, ${c[2]} mixed or unsigned.</div>`;
+      const bits = [];
+      if (tS.length) bits.push(`${vS} ${names(tS)}`);
+      if (tI.length) bits.push(`${vI} ${names(tI)}`);
+      return h + (bits.length ? `<div class="m">Strongest evidence: ${bits.join('; ')}.</div>` : '');
+    };
+    const h = part(cnt.out, top.oS, top.oI, 'Regulates', 'activates', 'inhibits')
+      + part(cnt.in, top.iS, top.iI, 'Regulated by', 'activated by', 'inhibited by');
+    return h ? `<div class="desc">${h}<div class="m">All regulation edges, ignoring the filters.</div></div>` : '';
+  }
   let details = null;
   function renderDetail(list) {
     const el = $('detail');
     if (!S.selected.size) { el.hidden = true; return; }
     el.hidden = false;
     const sel = [...S.selected];
-    let h = '';
+    let h = chipsHtml(sel);
     if (sel.length === 1) {
       const n = nodes[sel[0]];
       h += `<h2>${esc(n.l)}</h2><div class="sub">${esc(n.t)} · ${esc(n.r)}${n.u ? ' · UniProt ' + esc(n.u) : ''}${n.c ? ' · ' + esc(n.c) : ''}</div>`;
       h += `<div class="sub">${n.d} edges in total (${n.dr} regulation)${n.m ? ' · ' + n.m + ' members' : ''}</div>`;
+      h += nodeSummary(sel[0]);
     } else {
       h += `<h2>${sel.length} nodes selected</h2><div class="sub">${sel.slice(0, 8).map((i) => esc(nodes[i].l)).join(', ')}${sel.length > 8 ? '…' : ''}</div>`;
     }
@@ -284,6 +344,9 @@ async function main() {
     el.innerHTML = h + '</div>';
   }
   $('detail').addEventListener('click', async (ev) => {
+    const rm = ev.target.closest('button[data-rm]');
+    if (rm) { const i = +rm.dataset.rm; S.selected.delete(i); S.forced.delete(i); S.selected = new Set(S.selected); update(); return; }
+    if (ev.target.closest('button[data-clear]')) { clearSel(); return; }
     const a = ev.target.closest('a[data-node]');
     if (a) { selectOnly(+a.dataset.node, true); return; }
     const row = ev.target.closest('.row');
@@ -295,7 +358,7 @@ async function main() {
     const e = +row.dataset.e, ns = details.ns[e];
     const pm = (details.pmids[e] || '').split(';').filter(Boolean)
       .map((p) => `<a href="https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(p)}/" target="_blank" rel="noopener">${esc(p)}</a>`).join(', ');
-    more.innerHTML = `<div>evidence: stimulating ${ns[0]} · inhibiting ${ns[1]} · unsigned ${ns[2]}</div>`
+    more.innerHTML = `<div><b>${esc(edgeSentence(e, details))}</b></div><div>evidence: stimulating ${ns[0]} · inhibiting ${ns[1]} · unsigned ${ns[2]}</div>`
       + `<div>resources: ${esc((details.res[e] || '').split(';').join(', ') || '—')}</div>`
       + `<div>mechanisms: ${esc((details.mech[e] || '').split(';').join(', ') || '—')}</div>`
       + `<div>PMIDs (${details.npm[e]} total): ${pm || '—'}</div>`;
@@ -322,6 +385,25 @@ async function main() {
     if (fly) flyTo(new THREE.Vector3(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]), 120);
   }
   function clearSel() { S.selected = new Set(); S.forced.clear(); update(); }
+  function addToSel(i, fly) {
+    if (!vis(i)) S.forced.add(i);
+    S.selected = new Set([...S.selected, i]);
+    update();
+    if (fly) frameSelection();
+  }
+  function frameSelection() {
+    const ids = [...S.selected];
+    if (!ids.length) return;
+    const c = new THREE.Vector3();
+    ids.forEach((i) => c.add(new THREE.Vector3(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2])));
+    c.divideScalar(ids.length);
+    let rad = 0;
+    ids.forEach((i) => { rad = Math.max(rad, c.distanceTo(new THREE.Vector3(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]))); });
+    flyTo(c, Math.max(120, rad * 2.6));
+  }
+  const chipsHtml = (sel) => '<div class="chips">'
+    + sel.map((i) => `<span class="chip">${esc(nodes[i].l)}<button data-rm="${i}" title="remove from selection">×</button></span>`).join('')
+    + (sel.length > 1 ? '<button class="clearall" data-clear="1">clear all</button>' : '') + '</div>';
 
   // ---------------------------------------------------------------- camera tween
   let tween = null;
@@ -433,7 +515,7 @@ async function main() {
     m.slice(0, 12).forEach(([i]) => {
       const n = nodes[i], b = document.createElement('button');
       b.innerHTML = `${esc(n.l)} <small>${esc(n.t)} · ${esc(n.r)} · ${n.d}</small>`;
-      b.addEventListener('click', () => { selectOnly(i, true); });
+      b.addEventListener('click', () => { addToSel(i, true); $('q').value = ''; $('results').innerHTML = ''; });
       box.append(b);
     });
   });
