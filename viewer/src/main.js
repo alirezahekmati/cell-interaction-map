@@ -35,9 +35,16 @@ const MAXE = 15000;     // max edges drawn at once
 const ROWS = 300;       // max rows in the detail list
 const CAP = 6;          // arrow / T-bar size in world units
 
+async function getEdges() {
+  const bin = atob(await get('edges_b64.json'));
+  const u = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  return u.buffer;
+}
+
 async function main() {
   const [meta, nodes, regions, buf] = await Promise.all([
-    get('meta.json'), get('nodes.json'), get('regions.json'), get('edges.bin', 'buf')]);
+    get('meta.json'), get('nodes.json'), get('regions.json'), getEdges()]);
   const N = nodes.length, E = meta.n_edges;
   if (buf.byteLength !== E * 20) throw new Error(`edges.bin is ${buf.byteLength} bytes, expected ${E * 20}`);
 
