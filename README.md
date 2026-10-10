@@ -17,7 +17,8 @@ Nodes sit in coarse cellular compartments; click a node to draw its edges
 - OmniPath: https://omnipathdb.org. An aggregator whose resources have different licences.
   The default export contains entries with academic-use restrictions, so treat the merged
   data as academic/non-commercial unless you rebuild with a stricter licence filter.
-- Human Protein Atlas, UniProt, Human-GEM: compartments and metabolite classes.
+- UniProt (CC BY 4.0): protein names, function and disease text shown in the viewer, plus compartments. Informational only, not medical advice.
+- Human Protein Atlas, Human-GEM: compartments and metabolite classes.
   Check each project's terms before reusing.
 
 ## Rebuild

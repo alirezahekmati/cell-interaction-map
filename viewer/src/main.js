@@ -288,6 +288,29 @@ async function main() {
   }
 
   // ---------------------------------------------------------------- detail panel
+    let infoP = null;
+  async function fillInfo(i) {
+    const n = nodes[i];
+    if (n.t !== 'protein') return;
+    const acc = n.k.slice(2);
+    let all;
+    try { infoP = infoP || get('node_info.json'); all = await infoP; } catch (err) { infoP = null; return; }
+    if (!(S.selected.size === 1 && S.selected.has(i))) return;
+    const box = $('info'), d = all[acc];
+    if (!box || !d) return;
+    let h = '';
+    if (d.p) h += `<div><b>${esc(d.p)}</b></div>`;
+    if (d.a && d.a.length) h += `<div class="m">also known as: ${esc(d.a.join(' · '))}</div>`;
+    if (d.f) h += `<div>${esc(d.f)}</div>`;
+    if (d.d && d.d.length) {
+      const items = d.d.map(([name, mim]) => mim
+        ? `<a href="https://omim.org/entry/${esc(mim)}" target="_blank" rel="noopener">${esc(name)}</a>` : esc(name));
+      h += `<div><b>Linked to disease:</b> ${items.join('; ')}${d.dm ? ` (+${d.dm} more)` : ''}</div>`;
+    } else if (d.n) h += `<div class="m">Disease note: ${esc(d.n)}</div>`;
+    h += `<div class="m">UniProt <a href="https://www.uniprot.org/uniprotkb/${esc(acc)}" target="_blank" rel="noopener">${esc(acc)}</a> · informational only, not medical advice</div>`;
+    box.className = 'desc';
+    box.innerHTML = h;
+  }
   const DIRSYM = ['⇢', '→', '⊣', '±'];
   function edgeSentence(e, d) {
     const s = nodes[eSrc(e)].l, t = nodes[eTgt(e)].l, cls = meta.cls[eCls(e)], net = meta.net[eNet(e)];
@@ -338,6 +361,7 @@ async function main() {
       const n = nodes[sel[0]];
       h += `<h2>${esc(n.l)}</h2><div class="sub">${esc(n.t)} · ${esc(n.r)}${n.u ? ' · UniProt ' + esc(n.u) : ''}${n.c ? ' · ' + esc(n.c) : ''}</div>`;
       h += `<div class="sub">${n.d} edges in total (${n.dr} regulation)${n.m ? ' · ' + n.m + ' members' : ''}</div>`;
+      h += '<div id="info"></div>';
       h += nodeSummary(sel[0]);
     } else {
       h += `<h2>${sel.length} nodes selected</h2><div class="sub">${sel.slice(0, 8).map((i) => esc(nodes[i].l)).join(', ')}${sel.length > 8 ? '…' : ''}</div>`;
@@ -349,6 +373,7 @@ async function main() {
         + `<div class="m">${meta.cls[eCls(e)]} · ${eEv(e)} ev · ${eRes(e)} res</div><div class="more" hidden></div></div>`;
     }
     el.innerHTML = h + '</div>';
+    if (sel.length === 1) fillInfo(sel[0]);
   }
   $('detail').addEventListener('click', async (ev) => {
     const rm = ev.target.closest('button[data-rm]');

@@ -56,3 +56,5 @@ input[type=search], input[type=number], select { width: 100%; padding: 6px 8px; 
 .desc div { margin: 3px 0; }
 .desc .m { color: #6b7588; }
 #detail a[data-node] { color: #9ecbff; cursor: pointer; }
+
+.desc a { color: #9ecbff; }

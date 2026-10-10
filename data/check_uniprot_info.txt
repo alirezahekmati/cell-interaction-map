@@ -1,0 +1,45 @@
+columns: ['Entry', 'Gene Names (primary)', 'Protein names', 'Function [CC]', 'Involvement in disease'] rows: 20431
+
+proteins in graph: 9677; with function text: 9302; with disease text: 3678
+cleaned function text: 2.55 MB raw (mean 275 chars)
+disease names: 0.32 MB raw; proteins with >=1 parsed name: 3450 of 3678
+
+== samples ==
+
+--- TSC2 | Tuberin (Tuberous sclerosis 2 protein)
+FUNCTION: Catalytic component of the TSC-TBC complex, a multiprotein complex that acts as a negative regulator of the canonical mTORC1 complex, an evolutionarily conserved central nutrient sensor that stimulates anabolic reactions and macromolecule biosynthesis to promote cellular biomass generation and growth (PubMed:12172553, PubMed:12271141, PubMed:12842888, PubMed:12906785, PubMed:15340059, PubMed:22819…
+DISEASES: ['Tuberous sclerosis 2 (TSC2)', 'Lymphangioleiomyomatosis (LAM)', 'Focal cortical dysplasia 2 (FCORD2)']
+RAW disease head: DISEASE: Tuberous sclerosis 2 (TSC2) [MIM:613254]: An autosomal dominant multi-system disorder that affects especially the brain, kidneys, heart, and skin. It is characterized by hamartomas (benign overgrowths predominantly of a cell or tissue type that occurs normally in the organ) and hamartias (d
+
+--- AKT1 | RAC-alpha serine/threonine-protein kinase (EC 2.7.11.1) (Protein kinase B) (PKB) (Protein kinase B alpha) (PKB alpha) (Proto-oncogene c-Akt) (RAC-PK-alpha)
+FUNCTION: AKT1 is one of 3 closely related serine/threonine-protein kinases (AKT1, AKT2 and AKT3) called the AKT kinase, and which regulate many processes including metabolism, proliferation, cell survival, growth and angiogenesis (PubMed:11882383, PubMed:15526160, PubMed:15861136, PubMed:21432781, PubMed:21620960, PubMed:31204173).
+DISEASES: ['Breast cancer (BC)', 'Colorectal cancer (CRC)', 'Note=Genetic variations in AKT1 may play a role in susceptibility to ovarian cancer.; DISEASE', 'Cowden syndrome 6 (CWS6)']
+RAW disease head: DISEASE: Breast cancer (BC) [MIM:114480]: A common malignancy originating from breast epithelial tissue. Breast neoplasms can be distinguished by their histologic pattern. Invasive ductal carcinoma is by far the most common type. Breast cancer is etiologically and genetically heterogeneous. Importan
+
+--- MTOR | Serine/threonine-protein kinase mTOR (EC 2.7.11.1) (FK506-binding protein 12-rapamycin complex-associated protein 1) (FKBP12-rapamycin complex-associated protein) (Mammalian target of rapamycin) (mTOR) (Mechanistic target of rapamycin) (Rapamycin and FKBP12 target 1) (Rapamycin target protein 1) (Tyrosine-protein kinase mTOR) (EC 2.7.10.2)
+FUNCTION: Serine/threonine protein kinase which is a central regulator of cellular metabolism, growth and survival in response to hormones, growth factors, nutrients, energy and stress signals (PubMed:12087098, PubMed:12150925, PubMed:12150926, PubMed:12231510, PubMed:12718876, PubMed:14651849, PubMed:15268862, PubMed:15467718, PubMed:15545625, PubMed:15718470, PubMed:18497260, PubMed:18762023, PubMed:18925…
+DISEASES: ['Smith-Kingsmore syndrome (SKS)', 'Focal cortical dysplasia 2 (FCORD2)']
+RAW disease head: DISEASE: Smith-Kingsmore syndrome (SKS) [MIM:616638]: An autosomal dominant syndrome characterized by intellectual disability, macrocephaly, seizures, umbilical hernia, and facial dysmorphic features. {ECO:0000269|PubMed:25851998, ECO:0000269|PubMed:26542245, ECO:0000269|PubMed:27830187}. Note=The d
+
+--- PRKAA1 | 5'-AMP-activated protein kinase catalytic subunit alpha-1 (AMPK subunit alpha-1) (EC 2.7.11.1) (Acetyl-CoA carboxylase kinase) (ACACA kinase) (Hydroxymethylglutaryl-CoA reductase kinase) (HMGCR kinase) (EC 2.7.11.31) (Tau-protein kinase PRKAA1) (EC 2.7.11.26)
+FUNCTION: Catalytic subunit of AMP-activated protein kinase (AMPK), an energy sensor protein kinase that plays a key role in regulating cellular energy metabolism (PubMed:17307971, PubMed:17712357, PubMed:24563466, PubMed:31492851, PubMed:37821951, PubMed:40233740).
+DISEASES: (none parsed)
+RAW disease head: (none)
+
+--- RHEB | GTP-binding protein Rheb (EC 3.6.5.-) (Ras homolog enriched in brain)
+FUNCTION: Small GTPase that acts as an allosteric activator of the canonical mTORC1 complex, an evolutionarily conserved central nutrient sensor that stimulates anabolic reactions and macromolecule biosynthesis to promote cellular biomass generation and growth (PubMed:12172553, PubMed:12271141, PubMed:12842888, PubMed:12869586, PubMed:12906785, PubMed:15340059, PubMed:15854902, PubMed:16098514, PubMed:20381…
+DISEASES: (none parsed)
+RAW disease head: (none)
+
+--- TP53 | Cellular tumor antigen p53 (Antigen NY-CO-13) (Phosphoprotein p53) (Tumor suppressor p53)
+FUNCTION: Multifunctional transcription factor that induces cell cycle arrest, DNA repair or apoptosis upon binding to its target DNA sequence (PubMed:11025664, PubMed:12524540, PubMed:12810724, PubMed:15186775, PubMed:15340061, PubMed:17317671, PubMed:17349958, PubMed:19556538, PubMed:20673990, PubMed:20959462, PubMed:22726440, PubMed:24051492, PubMed:24652652, PubMed:35618207, PubMed:36634798, PubMed:3865…
+DISEASES: ['Note=TP53 is found in increased amounts in a wide variety of transformed cells. TP53 is frequently mutated or inactivated in about 60% of cancers. TP53 defects are found in Barrett metaplasia a condition in which the normally stratified squamous epithelium of the lower esophagus is replaced by a metaplastic columnar epithelium. The condition develops as a complication in approximately 10% of patients with chronic gastroesophageal reflux disease and predisposes to the development of esophageal adenocarcinoma.; DISEASE', 'Li-Fraumeni syndrome (LFS)', 'Squamous cell carcinoma of the head and neck (HNSCC)', 'Lung cancer (LNCR)', 'Papilloma of choroid plexus (CPP)', 'Adrenocortical carcinoma (ADCC)', 'Basal cell carcinoma 7 (BCC7)', 'Bone marrow failure syndrome 5 (BMFS5)']
+RAW disease head: DISEASE: Note=TP53 is found in increased amounts in a wide variety of transformed cells. TP53 is frequently mutated or inactivated in about 60% of cancers. TP53 defects are found in Barrett metaplasia a condition in which the normally stratified squamous epithelium of the lower esophagus is replaced
+
+== proteins whose disease text parsed to no names (sample) ==
+228 of 3678
+  ACVR1B | DISEASE: Note=ACVRIB is abundantly expressed in systemic sclerosis patient fibroblasts and production of collagen is also induced by activin-A/INHBA. This sugge
+  KAT2B | DISEASE: Note=Defects in KAT2B has been found in a patient with isolated coloboma, a defect of the eye characterized by the absence of ocular structures due to 
+  APOBEC3B | DISEASE: Note=In the urothelium, antiviral activity of APOBEC3A and APOBEC3B against BK polyomavirus (BKPyV) drives a high burden of mutations in cells proximal
+  STRADA | DISEASE: Note=A homozygous 7-kb deletion involving STRADA is a cause of a syndrome characterized by polyhydramnios, megalencephaly and symptomatic epilepsy.
+  SORT1 | DISEASE: Note=A common polymorphism located in a non-coding region between CELSR2 and PSRC1 alters a CEBP transcription factor binding site and is responsible f
