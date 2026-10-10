@@ -1,0 +1,130 @@
+== Pharos TDL ==
+20654 rows; unique uniprot_id: 20654
+shape: (1, 2)
+┌──────────────────────────┬───────┐
+│ canonical_isoform_status ┆ len   │
+│ ---                      ┆ ---   │
+│ str                      ┆ u32   │
+╞══════════════════════════╪═══════╡
+│ canonical                ┆ 20654 │
+└──────────────────────────┴───────┘
+our proteins: 9677 | matched in Pharos: 9603
+shape: (5, 2)
+┌───────┬──────┐
+│ tdl   ┆ len  │
+│ ---   ┆ ---  │
+│ str   ┆ u32  │
+╞═══════╪══════╡
+│ Tbio  ┆ 6110 │
+│ Tchem ┆ 2504 │
+│ Tclin ┆ 646  │
+│ Tdark ┆ 343  │
+│ null  ┆ 74   │
+└───────┴──────┘
+unmatched sample:
+shape: (12, 2)
+┌──────────┬────────┐
+│ label    ┆ acc    │
+│ ---      ┆ ---    │
+│ str      ┆ str    │
+╞══════════╪════════╡
+│ IFNA1    ┆ P01562 │
+│ Helicase ┆ P0DTD1 │
+│ 6        ┆ P59634 │
+│ 8b       ┆ Q80H93 │
+│ LMP1     ┆ P03230 │
+│ 3a       ┆ P59632 │
+│ 3b       ┆ P59633 │
+│ N        ┆ P59595 │
+│ LF2      ┆ P0C725 │
+│ NQO1     ┆ Q5RD31 │
+│ BRLF1    ┆ P03209 │
+│ BPLF1    ┆ P03186 │
+└──────────┴────────┘
+shape: (8, 6)
+┌────────┬────────┬───────┬──────────────────────┬────────────────┬──────────────────┐
+│ label  ┆ acc    ┆ tdl   ┆ idg_family           ┆ tdl_drug_count ┆ tdl_ligand_count │
+│ ---    ┆ ---    ┆ ---   ┆ ---                  ┆ ---            ┆ ---              │
+│ str    ┆ str    ┆ str   ┆ str                  ┆ str            ┆ str              │
+╞════════╪════════╪═══════╪══════════════════════╪════════════════╪══════════════════╡
+│ PRKAA1 ┆ Q13131 ┆ Tclin ┆ Kinase               ┆ 1              ┆ 29               │
+│ TSC2   ┆ P49815 ┆ Tbio  ┆ null                 ┆ 0              ┆ 0                │
+│ TP53   ┆ P04637 ┆ Tchem ┆ Transcription Factor ┆ 0              ┆ 3509             │
+│ AKT1   ┆ P31749 ┆ Tclin ┆ Kinase               ┆ 0              ┆ 1367             │
+│ STK11  ┆ Q15831 ┆ Tchem ┆ Kinase               ┆ 0              ┆ 3                │
+│ EGFR   ┆ P00533 ┆ Tclin ┆ Kinase               ┆ 15             ┆ 4421             │
+│ RHEB   ┆ Q15382 ┆ Tbio  ┆ Enzyme               ┆ 0              ┆ 0                │
+│ MTOR   ┆ P42345 ┆ Tclin ┆ Kinase               ┆ 1              ┆ 2130             │
+└────────┴────────┴───────┴──────────────────────┴────────────────┴──────────────────┘
+
+== DrugCentral drug-target file ==
+22364 rows; columns: ['"DRUG_NAME"', '"STRUCT_ID"', '"TARGET_NAME"', '"TARGET_CLASS"', '"ACCESSION"', '"GENE"', '"SWISSPROT"', '"ACT_VALUE"', '"ACT_UNIT"', '"ACT_TYPE"', '"ACT_COMMENT"', '"ACT_SOURCE"', '"RELATION"', '"MOA"', '"MOA_SOURCE"', '"ACT_SOURCE_URL"', '"MOA_SOURCE_URL"', '"ACTION_TYPE"', '"TDL"', '"ORGANISM"']
+shape: (20, 4)
+┌──────────────────┬───────────────────────────────────────────────────────────────────────────────────┬───────────────────────────────────────────────┬───────────────────────────────────────────────────────────────┐
+│ column           ┆ row1                                                                              ┆ row2                                          ┆ row3                                                          │
+│ ---              ┆ ---                                                                               ┆ ---                                           ┆ ---                                                           │
+│ str              ┆ str                                                                               ┆ str                                           ┆ str                                                           │
+╞══════════════════╪═══════════════════════════════════════════════════════════════════════════════════╪═══════════════════════════════════════════════╪═══════════════════════════════════════════════════════════════╡
+│ "DRUG_NAME"      ┆ "levobupivacaine"                                                                 ┆ "levobupivacaine"                             ┆ "levobupivacaine"                                             │
+│ "STRUCT_ID"      ┆ 4                                                                                 ┆ 4                                             ┆ 4                                                             │
+│ "TARGET_NAME"    ┆ "Potassium voltage-gated channel subfamily H member 2"                            ┆ "Sodium channel protein type 1 subunit alpha" ┆ "Sodium channel protein type 4 subunit alpha"                 │
+│ "TARGET_CLASS"   ┆ "Ion channel"                                                                     ┆ "Ion channel"                                 ┆ "Ion channel"                                                 │
+│ "ACCESSION"      ┆ "Q12809"                                                                          ┆ "P35498"                                      ┆ "P35499"                                                      │
+│ "GENE"           ┆ "KCNH2"                                                                           ┆ "SCN1A"                                       ┆ "SCN4A"                                                       │
+│ "SWISSPROT"      ┆ "KCNH2_HUMAN"                                                                     ┆ "SCN1A_HUMAN"                                 ┆ "SCN4A_HUMAN"                                                 │
+│ "ACT_VALUE"      ┆ 4.89                                                                              ┆ 5.79                                          ┆ null                                                          │
+│ "ACT_UNIT"       ┆ null                                                                              ┆ null                                          ┆ null                                                          │
+│ "ACT_TYPE"       ┆ "IC50"                                                                            ┆ "IC50"                                        ┆ null                                                          │
+│ "ACT_COMMENT"    ┆ "Inhibition of wild-type human ERG channel expressed in HEK293 cells assessed as… ┆ null                                          ┆ null                                                          │
+│ "ACT_SOURCE"     ┆ "CHEMBL"                                                                          ┆ "WOMBAT-PK"                                   ┆ "WOMBAT-PK"                                                   │
+│ "RELATION"       ┆ "="                                                                               ┆ "="                                           ┆ null                                                          │
+│ "MOA"            ┆ null                                                                              ┆ null                                          ┆ 1                                                             │
+│ "MOA_SOURCE"     ┆ null                                                                              ┆ null                                          ┆ "CHEMBL"                                                      │
+│ "ACT_SOURCE_URL" ┆ null                                                                              ┆ null                                          ┆ null                                                          │
+│ "MOA_SOURCE_URL" ┆ null                                                                              ┆ null                                          ┆ "https://www.ebi.ac.uk/chembl/compound/inspect/CHEMBL1201193" │
+│ "ACTION_TYPE"    ┆ null                                                                              ┆ null                                          ┆ "BLOCKER"                                                     │
+│ "TDL"            ┆ "Tclin"                                                                           ┆ "Tclin"                                       ┆ "Tclin"                                                       │
+│ "ORGANISM"       ┆ "Homo sapiens"                                                                    ┆ "Homo sapiens"                                ┆ "Homo sapiens"                                                │
+└──────────────────┴───────────────────────────────────────────────────────────────────────────────────┴───────────────────────────────────────────────┴───────────────────────────────────────────────────────────────┘
+
+columns with few distinct values:
+  "ACT_UNIT" (1): [None]
+  "ACT_SOURCE" (11): ['"IUPHAR"', '"KEGG DRUG"', '"UNKNOWN"', '"WOMBAT-PK"', '"DRUGBANK"', '"CHEMBL"', '"SCIENTIFIC LITERATURE"', '"Mechanism of Action"', '"DRUG MATRIX"', '"DRUG LABEL"', '"PDSP"']
+  "RELATION" (6): ['">"', None, '"="', '"UNKNOWN"', '"-"', '"~"']
+  "MOA" (2): ['1', None]
+  "MOA_SOURCE" (9): ['"IUPHAR"', '"SCIENTIFIC LITERATURE"', '"EXPERT CURATOR"', '"DRUGBANK"', '"KEGG DRUG"', '"DRUG LABEL"', '"CHEMBL"', '1', None]
+
+== Approved-drug lists ==
+FDA: 2330 rows; columns: ['2104', 'perflutren']
+shape: (3, 2)
+┌──────┬─────────────┐
+│ 2104 ┆ perflutren  │
+│ ---  ┆ ---         │
+│ str  ┆ str         │
+╞══════╪═════════════╡
+│ 1834 ┆ monobenzone │
+│ 2684 ┆ tobramycin  │
+│ 3051 ┆ butamben    │
+└──────┴─────────────┘
+EMA: 455 rows; columns: ['5405', 'belantamab mafodotin']
+shape: (3, 2)
+┌──────┬──────────────────────┐
+│ 5405 ┆ belantamab mafodotin │
+│ ---  ┆ ---                  │
+│ str  ┆ str                  │
+╞══════╪══════════════════════╡
+│ 5376 ┆ remdesivir           │
+│ 5415 ┆ lumasiran            │
+│ 5416 ┆ setmelanotide        │
+└──────┴──────────────────────┘
+PMDA: 434 rows; columns: ['5392', 'capmatinib']
+shape: (3, 2)
+┌──────┬─────────────┐
+│ 5392 ┆ capmatinib  │
+│ ---  ┆ ---         │
+│ str  ┆ str         │
+╞══════╪═════════════╡
+│ 5400 ┆ remimazolam │
+│ 5408 ┆ viltolarsen │
+│ 5419 ┆ filgotinib  │
+└──────┴─────────────┘

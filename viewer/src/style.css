@@ -58,3 +58,11 @@ input[type=search], input[type=number], select { width: 100%; padding: 6px 8px; 
 #detail a[data-node] { color: #9ecbff; cursor: pointer; }
 
 .desc a { color: #9ecbff; }
+
+details.panel { margin: 10px 0; border-top: 1px solid #1c2330; padding-top: 6px; }
+details.panel > summary { cursor: pointer; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: #8a93a3; padding: 4px 0; list-style: none; }
+details.panel > summary::-webkit-details-marker { display: none; }
+details.panel > summary::before { content: '▸ '; }
+details.panel[open] > summary::before { content: '▾ '; }
+.leg { display: flex; align-items: center; gap: 6px; margin: 2px 0; font-size: 12px; color: #aab2c0; }

@@ -35,6 +35,35 @@ const MAXE = 15000;     // max edges drawn at once
 const ROWS = 300;       // max rows in the detail list
 const CAP = 6;          // arrow / T-bar size in world units
 
+const DRUG_COLORS = { approved: '#22d3ee', drug: '#5b8def', Tchem: '#ffa94d', Tbio: '#8a93a3', Tdark: '#4a5468', none: '#363d4a' };
+function drugClass(n, drugs) {
+  if (n.t !== 'protein') return 'none';
+  const r = drugs[n.k.slice(2)];
+  if (!r) return 'none';
+  if (r.t === 'Tclin' || (r.d && r.d.some((x) => x[2] !== '-'))) return 'approved';
+  if (r.d && r.d.length) return 'drug';
+  return r.t || 'none';
+}
+
+// each sidebar section (an h2 plus what follows it) becomes an open/close panel
+const OPEN_PANELS = new Set(['Edge layers']);
+function makePanels() {
+  const side = $('side');
+  let cur = null;
+  for (const el of [...side.children]) {
+    if (el.tagName === 'H2') {
+      cur = document.createElement('details');
+      cur.className = 'panel';
+      cur.open = OPEN_PANELS.has(el.textContent.trim());
+      const sm = document.createElement('summary');
+      sm.textContent = el.textContent;
+      cur.append(sm);
+      side.insertBefore(cur, el);
+      el.remove();
+    } else if (cur) cur.append(el);
+  }
+}
+
 async function getEdges() {
   const bin = atob(await get('edges_b64.json'));
   const u = new Uint8Array(bin.length);
@@ -43,8 +72,9 @@ async function getEdges() {
 }
 
 async function main() {
-  const [meta, nodes, regions, buf] = await Promise.all([
-    get('meta.json'), get('nodes.json'), get('regions.json'), getEdges()]);
+  makePanels();
+  const [meta, nodes, regions, buf, drugs] = await Promise.all([
+    get('meta.json'), get('nodes.json'), get('regions.json'), getEdges(), get('node_drugs.json').catch(() => ({}))]);
   const N = nodes.length, E = meta.n_edges;
   if (buf.byteLength !== E * 20) throw new Error(`edges.bin is ${buf.byteLength} bytes, expected ${E * 20}`);
 
@@ -63,7 +93,7 @@ async function main() {
 
   // ---------------------------------------------------------------- node data
   const pos = new Float32Array(N * 3), baseSize = new Float32Array(N);
-  const colReg = new Float32Array(N * 3), colKind = new Float32Array(N * 3);
+  const colReg = new Float32Array(N * 3), colKind = new Float32Array(N * 3), colDrug = new Float32Array(N * 3);
   const lower = new Array(N), tmp = new THREE.Color();
   const kindCount = {}, regCount = {};
   nodes.forEach((n, i) => {
@@ -71,6 +101,7 @@ async function main() {
     baseSize[i] = Math.min(16, 2.2 + 0.8 * Math.sqrt(Math.max(n.d, 1)));
     tmp.set(meta.region_colors[n.r] || '#adb5bd'); colReg.set([tmp.r, tmp.g, tmp.b], i * 3);
     tmp.set(KIND_COLORS[n.t] || '#adb5bd'); colKind.set([tmp.r, tmp.g, tmp.b], i * 3);
+    tmp.set(DRUG_COLORS[drugClass(n, drugs)]); colDrug.set([tmp.r, tmp.g, tmp.b], i * 3);
     lower[i] = n.l.toLowerCase();
     kindCount[n.t] = (kindCount[n.t] || 0) + 1;
     regCount[n.r] = (regCount[n.r] || 0) + 1;
@@ -250,7 +281,7 @@ async function main() {
 
   // ---------------------------------------------------------------- node attribute refresh
   function refreshNodes() {
-    const hl = S.highlight, cols = S.colorby === 'kind' ? colKind : colReg;
+    const hl = S.highlight, cols = S.colorby === 'kind' ? colKind : S.colorby === 'drug' ? colDrug : colReg;
     let shown = 0;
     for (let i = 0; i < N; i++) {
       const v = vis(i), s = S.selected.has(i);
@@ -288,7 +319,25 @@ async function main() {
   }
 
   // ---------------------------------------------------------------- detail panel
-    let infoP = null;
+    const TDL_TXT = { Tclin: 'has approved drugs acting on it', Tchem: 'small molecules bind it strongly, but no approved drug',
+    Tbio: 'biology is annotated, but no qualifying small molecules', Tdark: 'little is known about it' };
+  const AGN = { F: 'FDA', E: 'EMA', P: 'PMDA' };
+  function drugBox(i) {
+    const n = nodes[i];
+    if (n.t !== 'protein') return '';
+    const acc = n.k.slice(2), r = drugs[acc];
+    if (!r) return '';
+    let h = '<div class="desc">';
+    if (r.t) h += `<div><b>Druggability: ${esc(r.t)}</b> <span class="m">${esc(TDL_TXT[r.t] || '')}${r.f ? ' · ' + esc(r.f) : ''}</span></div>`;
+    if (r.d && r.d.length) {
+      h += `<div style="margin-top:4px"><b>Drugs (${r.n})</b></div>`;
+      h += r.d.map(([name, act, ag]) => `<div>${esc(name)} <span class="m">${esc(act || 'action n/a')} · ${ag === '-' ? 'not on FDA/EMA/PMDA lists' : ag.split('').map((c) => AGN[c]).join(', ')}</span></div>`).join('');
+      if (r.n > r.d.length) h += `<div class="m">+${r.n - r.d.length} more, see Pharos</div>`;
+    } else h += '<div class="m">No drug with a mechanism-of-action entry in DrugCentral.</div>';
+    h += `<div class="m"><a href="https://pharos.nih.gov/targets/${esc(acc)}" target="_blank" rel="noopener">Pharos</a> · DrugCentral mechanism-of-action drugs only; clinical-trial drugs are not included yet</div></div>`;
+    return h;
+  }
+  let infoP = null;
   async function fillInfo(i) {
     const n = nodes[i];
     if (n.t !== 'protein') return;
@@ -362,6 +411,7 @@ async function main() {
       h += `<h2>${esc(n.l)}</h2><div class="sub">${esc(n.t)} · ${esc(n.r)}${n.u ? ' · UniProt ' + esc(n.u) : ''}${n.c ? ' · ' + esc(n.c) : ''}</div>`;
       h += `<div class="sub">${n.d} edges in total (${n.dr} regulation)${n.m ? ' · ' + n.m + ' members' : ''}</div>`;
       h += '<div id="info"></div>';
+      h += drugBox(sel[0]);
       h += nodeSummary(sel[0]);
     } else {
       h += `<h2>${sel.length} nodes selected</h2><div class="sub">${sel.slice(0, 8).map((i) => esc(nodes[i].l)).join(', ')}${sel.length > 8 ? '…' : ''}</div>`;
@@ -533,7 +583,16 @@ async function main() {
     l.append(b);
   });
   $('size').addEventListener('input', (ev) => { S.sizeMul = +ev.target.value; update(); });
-  $('colorby').addEventListener('change', (ev) => { S.colorby = ev.target.value; refreshNodes(); });
+  $('colorby').addEventListener('change', (ev) => { S.colorby = ev.target.value; refreshNodes(); setLegend(); });
+  const legend = document.createElement('div'); legend.id = 'legend';
+  $('colorby').parentElement.after(legend);
+  const DRUG_TXT = [['approved', 'Target of an approved drug (Pharos Tclin)'], ['drug', 'Other drug in DrugCentral'],
+    ['Tchem', 'Small molecules bind it, no drug (Tchem)'], ['Tbio', 'Biology known, no compounds (Tbio)'],
+    ['Tdark', 'Little known (Tdark)'], ['none', 'Not a protein, or no data']];
+  function setLegend() {
+    legend.innerHTML = S.colorby === 'drug'
+      ? DRUG_TXT.map(([k, t]) => `<div class="leg"><span class="sw" style="background:${DRUG_COLORS[k]}"></span><span>${t}</span></div>`).join('') : '';
+  }
   $('labels').addEventListener('change', (ev) => { S.labels = ev.target.checked; update(); });
 
   // search

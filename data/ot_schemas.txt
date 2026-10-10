@@ -1,0 +1,137 @@
+release dir: 26.09
+
+===== association_overall_indirect (39 files) =====
+rows: 17459960
+  diseaseId: String
+  targetId: String
+  aggregationType: String
+  aggregationValue: String
+  associationScore: Float64
+  evidenceCount: Int64
+  timeseries: List(Struct({'year': Int32, 'associationScore': Float64, 'novelty': Float64, 'yearlyEvidenceCount': Int64}))
+  currentNovelty: Float64
+sample: {'diseaseId': 'EFO_0000180', 'targetId': 'ENSG00000009413', 'aggregationType': 'overall', 'aggregationValue': 'None', 'associationScore': 0.0014800995840213117, 'evidenceCount': 1, 'timeseries': [{'year': 2023, 'associationScore': 0.0014800995840213117, 'novelty': 0.0014534782021383, 'yearlyEvidenceCount': None}, {'year': 2020, 'associationScore': 0.0, 'novelty': 0.0, 'yearlyEvidenceCount': None}, {'year': 2019, 'associationScore': 0.0, 'novelty': 0.0, 'yearlyEvidenceCount': None}, {'year': 2022, 'associationScore': 0.0014800995840213117, 'novelty': 0.0014764398555157353, 'yearlyEvidenceCount': 1}, {'year': 2018, 'associationScore': 0.0, 'novelty': 0.0, 'yearlyEvidenceCount': None}, {'year': 2021, 'associationScore': 0.0, 'novelty': 0.0, 'yearlyEvidenceCount': None}, {'year': 2024, 'associationScore': 0.0014800995840213117, 'novelty': 0.0013036673887222505, 'yearlyEvidenceCount': None}, 
+
+===== clinical_indication (1 files) =====
+rows: 86451
+  id: String
+  maxClinicalStage: String
+  clinicalReportIds: List(String)
+  diseaseId: String
+  drugId: String
+sample: {'id': 'bcae49c2072f6bce9286dcced5374756568bbc17c3c389e188a091351dc06607', 'maxClinicalStage': 'APPROVAL', 'clinicalReportIds': ['00011703-bc55-4c0c-858c-149dc674bc3c', '006095a1-0ac2-4142-9527-f3b058c1d7bc', '03697692-effb-4439-86fe-f9c8e1525409', '058bb5a8-8ed1-43fe-8798-6bf0138734bf', '0772d62d-64e4-4f7f-b3c8-3574d321fbde', '108c9168-c33d-47e8-89a9-0d8ec9d45ce6', '1cb71324-72e7-40f8-8c51-25c7aa0bce57', '1d19a6db-6da5-e7de-f929-2d18bdfa2cf5', '1f42711d-f960-4832-acf5-97096aa6ad77', '29c44184-6d77-4d84-97f4-fbaa4f40fc3e', '2ec6bd57-96df-47ac-b218-1469801868b7', '2f86e302-445b-411b-97ce-b5a469d54abb', '33ad989c-f551-4c57-a4e3-b607686206fa', '48d04295-1e74-4e5a-a0c6-58c7ac0a7547', '5117d567-2004-c5ed-1391-f8831864696f', '557b44ee-bea9-4dfe-866b-f0e3d8fcd018', '566d218b-ad36-43b3-9794-e17092e80658', '59bfb7f9-400c-4bcd-88cc-edde4b1e8189', '5f1c5541-4492-4736-bb60-0b1a654b9cd4', '68c2fbe8-1
+
+===== clinical_report (1 files) =====
+rows: 289954
+  id: String
+  clinicalStage: String
+  origin: String
+  type: String
+  source: String
+  provider: String
+  drugs: List(Struct({'drugFromSource': String, 'drugId': String}))
+  countries: List(String)
+  trialDescription: String
+  phaseFromSource: String
+  trialOfficialTitle: String
+  trialSponsor: Struct({'agencyClass': String, 'name': String})
+  diseases: List(Struct({'diseaseFromSource': String, 'diseaseId': String}))
+  trialLiterature: List(Struct({'id': String, 'type': String}))
+  sideEffects: List(Struct({'diseaseId': String, 'diseaseFromSource': String}))
+  trialPhase: String
+  trialWhyStopped: String
+  trialStudyType: String
+  qualityControls: List(String)
+  trialPrimaryPurpose: String
+  title: String
+  trialNumberOfArms: Int32
+  trialOverallStatus: String
+  year: Int32
+  trialStopReasonCategories: List(String)
+  url: String
+  trialStartDate: Date
+sample: {'id': '00011703-bc55-4c0c-858c-149dc674bc3c', 'clinicalStage': 'APPROVAL', 'origin': 'DRUG_LABEL', 'type': 'INDICATION', 'source': 'DailyMed', 'provider': 'ChEMBL', 'drugs': [{'drugFromSource': 'OFLOXACIN', 'drugId': 'CHEMBL4'}], 'countries': None, 'trialDescription': None, 'phaseFromSource': 'APPROVAL', 'trialOfficialTitle': None, 'trialSponsor': None, 'diseases': [{'diseaseFromSource': 'infection', 'diseaseId': 'EFO_0000544'}], 'trialLiterature': None, 'sideEffects': None, 'trialPhase': None, 'trialWhyStopped': None, 'trialStudyType': None, 'qualityControls': None, 'trialPrimaryPurpose': None, 'title': 'Report in Approval stage for Ofloxacin and Infection', 'trialNumberOfArms': None, 'trialOverallStatus': None, 'year': None, 'trialStopReasonCategories': None, 'url': 'https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=00011703-bc55-4c0c-858c-149dc674bc3c', 'trialStartDate': None}
+
+===== clinical_target (1 files) =====
+rows: 13261
+  id: String
+  drugId: String
+  targetId: String
+  diseases: List(Struct({'diseaseFromSource': String, 'diseaseId': String}))
+  clinicalReportIds: List(String)
+  maxClinicalStage: String
+sample: {'id': '3b7ad4b95a794fe4e04bea03d9823ceb5645f49f67058f769685e3093f427e72', 'drugId': 'CHEMBL515914', 'targetId': 'ENSG00000114491', 'diseases': [None, {'diseaseFromSource': 'psoriasis vulgaris', 'diseaseId': 'EFO_1001494'}], 'clinicalReportIds': ['0031dba951c368a84dccf46b2a9f977a8e3f2b03fee1a13147117311e0b41cde', '03ad64a7f4165429bdb0bd23f55c868fc7372a9d119ace35a8f15b23c3cb422b', 'f3e26fb81e87cf349ab81f039d488126459c2900e5b626eec81e7a555fdde637', 'd09sik/psoriasis vulgaris'], 'maxClinicalStage': 'WITHDRAWAL'}
+
+===== disease (1 files) =====
+rows: 45896
+  id: String
+  code: String
+  name: String
+  description: String
+  dbXRefs: List(String)
+  parents: List(String)
+  exactSynonyms: List(String)
+  relatedSynonyms: List(String)
+  narrowSynonyms: List(String)
+  broadSynonyms: List(String)
+  obsoleteTerms: List(String)
+  obsoleteXRefs: List(String)
+  children: List(String)
+  ancestors: List(String)
+  therapeuticAreas: List(String)
+  descendants: List(String)
+  ontology: Struct({'isTherapeuticArea': Boolean, 'leaf': Boolean, 'sources': Struct({'url': String, 'name': String})})
+  synonyms: Struct({'hasExactSynonym': List(String), 'hasRelatedSynonym': List(String), 'hasNarrowSynonym': List(String), 'hasBroadSynonym': List(String)})
+sample: {'id': 'GO_0000050', 'code': 'http://purl.obolibrary.org/obo/GO_0000050', 'name': 'urea cycle', 'description': 'The sequence of reactions by which arginine is synthesized from ornithine, then cleaved to yield urea and regenerate ornithine. The overall reaction equation is NH3 + CO2 + aspartate + 3 ATP + 2 H2O = urea + fumarate + 2 ADP + 2 phosphate + AMP + diphosphate.', 'dbXRefs': ['Reactome:R-HSA-70635', 'Wikipedia:Urea_cycle'], 'parents': ['GO_0009058'], 'exactSynonyms': ['ornithine cycle', 'urea biosynthesis', 'urea biosynthetic process'], 'relatedSynonyms': [], 'narrowSynonyms': [], 'broadSynonyms': [], 'obsoleteTerms': [], 'obsoleteXRefs': [], 'children': [], 'ancestors': ['GO_0009058', 'GO_0008152', 'GO_0009987', 'GO_0008150'], 'therapeuticAreas': ['GO_0008150'], 'descendants': [], 'ontology': {'isTherapeuticArea': False, 'leaf': False, 'sources': {'url': 'http://purl.obolibrary.o
+
+===== drug_mechanism_of_action (1 files) =====
+rows: 6092
+  mechanismOfAction: String
+  actionType: String
+  chemblIds: List(String)
+  references: List(Struct({'source': String, 'ids': List(String), 'urls': List(String)}))
+  targetName: String
+  targetType: String
+  targets: List(String)
+sample: {'mechanismOfAction': 'Carbonic anhydrase VII inhibitor', 'actionType': 'INHIBITOR', 'chemblIds': ['CHEMBL19'], 'references': [{'source': 'PubMed', 'ids': ['18336310', '18336310', '18336310', '18336310'], 'urls': ['http://europepmc.org/abstract/MED/18336310', 'http://europepmc.org/abstract/MED/18336310', 'http://europepmc.org/abstract/MED/18336310', 'http://europepmc.org/abstract/MED/18336310']}, {'source': 'DailyMed', 'ids': ['setid=8e162b6d-8fa6-45f6-80d8-5132d94c1207', 'setid=8e162b6d-8fa6-45f6-80d8-5132d94c1207', 'setid=8e162b6d-8fa6-45f6-80d8-5132d94c1207', 'setid=8e162b6d-8fa6-45f6-80d8-5132d94c1207'], 'urls': ['http://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=8e162b6d-8fa6-45f6-80d8-5132d94c1207', 'http://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=8e162b6d-8fa6-45f6-80d8-5132d94c1207', 'http://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=8e162b6d-8fa6-45f6-80d8-5132d94c
+
+===== drug_molecule (1 files) =====
+rows: 19170
+  id: String
+  canonicalSmiles: String
+  inchiKey: String
+  molblock: String
+  drugType: String
+  name: String
+  parentId: String
+  synonyms: List(Struct({'label': String, 'source': String}))
+  tradeNames: List(Struct({'label': String, 'source': String}))
+  crossReferences: List(Struct({'source': String, 'ids': List(String)}))
+  childChemblIds: List(String)
+  maximumClinicalStage: String
+  description: String
+sample: {'id': 'CHEMBL100', 'canonicalSmiles': 'CC1(C)Oc2ccc(C#N)cc2[C@@H](N2CCCC2=O)[C@@H]1O', 'inchiKey': 'TVZCRIROJQEVOT-CABCVRRESA-N', 'molblock': '\n     RDKit          2D\n\n 21 23  0  0  1  0  0  0  0  0999 V2000\n    1.6500   -0.2004    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.5247    0.4916    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.1432   -1.4070    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    2.8122    0.4488    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.8589    1.7104    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.7480    2.4519    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n    0.5748    1.8449    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.2569   -2.3749    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -4.1833   -0.6125    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.6485   -0.1155    0.0000 C   0  0  0  0  0
+
+===== target (3 files) =====
+rows: 78733
+  id: String
+  approvedSymbol: String
+  biotype: String
+  genomicLocation: Struct({'chromosome': String, 'start': Int64, 'end': Int64, 'strand': Int32})
+  approvedName: String
+  go: List(Struct({'id': String, 'source': String, 'evidence': String, 'aspect': String, 'geneProduct': String, 'ecoId': String}))
+  hallmarks: Struct({'attributes': List(Struct({'pmid': Int64, 'description': String, 'name': String})), 'cancerHallmarks': List(Struct({'pmid': Int64, 'descriptio
+  synonyms: List(Struct({'label': String, 'source': String}))
+  symbolSynonyms: List(Struct({'label': String, 'source': String}))
+  nameSynonyms: List(Struct({'label': String, 'source': String}))
+  functionDescriptions: List(String)
+  subcellularLocations: List(Struct({'location': String, 'source': String, 'termSL': String, 'labelSL': String, 'targetModifier': String}))
+  targetClass: List(Struct({'id': Int64, 'label': String, 'level': String}))
+  obsoleteSymbols: List(Struct({'label': String, 'source': String}))
+  obsoleteNames: List(Struct({'label': String, 'source': String}))
+  constraint: List(Struct({'constraintType': String, 'score': Float32, 'exp': Float32, 'obs': Int32, 'oe': Float32, 'oeLower': Float32, 'oeUpper': Float32, 'upperRa
+  proteinIds: List(Struct({'id': String, 'source': String}))
+  dbXrefs: List(Struct({'id': String, 'source': String}))
+  pathways: List(Struct({'pathwayId': String, 'pathway': String, 'topLevelTerm': String}))
+  tss: Int64
+sample: {'id': 'ENSG00000083454', 'approvedSymbol': 'P2RX5', 'biotype': 'protein_coding', 'genomicLocation': {'chromosome': '17', 'start': 3669763, 'end': 3696398, 'strand': -1}, 'approvedName': 'purinergic receptor P2X 5', 'go': [{'id': 'GO:0033198', 'source': 'GO_REF:0000107', 'evidence': 'IEA', 'aspect': 'P', 'geneProduct': 'Q93086', 'ecoId': 'ECO:0000256'}, {'id': 'GO:0050850', 'source': 'PMID:17895406', 'evidence': 'NAS', 'aspect': 'P', 'geneProduct': 'Q93086', 'ecoId': 'ECO:0000303'}, {'id': 'GO:0098655', 'source': 'GO_REF:0000002', 'evidence': 'IEA', 'aspect': 'P', 'geneProduct': 'Q93086', 'ecoId': 'ECO:0000265'}, {'id': 'GO:0016020', 'source': 'GO_REF:0000002', 'evidence': 'IEA', 'aspect': 'C', 'geneProduct': 'Q93086', 'ecoId': 'ECO:0000256'}, {'id': 'GO:0009268', 'source': 'GO_REF:0000107', 'evidence': 'IEA', 'aspect': 'P', 'geneProduct': 'Q93086', 'ecoId': 'ECO:0000265'}, {'id': 'GO:00

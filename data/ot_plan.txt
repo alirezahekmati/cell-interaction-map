@@ -1,0 +1,11 @@
+Open Targets release 26.09
+  disease                               1 files    0.01 GB   (already have 0.00 GB)
+  target                                3 files    0.02 GB   (already have 0.00 GB)
+  drug_molecule                         1 files    0.01 GB   (already have 0.00 GB)
+  drug_mechanism_of_action              1 files    0.00 GB   (already have 0.00 GB)
+  clinical_indication                   1 files    0.00 GB   (already have 0.00 GB)
+  clinical_report                       1 files    0.08 GB   (already have 0.00 GB)
+  clinical_target                       1 files    0.00 GB   (already have 0.00 GB)
+  association_overall_indirect         39 files    2.41 GB   (already have 0.00 GB)
+
+still to download: 2.53 GB | free disk: 995.66 GB

@@ -1,0 +1,85 @@
+Open Targets release 26.09
+  disease                               1 files    0.01 GB   (already have 0.00 GB)
+  target                                3 files    0.02 GB   (already have 0.00 GB)
+  drug_molecule                         1 files    0.01 GB   (already have 0.00 GB)
+  drug_mechanism_of_action              1 files    0.00 GB   (already have 0.00 GB)
+  clinical_indication                   1 files    0.00 GB   (already have 0.00 GB)
+  clinical_report                       1 files    0.08 GB   (already have 0.00 GB)
+  clinical_target                       1 files    0.00 GB   (already have 0.00 GB)
+  association_overall_indirect         39 files    2.41 GB   (already have 0.00 GB)
+
+still to download: 2.53 GB | free disk: 995.66 GB
+
+== disease: 1 of 1 files to download ==
+    ok  00000000.parquet                                      6.3 MB    1.34 MB/s
+== disease finished | elapsed 0.1 min | failures so far: 0 ==
+
+== target: 3 of 3 files to download ==
+    ok  part-00001-ddfc1f8c-60a1-40fe-885a-2c1dd3f9a9c1-      7.2 MB    2.20 MB/s
+    ok  part-00002-ddfc1f8c-60a1-40fe-885a-2c1dd3f9a9c1-      7.3 MB    2.09 MB/s
+    ok  part-00000-ddfc1f8c-60a1-40fe-885a-2c1dd3f9a9c1-      7.2 MB    2.02 MB/s
+== target finished | elapsed 0.1 min | failures so far: 0 ==
+
+== drug_molecule: 1 of 1 files to download ==
+    ok  00000000.parquet                                      6.9 MB    1.60 MB/s
+== drug_molecule finished | elapsed 0.2 min | failures so far: 0 ==
+
+== drug_mechanism_of_action: 1 of 1 files to download ==
+    ok  00000000.parquet                                      0.3 MB    0.42 MB/s
+== drug_mechanism_of_action finished | elapsed 0.2 min | failures so far: 0 ==
+
+== clinical_indication: 1 of 1 files to download ==
+    ok  00000000.parquet                                      5.0 MB    1.45 MB/s
+== clinical_indication finished | elapsed 0.3 min | failures so far: 0 ==
+
+== clinical_report: 1 of 1 files to download ==
+    ok  00000000.parquet                                     75.9 MB    1.49 MB/s
+== clinical_report finished | elapsed 1.2 min | failures so far: 0 ==
+
+== clinical_target: 1 of 1 files to download ==
+    ok  00000000.parquet                                      2.8 MB    1.11 MB/s
+== clinical_target finished | elapsed 1.2 min | failures so far: 0 ==
+
+== association_overall_indirect: 39 of 39 files to download ==
+    ok  part-00000-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     58.1 MB    1.64 MB/s
+    ok  part-00001-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.2 MB    1.69 MB/s
+    ok  part-00002-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.9 MB    1.65 MB/s
+    ok  part-00003-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.9 MB    1.86 MB/s
+    ok  part-00004-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     63.1 MB    1.67 MB/s
+    ok  part-00005-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     58.2 MB    1.57 MB/s
+    ok  part-00006-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.9 MB    2.03 MB/s
+    ok  part-00007-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     61.9 MB    1.79 MB/s
+    ok  part-00008-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.9 MB    1.58 MB/s
+    ok  part-00009-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.9 MB    1.55 MB/s
+    ok  part-00010-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.5 MB    1.42 MB/s
+    ok  part-00011-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     58.3 MB    1.42 MB/s
+    ok  part-00012-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.2 MB    1.30 MB/s
+    ok  part-00013-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.2 MB    1.36 MB/s
+    ok  part-00014-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.5 MB    1.34 MB/s
+    ok  part-00015-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.9 MB    1.59 MB/s
+    ok  part-00016-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     57.4 MB    1.64 MB/s
+    ok  part-00017-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.9 MB    1.61 MB/s
+    ok  part-00018-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.0 MB    1.70 MB/s
+    ok  part-00019-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     63.0 MB    1.66 MB/s
+    ok  part-00020-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.7 MB    1.70 MB/s
+    ok  part-00021-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.1 MB    1.58 MB/s
+    ok  part-00022-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     58.1 MB    1.54 MB/s
+    ok  part-00023-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.9 MB    1.63 MB/s
+    ok  part-00024-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     63.6 MB    1.65 MB/s
+    ok  part-00025-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     63.0 MB    1.72 MB/s
+    ok  part-00026-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.8 MB    1.82 MB/s
+    ok  part-00027-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     58.0 MB    1.64 MB/s
+    ok  part-00028-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.5 MB    1.69 MB/s
+    ok  part-00029-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     63.1 MB    1.86 MB/s
+    ok  part-00030-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.5 MB    2.55 MB/s
+    ok  part-00031-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     61.9 MB    2.62 MB/s
+    ok  part-00032-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     63.0 MB    2.78 MB/s
+    ok  part-00033-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     58.4 MB    1.92 MB/s
+    ok  part-00034-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.8 MB    1.79 MB/s
+    ok  part-00035-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     62.7 MB    1.85 MB/s
+    ok  part-00036-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     63.0 MB    2.03 MB/s
+    ok  part-00038-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     61.9 MB    2.37 MB/s
+    ok  part-00037-3674162f-e2e6-4aaa-bc45-86ea584c3d56-     63.0 MB    2.34 MB/s
+== association_overall_indirect finished | elapsed 9.1 min | failures so far: 0 ==
+
+DONE.

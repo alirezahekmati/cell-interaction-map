@@ -1,0 +1,44 @@
+approved-list sizes: {'F': 2331, 'E': 456, 'P': 435}
+rows: 22364 | rows with MOA_SOURCE == '1' (possible column shift): 1
+shape: (1, 5)
+┌─────────────────────┬─────────────┬──────┬────────────┬─────────────────────────────────┐
+│ DRUG_NAME           ┆ TARGET_NAME ┆ MOA  ┆ MOA_SOURCE ┆ ACTION_TYPE                     │
+│ ---                 ┆ ---         ┆ ---  ┆ ---        ┆ ---                             │
+│ str                 ┆ str         ┆ str  ┆ str        ┆ str                             │
+╞═════════════════════╪═════════════╪══════╪════════════╪═════════════════════════════════╡
+│ letibotulinumtoxina ┆ 5810        ┆ null ┆ 1          ┆ https://www.accessdata.fda.gov… │
+└─────────────────────┴─────────────┴──────┴────────────┴─────────────────────────────────┘
+mechanism-of-action rows (human): 2680 | distinct drugs: 1779
+  distinct drugs on none of FDA/EMA/PMDA: 327
+
+node_drugs.json: 9603 proteins, 396,425 bytes raw / 69,330 gzip
+level counts: {'Tchem': 2504, 'Tbio': 6110, 'Tclin': 646, 'Tdark': 343}
+proteins with a drug list: 654
+
+Tclin: 646 | with drug list: 654 | both: 642
+Tclin but NO drug list (sample): ['AHR', 'PSEN2', 'IL15RA', 'GPR119']
+drug list but NOT Tclin (sample): [('MASP2', 'Tchem'), ('TNFSF13', 'Tbio'), ('BMP10', 'Tbio'), ('F12', 'Tchem'), ('APOB', 'Tchem'), ('ASGR1', 'Tchem'), ('ASGR2', 'Tbio'), ('EPCAM', 'Tchem'), ('PTH2R', 'Tchem'), ('COL7A1', 'Tbio'), ('PPARD', 'Tchem'), ('SMN1', 'Tchem')]
+largest drug lists: [('DRD2', 63), ('NR3C1', 63), ('HRH1', 58), ('GABRA1', 53), ('GABRG2', 50), ('PTGS2', 50)]
+
+== samples ==
+
+--- MTOR (P42345)
+{"t": "Tclin", "f": "Kinase", "n": 1, "d": [["ridaforolimus", "inhibitor", "-"]]}
+
+--- EGFR (P00533)
+{"t": "Tclin", "f": "Kinase", "n": 18, "d": [["cetuximab", "antibody binding", "FEP"], ["dacomitinib", "inhibitor", "FEP"], ["necitumumab", "antibody binding", "FEP"], ["osimertinib", "inhibitor", "FEP"], ["afatinib", "inhibitor", "FE"], ["amivantamab", "antibody binding", "FE"], ["lapatinib", "inhibitor", "FE"], ["neratinib", "inhibitor", "FE"], ["panitumumab", "agonist", "FE"], ["erlotinib", "inhibitor", "F"], ["gefitinib", "inhibitor", "F"], ["mobocertinib", "inhibitor", "F"], ["vandetanib", "inhibitor", "F"], ["icotinib", "inhibitor", "-"], ["lazertinib", "inhibitor", "-"], ["olmutinib", "inhibitor", "-"], ["sevabertinib", "inhibitor", "-"], ["sunvozertinib", "inhibitor", "-"]]}
+
+--- AKT1 (P31749)
+{"t": "Tclin", "f": "Kinase", "n": 1, "d": [["capivasertib", "inhibitor", "-"]]}
+
+--- PRKAA1 (Q13131)
+{"t": "Tclin", "f": "Kinase", "n": 1, "d": [["cepharanthine", "inhibitor", "P"]]}
+
+--- TSC2 (P49815)
+{"t": "Tbio"}
+
+--- TP53 (P04637)
+{"t": "Tchem", "f": "Transcription Factor"}
+
+--- STK11 (Q15831)
+{"t": "Tchem", "f": "Kinase"}
