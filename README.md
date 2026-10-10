@@ -18,7 +18,7 @@ Nodes sit in coarse cellular compartments; click a node to draw its edges
   The default export contains entries with academic-use restrictions, so treat the merged
   data as academic/non-commercial unless you rebuild with a stricter licence filter.
 - UniProt (CC BY 4.0): protein names, function and disease text shown in the viewer, plus compartments. Informational only, not medical advice.
-- DrugCentral (CC BY-SA 4.0): mechanism-of-action drugs and approval lists; the derived `node_drugs.json` is therefore offered under CC BY-SA 4.0.
+- Open Targets Platform (CC0 1.0): drug-target links, drug types, clinical stages, trial status and target-disease association scores. Please cite: Open Targets Platform: facilitating therapeutic hypotheses building in drug discovery (2025).
 - Pharos / TCRD (NCATS): target development levels (Tclin, Tchem, Tbio, Tdark).
 - Human Protein Atlas, Human-GEM: compartments and metabolite classes.
   Check each project's terms before reusing.

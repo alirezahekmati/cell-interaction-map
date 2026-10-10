@@ -1,0 +1,408 @@
+== clinical_target.maxClinicalStage ==
+shape: (13, 2)
+┌──────────────────┬──────┐
+│ maxClinicalStage ┆ len  │
+│ ---              ┆ ---  │
+│ str              ┆ u32  │
+╞══════════════════╪══════╡
+│ APPROVAL         ┆ 3368 │
+│ PHASE_4          ┆ 2934 │
+│ PHASE_2          ┆ 2741 │
+│ WITHDRAWAL       ┆ 1393 │
+│ PHASE_3          ┆ 1363 │
+│ PHASE_1          ┆ 950  │
+│ PHASE_1_2        ┆ 227  │
+│ PHASE_2_3        ┆ 185  │
+│ UNKNOWN          ┆ 72   │
+│ IND              ┆ 12   │
+│ PRECLINICAL      ┆ 6    │
+│ PREAPPROVAL      ┆ 5    │
+│ EARLY_PHASE_1    ┆ 5    │
+└──────────────────┴──────┘
+== clinical_indication.maxClinicalStage ==
+shape: (11, 2)
+┌──────────────────┬───────┐
+│ maxClinicalStage ┆ len   │
+│ ---              ┆ ---   │
+│ str              ┆ u32   │
+╞══════════════════╪═══════╡
+│ PHASE_2          ┆ 28601 │
+│ PHASE_3          ┆ 15811 │
+│ APPROVAL         ┆ 10952 │
+│ UNKNOWN          ┆ 9882  │
+│ PHASE_1          ┆ 9840  │
+│ PHASE_1_2        ┆ 6566  │
+│ PHASE_2_3        ┆ 3115  │
+│ EARLY_PHASE_1    ┆ 1304  │
+│ IND              ┆ 216   │
+│ PRECLINICAL      ┆ 117   │
+│ PREAPPROVAL      ┆ 47    │
+└──────────────────┴───────┘
+== drug_molecule.drugType ==
+shape: (11, 2)
+┌─────────────────────────┬───────┐
+│ drugType                ┆ len   │
+│ ---                     ┆ ---   │
+│ str                     ┆ u32   │
+╞═════════════════════════╪═══════╡
+│ Small molecule          ┆ 14889 │
+│ Unknown                 ┆ 1697  │
+│ Antibody                ┆ 990   │
+│ Protein                 ┆ 817   │
+│ Oligonucleotide         ┆ 189   │
+│ Gene                    ┆ 166   │
+│ Antibody drug conjugate ┆ 108   │
+│ Enzyme                  ┆ 107   │
+│ Vaccine component       ┆ 77    │
+│ Cell                    ┆ 67    │
+│ Oligosaccharide         ┆ 63    │
+└─────────────────────────┴───────┘
+== drug_molecule.maximumClinicalStage ==
+shape: (11, 2)
+┌──────────────────────┬──────┐
+│ maximumClinicalStage ┆ len  │
+│ ---                  ┆ ---  │
+│ str                  ┆ u32  │
+╞══════════════════════╪══════╡
+│ UNKNOWN              ┆ 7251 │
+│ APPROVAL             ┆ 5448 │
+│ PHASE_2              ┆ 2723 │
+│ PHASE_3              ┆ 1542 │
+│ PHASE_1              ┆ 1257 │
+│ PHASE_1_2            ┆ 441  │
+│ PHASE_2_3            ┆ 242  │
+│ IND                  ┆ 132  │
+│ PRECLINICAL          ┆ 69   │
+│ EARLY_PHASE_1        ┆ 36   │
+│ PREAPPROVAL          ┆ 29   │
+└──────────────────────┴──────┘
+== drug_mechanism_of_action.actionType ==
+shape: (25, 2)
+┌───────────────────────────────┬──────┐
+│ actionType                    ┆ len  │
+│ ---                           ┆ ---  │
+│ str                           ┆ u32  │
+╞═══════════════════════════════╪══════╡
+│ INHIBITOR                     ┆ 3158 │
+│ ANTAGONIST                    ┆ 900  │
+│ AGONIST                       ┆ 884  │
+│ BINDING AGENT                 ┆ 253  │
+│ BLOCKER                       ┆ 166  │
+│ MODULATOR                     ┆ 107  │
+│ POSITIVE ALLOSTERIC MODULATOR ┆ 78   │
+│ ACTIVATOR                     ┆ 70   │
+│ PARTIAL AGONIST               ┆ 64   │
+│ EXOGENOUS PROTEIN             ┆ 49   │
+│ VACCINE ANTIGEN               ┆ 46   │
+│ OPENER                        ┆ 39   │
+│ ANTISENSE INHIBITOR           ┆ 38   │
+│ POSITIVE MODULATOR            ┆ 37   │
+│ OTHER                         ┆ 30   │
+│ CROSS-LINKING AGENT           ┆ 26   │
+│ NEGATIVE ALLOSTERIC MODULATOR ┆ 23   │
+│ STABILISER                    ┆ 21   │
+│ RNAI INHIBITOR                ┆ 19   │
+│ EXOGENOUS GENE                ┆ 14   │
+│ INVERSE AGONIST               ┆ 14   │
+│ RELEASING AGENT               ┆ 13   │
+│ HYDROLYTIC ENZYME             ┆ 10   │
+│ DISRUPTING AGENT              ┆ 9    │
+│ SUBSTRATE                     ┆ 7    │
+└───────────────────────────────┴──────┘
+== clinical_report ==
+clinicalStage
+shape: (13, 2)
+┌───────────────┬───────┐
+│ clinicalStage ┆ len   │
+│ ---           ┆ ---   │
+│ str           ┆ u32   │
+╞═══════════════╪═══════╡
+│ PHASE_2       ┆ 64522 │
+│ PHASE_1       ┆ 50129 │
+│ UNKNOWN       ┆ 39512 │
+│ PHASE_3       ┆ 38959 │
+│ PHASE_4       ┆ 30510 │
+│ APPROVAL      ┆ 29328 │
+│ PHASE_1_2     ┆ 16155 │
+│ PHASE_2_3     ┆ 6244  │
+│ EARLY_PHASE_1 ┆ 4928  │
+│ IND           ┆ 4626  │
+│ PRECLINICAL   ┆ 3812  │
+│ WITHDRAWAL    ┆ 1061  │
+│ PREAPPROVAL   ┆ 168   │
+└───────────────┴───────┘
+type
+shape: (2, 2)
+┌────────────┬────────┐
+│ type       ┆ len    │
+│ ---        ┆ ---    │
+│ str        ┆ u32    │
+╞════════════╪════════╡
+│ INDICATION ┆ 287210 │
+│ SAFETY     ┆ 2744   │
+└────────────┴────────┘
+origin
+shape: (4, 2)
+┌───────────────────┬────────┐
+│ origin            ┆ len    │
+│ ---               ┆ ---    │
+│ str               ┆ u32    │
+╞═══════════════════╪════════╡
+│ CLINICAL_TRIAL    ┆ 230989 │
+│ CURATED_RESOURCE  ┆ 35890  │
+│ DRUG_LABEL        ┆ 17309  │
+│ REGULATORY_AGENCY ┆ 5766   │
+└───────────────────┴────────┘
+trialOverallStatus
+shape: (14, 2)
+┌───────────────────────────┬────────┐
+│ trialOverallStatus        ┆ len    │
+│ ---                       ┆ ---    │
+│ str                       ┆ u32    │
+╞═══════════════════════════╪════════╡
+│ COMPLETED                 ┆ 132208 │
+│ null                      ┆ 58965  │
+│ UNKNOWN                   ┆ 29809  │
+│ RECRUITING                ┆ 21288  │
+│ TERMINATED                ┆ 20458  │
+│ ACTIVE_NOT_RECRUITING     ┆ 9254   │
+│ WITHDRAWN                 ┆ 8293   │
+│ NOT_YET_RECRUITING        ┆ 7155   │
+│ ENROLLING_BY_INVITATION   ┆ 870    │
+│ SUSPENDED                 ┆ 734    │
+│ NO_LONGER_AVAILABLE       ┆ 480    │
+│ AVAILABLE                 ┆ 210    │
+│ APPROVED_FOR_MARKETING    ┆ 208    │
+│ TEMPORARILY_NOT_AVAILABLE ┆ 22     │
+└───────────────────────────┴────────┘
+trialPhase
+shape: (8, 2)
+┌───────────────┬───────┐
+│ trialPhase    ┆ len   │
+│ ---           ┆ ---   │
+│ str           ┆ u32   │
+╞═══════════════╪═══════╡
+│ null          ┆ 94793 │
+│ PHASE2        ┆ 58328 │
+│ PHASE1        ┆ 44420 │
+│ PHASE3        ┆ 36557 │
+│ PHASE4        ┆ 30447 │
+│ PHASE1/PHASE2 ┆ 14523 │
+│ PHASE2/PHASE3 ┆ 5969  │
+│ EARLY_PHASE1  ┆ 4917  │
+└───────────────┴───────┘<stdin>:28: DeprecationWarning: In Polars 2.0, the default behavior for `empty_as_null` will change to `False`. To keep the current behavior, explicitly set `empty_as_null=True`.
+
+
+== target -> UniProt mapping ==
+shape: (5, 2)
+┌───────────────────┬────────┐
+│ src               ┆ len    │
+│ ---               ┆ ---    │
+│ str               ┆ u32    │
+╞═══════════════════╪════════╡
+│ ensembl_PRO       ┆ 370886 │
+│ uniprot_obsolete  ┆ 71612  │
+│ uniprot_trembl    ┆ 64744  │
+│ null              ┆ 57624  │
+│ uniprot_swissprot ┆ 19439  │
+└───────────────────┴────────┘
+  uniprot_swissprot: 9522 of our 9677 proteins, 9560 Ensembl genes
+  ensembl_PRO: 0 of our 9677 proteins, 0 Ensembl genes
+  uniprot_obsolete: 72 of our 9677 proteins, 73 Ensembl genes
+  uniprot_trembl: 21 of our 9677 proteins, 21 Ensembl genes
+our proteins reachable through any source: 9608
+
+== clinical drug-target pairs ==
+pairs on proteins in your map, by stage:
+shape: (13, 2)
+┌──────────────────┬──────┐
+│ maxClinicalStage ┆ len  │
+│ ---              ┆ ---  │
+│ str              ┆ u32  │
+╞══════════════════╪══════╡
+│ APPROVAL         ┆ 3166 │
+│ PHASE_4          ┆ 2772 │
+│ PHASE_2          ┆ 2649 │
+│ PHASE_3          ┆ 1323 │
+│ WITHDRAWAL       ┆ 1293 │
+│ PHASE_1          ┆ 926  │
+│ PHASE_1_2        ┆ 216  │
+│ PHASE_2_3        ┆ 173  │
+│ UNKNOWN          ┆ 69   │
+│ IND              ┆ 12   │
+│ PRECLINICAL      ┆ 6    │
+│ EARLY_PHASE_1    ┆ 5    │
+│ PREAPPROVAL      ┆ 5    │
+└──────────────────┴──────┘
+your proteins with at least one clinical-stage drug: 1401
+
+--- MTOR (ENSG00000198793): 26 drug-target pairs
+shape: (14, 3)
+┌───────────────┬────────────────┬──────────────────┐
+│ name          ┆ drugType       ┆ maxClinicalStage │
+│ ---           ┆ ---            ┆ ---              │
+│ str           ┆ str            ┆ str              │
+╞═══════════════╪════════════════╪══════════════════╡
+│ PERHEXILINE   ┆ Small molecule ┆ APPROVAL         │
+│ RIDAFOROLIMUS ┆ Small molecule ┆ APPROVAL         │
+│ OMIPALISIB    ┆ Small molecule ┆ PHASE_1          │
+│ PALOMID-529   ┆ Small molecule ┆ PHASE_1          │
+│ PANULISIB     ┆ Small molecule ┆ PHASE_1          │
+│ VS-5584       ┆ Small molecule ┆ PHASE_1          │
+│ RG-7603       ┆ Small molecule ┆ PHASE_1          │
+│ DS-7423       ┆ Unknown        ┆ PHASE_1          │
+│ PKI-179       ┆ Small molecule ┆ PHASE_1          │
+│ DS-3078A      ┆ Unknown        ┆ PHASE_1          │
+│ AZD-8055      ┆ Small molecule ┆ PHASE_1_2        │
+│ BGT-226       ┆ Small molecule ┆ PHASE_1_2        │
+│ VOXTALISIB    ┆ Small molecule ┆ PHASE_2          │
+│ SAPANISERTIB  ┆ Small molecule ┆ PHASE_2          │
+└───────────────┴────────────────┴──────────────────┘
+
+--- AKT1 (ENSG00000142208): 15 drug-target pairs
+shape: (14, 3)
+┌───────────────────────┬────────────────┬──────────────────┐
+│ name                  ┆ drugType       ┆ maxClinicalStage │
+│ ---                   ┆ ---            ┆ ---              │
+│ str                   ┆ str            ┆ str              │
+╞═══════════════════════╪════════════════╪══════════════════╡
+│ CAPIVASERTIB          ┆ Small molecule ┆ APPROVAL         │
+│ SR-13668              ┆ Small molecule ┆ PHASE_1          │
+│ RUPITASERTIB          ┆ Small molecule ┆ PHASE_1          │
+│ GSK-690693            ┆ Small molecule ┆ PHASE_1          │
+│ BAY-1125976           ┆ Small molecule ┆ PHASE_1          │
+│ XL-418                ┆ Small molecule ┆ PHASE_1          │
+│ TAS0612               ┆ Small molecule ┆ PHASE_1          │
+│ TRICIRIBINE PHOSPHATE ┆ Small molecule ┆ PHASE_1_2        │
+│ LY-2780301            ┆ Unknown        ┆ PHASE_1_2        │
+│ UPROSERTIB            ┆ Small molecule ┆ PHASE_2          │
+│ MIRANSERTIB           ┆ Small molecule ┆ PHASE_2          │
+│ MK-2206               ┆ Small molecule ┆ PHASE_2          │
+│ PIFUSERTIB            ┆ Small molecule ┆ PHASE_2          │
+│ IPATASERTIB           ┆ Small molecule ┆ PHASE_3          │
+└───────────────────────┴────────────────┴──────────────────┘
+
+--- EGFR (ENSG00000146648): 82 drug-target pairs
+shape: (14, 3)
+┌─────────────────────────┬─────────────────────────┬──────────────────┐
+│ name                    ┆ drugType                ┆ maxClinicalStage │
+│ ---                     ┆ ---                     ┆ ---              │
+│ str                     ┆ str                     ┆ str              │
+╞═════════════════════════╪═════════════════════════╪══════════════════╡
+│ AFATINIB DIMALEATE      ┆ Small molecule          ┆ APPROVAL         │
+│ BRIGATINIB              ┆ Small molecule          ┆ APPROVAL         │
+│ LAPATINIB DITOSYLATE    ┆ Small molecule          ┆ APPROVAL         │
+│ DACOMITINIB             ┆ Small molecule          ┆ APPROVAL         │
+│ ERLOTINIB HYDROCHLORIDE ┆ Small molecule          ┆ APPROVAL         │
+│ OSIMERTINIB MESYLATE    ┆ Small molecule          ┆ APPROVAL         │
+│ CETUXIMAB SAROTALOCAN   ┆ Antibody drug conjugate ┆ APPROVAL         │
+│ MOBOCERTINIB SUCCINATE  ┆ Small molecule          ┆ APPROVAL         │
+│ NIMOTUZUMAB             ┆ Antibody                ┆ APPROVAL         │
+│ OLMUTINIB               ┆ Small molecule          ┆ APPROVAL         │
+│ NERATINIB MALEATE       ┆ Small molecule          ┆ APPROVAL         │
+│ MOBOCERTINIB            ┆ Small molecule          ┆ APPROVAL         │
+│ LAZERTINIB MESYLATE     ┆ Small molecule          ┆ APPROVAL         │
+│ NERATINIB               ┆ Small molecule          ┆ APPROVAL         │
+└─────────────────────────┴─────────────────────────┴──────────────────┘
+
+--- PRKAA1 (ENSG00000132356): 1 drug-target pairs
+shape: (1, 3)
+┌───────────┬────────────────┬──────────────────┐
+│ name      ┆ drugType       ┆ maxClinicalStage │
+│ ---       ┆ ---            ┆ ---              │
+│ str       ┆ str            ┆ str              │
+╞═══════════╪════════════════╪══════════════════╡
+│ ACADESINE ┆ Small molecule ┆ APPROVAL         │
+└───────────┴────────────────┴──────────────────┘
+
+--- TSC2 (ENSG00000103197): 0 drug-target pairs
+shape: (0, 3)
+┌──────┬──────────┬──────────────────┐
+│ name ┆ drugType ┆ maxClinicalStage │
+│ ---  ┆ ---      ┆ ---              │
+│ str  ┆ str      ┆ str              │
+╞══════╪══════════╪══════════════════╡
+└──────┴──────────┴──────────────────┘
+
+--- TP53 (ENSG00000141510): 9 drug-target pairs
+shape: (9, 3)
+┌───────────────────────┬─────────────────┬──────────────────┐
+│ name                  ┆ drugType        ┆ maxClinicalStage │
+│ ---                   ┆ ---             ┆ ---              │
+│ str                   ┆ str             ┆ str              │
+╞═══════════════════════╪═════════════════╪══════════════════╡
+│ ALRIZOMADLIN          ┆ Small molecule  ┆ PHASE_2          │
+│ CENERSEN              ┆ Oligonucleotide ┆ PHASE_2          │
+│ CENERSEN SODIUM       ┆ Oligonucleotide ┆ PHASE_2          │
+│ SIREMADLIN            ┆ Small molecule  ┆ PHASE_2          │
+│ CONTUSUGENE LADENOVEC ┆ Gene            ┆ PHASE_3          │
+│ TEPRASIRAN            ┆ Oligonucleotide ┆ PHASE_3          │
+│ IDASANUTLIN           ┆ Small molecule  ┆ PHASE_3          │
+│ EPRENETAPOPT          ┆ Small molecule  ┆ PHASE_3          │
+│ NAVTEMADLIN           ┆ Small molecule  ┆ PHASE_3          │
+└───────────────────────┴─────────────────┴──────────────────┘
+
+--- STK11 (ENSG00000118046): 0 drug-target pairs
+shape: (0, 3)
+┌──────┬──────────┬──────────────────┐
+│ name ┆ drugType ┆ maxClinicalStage │
+│ ---  ┆ ---      ┆ ---              │
+│ str  ┆ str      ┆ str              │
+╞══════╪══════════╪══════════════════╡
+└──────┴──────────┴──────────────────┘
+
+== diseases and association sizes ==
+shape: (12, 2)
+┌──────────┬───────┐
+│ prefix   ┆ len   │
+│ ---      ┆ ---   │
+│ str      ┆ u32   │
+╞══════════╪═══════╡
+│ OBA      ┆ 17825 │
+│ MONDO    ┆ 15551 │
+│ EFO      ┆ 9257  │
+│ HP       ┆ 2183  │
+│ Orphanet ┆ 571   │
+│ GO       ┆ 470   │
+│ GSSO     ┆ 16    │
+│ OTAR     ┆ 9     │
+│ OBI      ┆ 5     │
+│ NCIT     ┆ 3     │
+│ MP       ┆ 2     │
+│ PATO     ┆ 2     │
+└──────────┴───────┘
+distinct diseases with any association: 27845
+shape: (1, 7)
+┌─────────────────┬─────────┬─────────┬─────────┬─────────┬─────────┬────────┐
+│ all_rows_in_map ┆ ge_0.01 ┆ ge_0.02 ┆ ge_0.05 ┆ ge_0.1  ┆ ge_0.2  ┆ ge_0.5 │
+│ ---             ┆ ---     ┆ ---     ┆ ---     ┆ ---     ┆ ---     ┆ ---    │
+│ u32             ┆ u32     ┆ u32     ┆ u32     ┆ u32     ┆ u32     ┆ u32    │
+╞═════════════════╪═════════╪═════════╪═════════╪═════════╪═════════╪════════╡
+│ 11726344        ┆ 9091815 ┆ 8404659 ┆ 4274087 ┆ 1816044 ┆ 1186771 ┆ 233465 │
+└─────────────────┴─────────┴─────────┴─────────┴─────────┴─────────┴────────┘
+score>=0.05: 24833 diseases | targets per disease: median 17.0, p90 335.0, max 9265
+
+--- type 2 diabetes mellitus (MONDO_0005148): 6321 targets in your map
+shape: (15, 2)
+┌────────────────┬──────────────────┐
+│ approvedSymbol ┆ associationScore │
+│ ---            ┆ ---              │
+│ str            ┆ f64              │
+╞════════════════╪══════════════════╡
+│ KCNJ11         ┆ 0.871733         │
+│ ABCC8          ┆ 0.87046          │
+│ GCK            ┆ 0.865165         │
+│ PPARG          ┆ 0.856363         │
+│ HNF1A          ┆ 0.850652         │
+│ HNF4A          ┆ 0.799933         │
+│ HNF1B          ┆ 0.777327         │
+│ INSR           ┆ 0.764802         │
+│ GLP1R          ┆ 0.763409         │
+│ SLC2A2         ┆ 0.745818         │
+│ AKT2           ┆ 0.721586         │
+│ GIPR           ┆ 0.696827         │
+│ NEUROD1        ┆ 0.687214         │
+│ CDKAL1         ┆ 0.686052         │
+│ NDUFS4         ┆ 0.683409         │
+└────────────────┴──────────────────┘
+{'>=0.5': 149, '>=0.3': 624, '>=0.2': 974, '>=0.1': 1433, '>=0.05': 2269}

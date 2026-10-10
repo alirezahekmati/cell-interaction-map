@@ -14,6 +14,13 @@
     <div id="results"></div>
     <p class="hint">Click a node to draw its edges · Shift-click adds · Esc clears · drag rotates, right-drag pans, wheel zooms</p>
 
+    <h2>Disease targets</h2>
+    <input id="dq" type="search" placeholder="Search a disease, e.g. type 2 diabetes" autocomplete="off">
+    <div id="dres"></div>
+    <label class="row2">Min score <input id="dscore" type="range" min="0.1" max="0.9" step="0.01" value="0.1"><span id="dscoreV">0.10</span></label>
+    <label class="row2">Max targets <input id="dcap" type="number" min="1" max="2000" value="150"></label>
+    <div class="hint" id="dinfo">Open Targets scores. Selects the top-scoring targets that are in this map, with bigger dots for higher scores.</div>
+    <button id="dclear">Clear disease targets</button>
     <h2>Edge layers</h2>
     <div id="cls"></div>
     <h2>Sign</h2>
@@ -47,7 +54,7 @@
     </label>
     <label class="chk"><input type="checkbox" id="labels" checked><span>Labels on selection</span></label>
     <h2>About</h2>
-    <div id="about" class="hint">Signed, directed interactions merged from SIGNOR (CC BY 4.0) and OmniPath (an aggregator; see the licences of its resources). Compartments come from the Human Protein Atlas, UniProt and Human-GEM, plus some manual overrides. Positions are schematic, not physical, and a line means "reported", not "verified". Protein names, function and disease text: UniProt (CC BY 4.0), for information only, not medical advice. Drug and druggability data: DrugCentral (CC BY-SA 4.0) and Pharos/TCRD (NCATS). Not peer reviewed.</div>
+    <div id="about" class="hint">Signed, directed interactions merged from SIGNOR (CC BY 4.0) and OmniPath (an aggregator; see the licences of its resources). Compartments come from the Human Protein Atlas, UniProt and Human-GEM, plus some manual overrides. Positions are schematic, not physical, and a line means "reported", not "verified". Protein names, function and disease text: UniProt (CC BY 4.0), for information only, not medical advice. Drugs, clinical stages and disease associations: Open Targets Platform (CC0; please cite Open Targets Platform, 2025). Druggability levels: Pharos/TCRD (NCATS). Not peer reviewed.</div>
   </aside>
   <main id="view">
     <canvas id="c"></canvas>

@@ -1,0 +1,15 @@
+Ensembl genes mapped to graph nodes: 9624 | node indexes: 9582
+pairs at the lowest cutoff considered: 4,278,827
+size of alternatives (3 bytes per pair, before base64):
+  min 0.05, cap 3000: 3,784,602 pairs, about 11.4 MB
+  min 0.1, cap 2000: 1,473,249 pairs, about 4.4 MB
+  min 0.1, cap 3000: 1,618,230 pairs, about 4.9 MB
+  min 0.2, cap 2000: 1,033,536 pairs, about 3.1 MB
+
+min score 0.1, cap 2000: 1,473,249 pairs for 21,832 diseases
+disease_index.json: 2,727,750 bytes raw / 628,002 gzip
+disease_targets_b64.json: 5,892,998 bytes raw / 3,805,287 gzip
+diseases that hit the cap: 198 | targets per disease: median 3 max 2000
+
+round trip OK. type 2 diabetes mellitus (MONDO_0005148): 1438 targets; top 10 decoded from the blob:
+  [('KCNJ11', 0.87), ('ABCC8', 0.87), ('GCK', 0.87), ('PPARG', 0.85), ('HNF1A', 0.85), ('HNF4A', 0.8), ('HNF1B', 0.78), ('INSR', 0.76), ('GLP1R', 0.76), ('SLC2A2', 0.75)]

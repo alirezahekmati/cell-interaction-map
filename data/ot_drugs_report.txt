@@ -1,0 +1,134 @@
+/home/bio/projects/3d-biology-space/scripts/13_build_ot_drugs.py:52: DeprecationWarning: In Polars 2.0, the default behavior for `empty_as_null` will change to `False`. To keep the current behavior, explicitly set `empty_as_null=True`.
+  .explode("drugs")
+/home/bio/projects/3d-biology-space/scripts/13_build_ot_drugs.py:70: DeprecationWarning: In Polars 2.0, the default behavior for `empty_as_null` will change to `False`. To keep the current behavior, explicitly set `empty_as_null=True`.
+  .explode("chemblIds").explode("targets").drop_nulls(["chemblIds", "targets"]))
+== approval reports by origin and source ==
+shape: (8, 3)
+┌───────────────────┬────────────────────┬───────┐
+│ origin            ┆ source             ┆ len   │
+│ ---               ┆ ---                ┆ ---   │
+│ str               ┆ str                ┆ u32   │
+╞═══════════════════╪════════════════════╪═══════╡
+│ DRUG_LABEL        ┆ DailyMed           ┆ 19815 │
+│ CURATED_RESOURCE  ┆ TTD                ┆ 3444  │
+│ CURATED_RESOURCE  ┆ ATC                ┆ 3083  │
+│ REGULATORY_AGENCY ┆ PMDA               ┆ 2007  │
+│ REGULATORY_AGENCY ┆ EMA Human Drugs    ┆ 1701  │
+│ REGULATORY_AGENCY ┆ FDA                ┆ 1476  │
+│ CLINICAL_TRIAL    ┆ ClinicalTrials.gov ┆ 243   │
+│ REGULATORY_AGENCY ┆ EMA                ┆ 1     │
+└───────────────────┴────────────────────┴───────┘
+
+node_drugs_ot.json: 9604 proteins, 10661 drug rows, 1,184,343 bytes raw / 155,655 gzip
+proteins with any drug: 1390 | best stage APPROVAL: 820 | with an ongoing trial: 1006 | ongoing trial but not approved: 263
+best stage counts: {'APPROVAL': 820, 'PHASE_2': 204, 'PHASE_3': 157, 'PHASE_4': 132, 'PHASE_1': 34, 'PHASE_2_3': 28, 'PHASE_1_2': 11, None: 3, 'PREAPPROVAL': 1}
+drug types in rows: {'Small molecule': 7767, 'Unknown': 863, 'Antibody drug conjugate': 744, 'Antibody': 593, 'Protein': 553, 'Oligonucleotide': 61, 'Enzyme': 42, 'Gene': 22, 'Oligosaccharide': 13, 'Cell': 2, 'Vaccine component': 1}
+
+DrugCentral approved-drug targets: 610 | Open Targets APPROVAL: 820 | both: 496
+DrugCentral-approved but not OT-approved (sample): ['PDE2A', 'TNFSF11', 'MSTN', 'ANGPT2', 'HCN1', 'GUCY1B2', 'GABBR2', 'DGAT1', 'GDF11', 'GLP2R', 'PAH', 'C1R', 'IFNG', 'HLA-A', 'ALDH2', 'ITGB1', 'CALCA', 'ASGR1', 'ASGR2', 'FES', 'PRSS1', 'NGFR', 'ELANE', 'MME', 'FCGR3A']
+OT-approved but not DrugCentral (sample): ['HTR3E', 'COL6A6', 'COL6A5', 'MASP2', 'PSMD11', 'PSMD12', 'BMPR1B', 'MEN1', 'CACNB4', 'PSMD14', 'CACNA1A', 'TERT', 'PSMA7', 'CEP290', 'LAMA5', 'PSMD3', 'PRKAB2', 'BRD4', 'TRPA1', 'PRKD3', 'S1PR2', 'HTR3B', 'LDHA', 'F8', 'F13A1']
+
+== samples ==
+
+--- MTOR (P42345) level=Tclin best=APPROVAL ongoing=PHASE_4 drugs=28
+    ['everolimus', 'Small molecule', 'allosteric inhibitor (acts via FKBP12)', 'APPROVAL', 98, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,FDA,PMDA,manual', 0]
+    ['sirolimus', 'Small molecule', 'allosteric inhibitor (acts via FKBP12)', 'APPROVAL', 143, 'PHASE_4', 'ATC,ClinicalTrials.gov,DailyMed,EMA Human Drugs,FDA,manual', 0]
+    ['temsirolimus', 'Small molecule', 'allosteric inhibitor (acts via FKBP12)', 'APPROVAL', 12, 'PHASE_3', 'ATC,DailyMed,EMA Human Drugs,PMDA,TTD,manual', 0]
+    ['perhexiline', 'Small molecule', 'inhibitor', 'APPROVAL', 0, '', 'ATC,TTD', 1]
+    ['ridaforolimus', 'Small molecule', 'inhibitor', 'APPROVAL', 0, '', 'ATC', 0]
+    ['gedatolisib', 'Small molecule', 'inhibitor', 'PHASE_3', 5, 'PHASE_3', '', 0]
+    ['dactolisib', 'Small molecule', 'inhibitor', 'PHASE_3', 2, 'PHASE_2', '', 0]
+
+--- AKT1 (P31749) level=Tclin best=APPROVAL ongoing=PHASE_3 drugs=15
+    ['capivasertib', 'Small molecule', 'inhibitor', 'APPROVAL', 32, 'PHASE_3', 'ATC,EMA Human Drugs,PMDA,TTD', 0]
+    ['afuresertib', 'Small molecule', 'inhibitor', 'PHASE_3', 1, 'PHASE_3', '', 0]
+    ['ipatasertib', 'Small molecule', 'inhibitor', 'PHASE_3', 21, 'PHASE_3', '', 0]
+    ['miransertib', 'Small molecule', 'inhibitor', 'PHASE_2', 2, 'PHASE_2', '', 0]
+    ['uprosertib', 'Small molecule', 'inhibitor', 'PHASE_2', 1, 'PHASE_2', '', 0]
+    ['MK-2206', 'Small molecule', 'inhibitor', 'PHASE_2', 1, 'PHASE_1', '', 0]
+    ['pifusertib', 'Small molecule', 'negative allosteric modulator', 'PHASE_2', 0, '', '', 0]
+
+--- EGFR (P00533) level=Tclin best=APPROVAL ongoing=PHASE_4 drugs=72
+    ['afatinib', 'Small molecule', 'inhibitor', 'APPROVAL', 25, 'PHASE_4', 'ATC,ClinicalTrials.gov,DailyMed,EMA Human Drugs,PMDA', 0]
+    ['nimotuzumab', 'Antibody', 'inhibitor', 'APPROVAL', 51, 'PHASE_4', 'TTD', 0]
+    ['osimertinib', 'Small molecule', 'inhibitor', 'APPROVAL', 150, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,PMDA,TTD', 0]
+    ['aumolertinib', 'Small molecule', 'inhibitor', 'APPROVAL', 26, 'PHASE_3', 'ATC,EMA Human Drugs', 0]
+    ['cetuximab sarotalocan', 'Antibody drug conjugate', 'binding agent', 'APPROVAL', 6, 'PHASE_3', 'PMDA', 0]
+    ['dacomitinib anhydrous', 'Small molecule', 'inhibitor', 'APPROVAL', 7, 'PHASE_3', 'ATC,EMA Human Drugs,FDA,PMDA,TTD', 0]
+    ['erlotinib', 'Small molecule', 'inhibitor', 'APPROVAL', 28, 'PHASE_3', 'ATC,DailyMed,EMA Human Drugs,PMDA,TTD', 0]
+
+--- PRKAA1 (Q13131) level=Tclin best=APPROVAL ongoing=None drugs=1
+    ['acadesine', 'Small molecule', 'activator', 'APPROVAL', 0, '', 'ATC', 0]
+
+--- TSC2 (P49815) level=Tbio best=None ongoing=None drugs=0
+
+--- TP53 (P04637) level=Tchem best=PHASE_3 ongoing=PHASE_3 drugs=9
+    ['navtemadlin', 'Small molecule', 'inhibitor', 'PHASE_3', 6, 'PHASE_3', '', 0]
+    ['contusugene ladenovec', 'Gene', 'exogenous gene', 'PHASE_3', 0, '', '', 0]
+    ['eprenetapopt', 'Small molecule', 'stabiliser', 'PHASE_3', 0, '', '', 0]
+    ['idasanutlin', 'Small molecule', 'inhibitor', 'PHASE_3', 0, '', '', 0]
+    ['teprasiran', 'Oligonucleotide', 'rnai inhibitor', 'PHASE_3', 0, '', '', 0]
+    ['alrizomadlin', 'Small molecule', 'inhibitor', 'PHASE_2', 7, 'PHASE_2', '', 0]
+    ['siremadlin', 'Small molecule', 'inhibitor', 'PHASE_2', 2, 'PHASE_2', '', 0]
+
+--- KCNJ11 (Q14654) level=Tclin best=APPROVAL ongoing=PHASE_4 drugs=15
+    ['glimepiride', 'Small molecule', 'blocker', 'APPROVAL', 4, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,PMDA,TTD', 1]
+    ['acetohexamide', 'Small molecule', 'blocker', 'APPROVAL', 0, '', 'ATC,TTD', 0]
+    ['chlorpropamide', 'Small molecule', 'blocker', 'APPROVAL', 0, '', 'ATC,DailyMed,TTD', 0]
+    ['mitiglinide', 'Small molecule', 'blocker', 'APPROVAL', 0, '', 'ATC,TTD', 0]
+    ['nateglinide', 'Small molecule', 'blocker', 'APPROVAL', 0, '', 'ATC,DailyMed,TTD', 1]
+    ['pinacidil anhydrous', 'Small molecule', 'opener', 'APPROVAL', 0, '', 'ATC,TTD', 0]
+    ['tolazamide', 'Small molecule', 'blocker', 'APPROVAL', 0, '', 'ATC,DailyMed,TTD', 0]
+
+--- GLP1R (P43220) level=Tclin best=APPROVAL ongoing=PHASE_4 drugs=17
+    ['lixisenatide', 'Protein', 'agonist', 'APPROVAL', 4, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,FDA,PMDA', 1]
+    ['albiglutide', 'Protein', 'agonist', 'APPROVAL', 0, '', 'ATC,DailyMed,TTD', 1]
+    ['dulaglutide', 'Protein', 'agonist', 'PHASE_4', 11, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,FDA,PMDA', 0]
+    ['exenatide', 'Protein', 'agonist', 'PHASE_4', 8, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,FDA,PMDA', 0]
+    ['liraglutide', 'Protein', 'agonist', 'PHASE_4', 23, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,FDA,PMDA', 0]
+    ['semaglutide', 'Protein', 'agonist', 'PHASE_4', 228, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,FDA,PMDA', 0]
+    ['tirzepatide', 'Protein', 'agonist', 'PHASE_4', 123, 'PHASE_4', 'ATC,EMA Human Drugs,FDA,PMDA,TTD', 0]
+
+--- PPARG (P37231) level=Tclin best=APPROVAL ongoing=PHASE_4 drugs=35
+    ['pioglitazone', 'Small molecule', 'agonist', 'APPROVAL', 41, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,FDA,PMDA', 1]
+    ['bezafibrate', 'Small molecule', 'agonist', 'APPROVAL', 2, 'PHASE_3', 'ATC,TTD', 0]
+    ['saroglitazar', 'Small molecule', 'agonist', 'APPROVAL', 5, 'PHASE_3', 'TTD', 0]
+    ['rosiglitazone', 'Small molecule', 'agonist', 'APPROVAL', 1, 'PHASE_2', 'ATC,DailyMed,FDA,TTD', 1]
+    ['balsalazide', 'Small molecule', 'agonist', 'APPROVAL', 0, '', 'DailyMed,TTD', 0]
+    ['olsalazine', 'Small molecule', 'agonist', 'APPROVAL', 0, '', 'DailyMed,TTD', 0]
+    ['troglitazone', 'Small molecule', 'agonist', 'APPROVAL', 0, '', 'ATC,TTD', 1]
+
+--- DPP4 (P27487) level=Tclin best=APPROVAL ongoing=PHASE_4 drugs=16
+    ['sitagliptin', 'Small molecule', 'inhibitor', 'APPROVAL', 19, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,PMDA,TTD', 1]
+    ['trelagliptin', 'Small molecule', 'inhibitor', 'APPROVAL', 3, 'PHASE_3', 'PMDA', 0]
+    ['saxagliptin anhydrous', 'Small molecule', 'inhibitor', 'APPROVAL', 2, 'PHASE_2_3', 'ATC,DailyMed,EMA Human Drugs,PMDA,TTD', 0]
+    ['gemigliptin', 'Small molecule', 'inhibitor', 'APPROVAL', 1, 'PHASE_1', 'ATC', 0]
+    ['evogliptin', 'Small molecule', 'inhibitor', 'APPROVAL', 0, '', 'ATC', 0]
+    ['teneligliptin', 'Small molecule', 'inhibitor', 'APPROVAL', 0, '', 'ATC', 0]
+    ['alogliptin', 'Small molecule', 'inhibitor', 'PHASE_4', 1, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,PMDA,TTD', 0]
+
+--- GPD2 (None) level=None best=None ongoing=None drugs=0
+
+--- NDUFS2 (O75306) level=Tclin best=APPROVAL ongoing=PHASE_4 drugs=2
+    ['metformin', 'Small molecule', 'inhibitor', 'APPROVAL', 250, 'PHASE_4', 'ATC,DailyMed,EMA Human Drugs,FDA,PMDA', 1]
+    ['ME-344', 'Small molecule', 'inhibitor', 'PHASE_1_2', 0, '', '', 0]
+
+== where do these drugs link? ==
+  CHEMBL413 parent=None SIROLIMUS [Small molecule]
+     clinical_target -> ['FKBP1A:PHASE_4'] | mechanism targets -> ['FKBP1A']
+  CHEMBL1908360 parent=None EVEROLIMUS [Small molecule]
+     clinical_target -> ['FKBP1A:PHASE_4'] | mechanism targets -> ['FKBP1A']
+  CHEMBL1201182 parent=None TEMSIROLIMUS [Small molecule]
+     clinical_target -> ['FKBP1A:PHASE_4'] | mechanism targets -> ['FKBP1A']
+  CHEMBL2103839 parent=None RIDAFOROLIMUS [Small molecule]
+     clinical_target -> ['MTOR:APPROVAL'] | mechanism targets -> ['MTOR']
+  CHEMBL1334033 parent=CHEMBL75880 PERHEXILINE MALEATE [Small molecule]
+     clinical_target -> ['CPT1B:APPROVAL', 'CPT1B:WITHDRAWAL', 'CPT2:APPROVAL', 'CPT2:WITHDRAWAL', 'MTOR:APPROVAL', 'MTOR:WITHDRAWAL'] | mechanism targets -> ['CPT1B', 'CPT2', 'MTOR']
+  CHEMBL75880 parent=None PERHEXILINE [Small molecule]
+     clinical_target -> ['CPT1B:APPROVAL', 'CPT1B:WITHDRAWAL', 'CPT2:APPROVAL', 'CPT2:WITHDRAWAL', 'MTOR:APPROVAL', 'MTOR:WITHDRAWAL'] | mechanism targets -> ['CPT1B', 'CPT2', 'MTOR']
+  CHEMBL1431 parent=None METFORMIN [Small molecule]
+     clinical_target -> ['COXFA4:WITHDRAWAL', 'COXFA4L2:WITHDRAWAL', 'GPD2:WITHDRAWAL', 'MT-ND1:WITHDRAWAL', 'MT-ND2:WITHDRAWAL', 'MT-ND3:WITHDRAWAL', 'MT-ND4:WITHDRAWAL', 'MT-ND4L:WITHDRAWAL'] | mechanism targets -> ['COXFA4', 'COXFA4L2', 'GPD2', 'MT-ND1', 'MT-ND2', 'MT-ND3', 'MT-ND4', 'MT-ND4L']
+  CHEMBL1703 parent=CHEMBL1431 METFORMIN HYDROCHLORIDE [Small molecule]
+     clinical_target -> ['COXFA4:WITHDRAWAL', 'COXFA4L2:WITHDRAWAL', 'GPD2:WITHDRAWAL', 'MT-ND1:WITHDRAWAL', 'MT-ND2:WITHDRAWAL', 'MT-ND3:WITHDRAWAL', 'MT-ND4:WITHDRAWAL', 'MT-ND4L:WITHDRAWAL'] | mechanism targets -> ['COXFA4', 'COXFA4L2', 'GPD2', 'MT-ND1', 'MT-ND2', 'MT-ND3', 'MT-ND4', 'MT-ND4L']
+  CHEMBL2108299 parent=None METFORMIN GLYCINATE [Unknown]
+     clinical_target -> [] | mechanism targets -> []

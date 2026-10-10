@@ -35,18 +35,24 @@ const MAXE = 15000;     // max edges drawn at once
 const ROWS = 300;       // max rows in the detail list
 const CAP = 6;          // arrow / T-bar size in world units
 
-const DRUG_COLORS = { approved: '#22d3ee', drug: '#5b8def', Tchem: '#ffa94d', Tbio: '#8a93a3', Tdark: '#4a5468', none: '#363d4a' };
+const DRUG_COLORS = { approved: '#22d3ee', approvedc: '#67e8b0', Tclin: '#67e8b0', trial: '#5b8def', earlier: '#3b5fa8', Tchem: '#ffa94d', Tbio: '#8a93a3', Tdark: '#4a5468', none: '#363d4a' };
+const REG_SRC = new Set(['FDA', 'DailyMed', 'EMA', 'EMA Human Drugs', 'PMDA']);
 function drugClass(n, drugs) {
   if (n.t !== 'protein') return 'none';
   const r = drugs[n.k.slice(2)];
   if (!r) return 'none';
-  if (r.t === 'Tclin' || (r.d && r.d.some((x) => x[2] !== '-'))) return 'approved';
-  if (r.d && r.d.length) return 'drug';
+  if (r.d && r.d.length) {
+    if (r.d.some((x) => x[3] === 'APPROVAL' && String(x[6]).split(',').some((s) => REG_SRC.has(s)))) return 'approved';
+    if (r.s === 'APPROVAL') return 'approvedc';
+    if (r.o) return 'trial';
+    if (r.s) return 'earlier';
+  }
+  if (r.t === 'Tclin') return 'approvedc';
   return r.t || 'none';
 }
 
 // each sidebar section (an h2 plus what follows it) becomes an open/close panel
-const OPEN_PANELS = new Set(['Edge layers']);
+const OPEN_PANELS = new Set(['Edge layers', 'Disease targets']);
 function makePanels() {
   const side = $('side');
   let cur = null;
@@ -74,7 +80,7 @@ async function getEdges() {
 async function main() {
   makePanels();
   const [meta, nodes, regions, buf, drugs] = await Promise.all([
-    get('meta.json'), get('nodes.json'), get('regions.json'), getEdges(), get('node_drugs.json').catch(() => ({}))]);
+    get('meta.json'), get('nodes.json'), get('regions.json'), getEdges(), get('node_drugs_ot.json').catch(() => ({}))]);
   const N = nodes.length, E = meta.n_edges;
   if (buf.byteLength !== E * 20) throw new Error(`edges.bin is ${buf.byteLength} bytes, expected ${E * 20}`);
 
@@ -285,7 +291,8 @@ async function main() {
     let shown = 0;
     for (let i = 0; i < N; i++) {
       const v = vis(i), s = S.selected.has(i);
-      aSize[i] = v ? baseSize[i] * S.sizeMul * (s ? 1.7 : 1) : 0;
+      const gs = S.group ? S.group.score.get(i) : undefined;
+      aSize[i] = v ? baseSize[i] * S.sizeMul * (s ? 1.7 : 1) * (gs === undefined ? 1 : 0.8 + 3.2 * gs) : 0;
       aAlpha[i] = !v ? 0 : (hl && !hl.has(i) ? 0.08 : 1);
       aSel[i] = s ? 1 : 0;
       if (v) shown++;
@@ -303,7 +310,13 @@ async function main() {
     if (!S.labels || !S.selected.size) return;
     const nb = new Set(); list.forEach((e) => { nb.add(eSrc(e)); nb.add(eTgt(e)); });
     const rest = [...nb].filter((i) => !S.selected.has(i)).sort((a, b) => nodes[b].d - nodes[a].d).slice(0, 30);
-    labelNodes = [...S.selected, ...rest];
+    const selList = [...S.selected];
+    if (selList.length > 60) {
+      const gsc = (i) => (S.group && S.group.score.get(i)) || 0;
+      selList.sort((a, b) => gsc(b) - gsc(a) || nodes[b].d - nodes[a].d);
+      selList.length = 40;
+    }
+    labelNodes = [...selList, ...rest];
     for (const i of labelNodes) {
       const el = document.createElement('div');
       el.className = 'nlabel' + (S.selected.has(i) ? ' sel' : '');
@@ -322,7 +335,7 @@ async function main() {
     const TDL_TXT = { Tclin: 'has approved drugs acting on it', Tchem: 'small molecules bind it strongly, but no approved drug',
     Tbio: 'biology is annotated, but no qualifying small molecules', Tdark: 'little is known about it' };
   const AGN = { F: 'FDA', E: 'EMA', P: 'PMDA' };
-  function drugBox(i) {
+  function drugBoxLegacy(i) {
     const n = nodes[i];
     if (n.t !== 'protein') return '';
     const acc = n.k.slice(2), r = drugs[acc];
@@ -335,6 +348,44 @@ async function main() {
       if (r.n > r.d.length) h += `<div class="m">+${r.n - r.d.length} more, see Pharos</div>`;
     } else h += '<div class="m">No drug with a mechanism-of-action entry in DrugCentral.</div>';
     h += `<div class="m"><a href="https://pharos.nih.gov/targets/${esc(acc)}" target="_blank" rel="noopener">Pharos</a> · DrugCentral mechanism-of-action drugs only; clinical-trial drugs are not included yet</div></div>`;
+    return h;
+  }
+  const STAGE_TXT = { APPROVAL: 'approved', PREAPPROVAL: 'pre-approval', PHASE_4: 'phase 4', PHASE_3: 'phase 3', PHASE_2_3: 'phase 2/3',
+    PHASE_2: 'phase 2', PHASE_1_2: 'phase 1/2', PHASE_1: 'phase 1', EARLY_PHASE_1: 'early phase 1', IND: 'IND filed', PRECLINICAL: 'preclinical', UNKNOWN: 'stage unknown' };
+  const STAGE_ORDER = ['APPROVAL', 'PREAPPROVAL', 'PHASE_4', 'PHASE_3', 'PHASE_2_3', 'PHASE_2', 'PHASE_1_2', 'PHASE_1', 'EARLY_PHASE_1', 'IND', 'PRECLINICAL', 'UNKNOWN'];
+  const REG_NAME = { FDA: 'FDA', DailyMed: 'FDA label', EMA: 'EMA', 'EMA Human Drugs': 'EMA', PMDA: 'PMDA' };
+  function drugRow(x) {
+    const [name, type, act, stage, nOn, onStage, srcs, wd] = x;
+    const all = String(srcs || '').split(',').filter(Boolean);
+    const reg = [...new Set(all.filter((s) => REG_NAME[s]).map((s) => REG_NAME[s]))];
+    const cur = all.filter((s) => !REG_NAME[s] && s !== 'manual');
+    const parts = [type || 'type n/a', act || 'action n/a', STAGE_TXT[stage] || stage];
+    if (nOn) parts.push(`${nOn} ongoing trial${nOn > 1 ? 's' : ''}${onStage && onStage !== stage ? ' (up to ' + (STAGE_TXT[onStage] || onStage) + ')' : ''}`);
+    if (stage === 'APPROVAL') parts.push(reg.length ? reg.join(', ') : cur.length ? 'approval listed by ' + cur.join(', ') + ' only' : 'source n/a');
+    if (all.includes('manual')) parts.push('link curated by hand: acts through FKBP12');
+    if (wd) parts.push('withdrawn in some products');
+    return `<div>${esc(name)} <span class="m">${esc(parts.join(' · '))}</span></div>`;
+  }
+  function drugBox(i) {
+    const n = nodes[i];
+    if (n.t !== 'protein') return '';
+    const acc = n.k.slice(2), r = drugs[acc];
+    if (!r) return '';
+    let h = '<div class="desc">';
+    if (r.t) h += `<div><b>Druggability: ${esc(r.t)}</b> <span class="m">${esc(TDL_TXT[r.t] || '')}${r.f ? ' · ' + esc(r.f) : ''}</span></div>`;
+    if (r.d && r.d.length) {
+      const by = {};
+      r.d.forEach((x) => { by[x[3]] = (by[x[3]] || 0) + 1; });
+      const sumTxt = STAGE_ORDER.filter((k) => by[k]).map((k) => by[k] + ' ' + STAGE_TXT[k]).join(', ');
+      const on = r.d.filter((x) => x[4] > 0).length;
+      h += `<div style="margin-top:4px"><b>${r.d.length} drug${r.d.length > 1 ? 's' : ''}</b> <span class="m">${esc(sumTxt)}</span></div>`;
+      h += on ? `<div class="m">${on} with trials still running${r.o ? ' (furthest: ' + esc(STAGE_TXT[r.o] || r.o) + ')' : ''}</div>`
+              : '<div class="m">No trials currently recruiting or active.</div>';
+      h += r.d.slice(0, 10).map(drugRow).join('');
+      const rest = r.d.slice(10);
+      if (rest.length) h += `<details><summary class="m">show ${rest.length} more</summary>${rest.map(drugRow).join('')}</details>`;
+    } else h += '<div class="m">No clinical-stage drug is linked to this protein in Open Targets.</div>';
+    h += `<div class="m"><a href="https://pharos.nih.gov/targets/${esc(acc)}" target="_blank" rel="noopener">Pharos</a> · Open Targets (CC0) · ongoing = recruiting, active, not yet recruiting or enrolling by invitation</div></div>`;
     return h;
   }
   let infoP = null;
@@ -426,6 +477,8 @@ async function main() {
     if (sel.length === 1) fillInfo(sel[0]);
   }
   $('detail').addEventListener('click', async (ev) => {
+    const rg = ev.target.closest('button[data-rmgroup]');
+    if (rg) { clearGroup(); return; }
     const rm = ev.target.closest('button[data-rm]');
     if (rm) { const i = +rm.dataset.rm; S.selected.delete(i); S.forced.delete(i); S.selected = new Set(S.selected); update(); return; }
     if (ev.target.closest('button[data-clear]')) { clearSel(); return; }
@@ -462,11 +515,11 @@ async function main() {
   }
   function selectOnly(i, fly) {
     if (!vis(i)) S.forced.add(i);
-    S.selected = new Set([i]);
+    S.selected = new Set([i]); S.group = null;
     update();
     if (fly) flyTo(new THREE.Vector3(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]), 120);
   }
-  function clearSel() { S.selected = new Set(); S.forced.clear(); update(); }
+  function clearSel() { S.selected = new Set(); S.forced.clear(); S.group = null; update(); }
   function addToSel(i, fly) {
     if (!vis(i)) S.forced.add(i);
     S.selected = new Set([...S.selected, i]);
@@ -483,7 +536,7 @@ async function main() {
     ids.forEach((i) => { rad = Math.max(rad, c.distanceTo(new THREE.Vector3(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]))); });
     flyTo(c, Math.max(120, rad * 2.6));
   }
-  const chipsHtml = (sel) => '<div class="chips">'
+  const chipsHtmlOld = (sel) => '<div class="chips">'
     + sel.map((i) => `<span class="chip">${esc(nodes[i].l)}<button data-rm="${i}" title="remove from selection">×</button></span>`).join('')
     + (sel.length > 1 ? '<button class="clearall" data-clear="1">clear all</button>' : '') + '</div>';
 
@@ -589,6 +642,11 @@ async function main() {
   const DRUG_TXT = [['approved', 'Target of an approved drug (Pharos Tclin)'], ['drug', 'Other drug in DrugCentral'],
     ['Tchem', 'Small molecules bind it, no drug (Tchem)'], ['Tbio', 'Biology known, no compounds (Tbio)'],
     ['Tdark', 'Little known (Tdark)'], ['none', 'Not a protein, or no data']];
+  DRUG_TXT.length = 0;
+  DRUG_TXT.push(['approved', 'Approved drug (FDA / EMA / PMDA / label)'], ['approvedc', 'Approval only on curated lists (ATC/TTD), or Pharos Tclin'],
+    ['trial', 'Drug in an ongoing trial, none approved'], ['earlier', 'Drug reached trials, none ongoing or approved'],
+    ['Tchem', 'Small molecules bind it, no drug (Tchem)'], ['Tbio', 'Biology known, no compounds (Tbio)'],
+    ['Tdark', 'Little known (Tdark)'], ['none', 'Not a protein, or no data']);
   function setLegend() {
     legend.innerHTML = S.colorby === 'drug'
       ? DRUG_TXT.map(([k, t]) => `<div class="leg"><span class="sw" style="background:${DRUG_COLORS[k]}"></span><span>${t}</span></div>`).join('') : '';
@@ -613,6 +671,104 @@ async function main() {
   $('q').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') $('results').querySelector('button')?.click(); });
 
   // ---------------------------------------------------------------- render loop
+  // ---------------------------------------------------------------- disease panel (Open Targets, CC0)
+  S.group = null;
+  function chipsHtml(sel) {
+    const g = S.group;
+    const manual = g ? sel.filter((i) => !g.set.has(i)) : sel;
+    let h = '<div class="chips">';
+    if (g) h += `<span class="chip group">${esc(g.name)} · ${g.set.size} targets<button data-rmgroup="1" title="remove these targets">×</button></span>`;
+    h += manual.slice(0, 40).map((i) => `<span class="chip">${esc(nodes[i].l)}<button data-rm="${i}" title="remove from selection">×</button></span>`).join('');
+    if (manual.length > 40) h += `<span class="m">+${manual.length - 40} more</span>`;
+    if (sel.length > 1) h += '<button class="clearall" data-clear="1">clear all</button>';
+    return h + '</div>';
+  }
+  function clearGroup() {
+    if (!S.group) return;
+    S.group.set.forEach((i) => { S.selected.delete(i); S.forced.delete(i); });
+    S.selected = new Set(S.selected);
+    S.group = null;
+    $('dinfo').textContent = 'Disease selection removed.';
+    update();
+  }
+  const DZ = { index: null, blob: null, off: null, low: null, loading: null };
+  function loadDiseases() {
+    if (DZ.loading) return DZ.loading;
+    $('dinfo').textContent = 'loading disease data…';
+    DZ.loading = (async () => {
+      const [idx, b64] = await Promise.all([get('disease_index.json'), get('disease_targets_b64.json')]);
+      const bin = atob(b64), u = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+      const off = new Array(idx.length);
+      let o = 0;
+      idx.forEach((r, k) => { off[k] = o; o += r[2]; });
+      DZ.index = idx; DZ.blob = u; DZ.off = off;
+      DZ.low = idx.map((r) => (r[1] + ' ' + r[3]).toLowerCase());
+      $('dinfo').textContent = idx.length.toLocaleString() + ' diseases ready. Type a name above.';
+    })().catch((err) => { DZ.loading = null; $('dinfo').textContent = 'Could not load disease data: ' + err.message; throw err; });
+    return DZ.loading;
+  }
+  let curD = null;
+  function applyDisease() {
+    if (!curD) return;
+    const minS = +$('dscore').value, cap = Math.max(1, Math.floor(+$('dcap').value) || 1);
+    if (S.group) S.group.set.forEach((i) => { S.selected.delete(i); S.forced.delete(i); });
+    const set = new Set(), score = new Map();
+    for (let j = 0; j < curD.idxs.length && set.size < cap; j++) {
+      if (curD.sc[j] < minS) break;
+      set.add(curD.idxs[j]); score.set(curD.idxs[j], curD.sc[j]);
+    }
+    S.group = { name: curD.name, set, score };
+    set.forEach((i) => { if (!vis(i)) S.forced.add(i); S.selected.add(i); });
+    S.selected = new Set(S.selected);
+    S.scope = 'among'; $('scope').value = 'among';
+    $('dinfo').textContent = `${set.size} of ${curD.idxs.length} scored targets shown (score ≥ ${minS.toFixed(2)}; top score ${curD.sc[0].toFixed(2)}). Only targets present in this map are listed, and scores below 0.1 are not stored.`;
+    update();
+  }
+  function pickDisease(k) {
+    const r = DZ.index[k], o = DZ.off[k], n = r[2];
+    const idxs = new Array(n), sc = new Array(n);
+    for (let j = 0; j < n; j++) {
+      const b = (o + j) * 3;
+      idxs[j] = DZ.blob[b] | (DZ.blob[b + 1] << 8);
+      sc[j] = DZ.blob[b + 2] / 255;
+    }
+    curD = { id: r[0], name: r[1], idxs, sc };
+    $('dres').innerHTML = ''; $('dq').value = r[1];
+    $('dscore').max = String(Math.max(0.2, Math.ceil(sc[0] * 100) / 100));
+    $('dscore').value = '0.1'; $('dscoreV').textContent = '0.10';
+    $('dcap').max = String(n); $('dcap').value = String(Math.min(150, n));
+    applyDisease();
+    frameSelection();
+  }
+  $('dq').addEventListener('focus', () => { loadDiseases().catch(() => {}); });
+  $('dq').addEventListener('input', async () => {
+    const box = $('dres'), q = $('dq').value.trim().toLowerCase();
+    box.innerHTML = '';
+    if (q.length < 2) return;
+    try { await loadDiseases(); } catch (e) { return; }
+    if ($('dq').value.trim().toLowerCase() !== q) return;
+    const m = [];
+    for (let k = 0; k < DZ.index.length; k++) {
+      const p = DZ.index[k][1].toLowerCase().indexOf(q);
+      if (p === 0) m.push([k, 0]);
+      else if (p > 0) m.push([k, 1]);
+      else if (DZ.low[k].indexOf(q) >= 0) m.push([k, 2]);
+    }
+    m.sort((a, b) => a[1] - b[1] || DZ.index[b[0]][2] - DZ.index[a[0]][2]);
+    if (!m.length) { box.textContent = 'No disease with scored targets in this map matches.'; return; }
+    m.slice(0, 12).forEach(([k]) => {
+      const b = document.createElement('button');
+      b.innerHTML = `${esc(DZ.index[k][1])} <small>${DZ.index[k][2]} targets</small>`;
+      b.addEventListener('click', () => pickDisease(k));
+      box.append(b);
+    });
+  });
+  $('dq').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') $('dres').querySelector('button')?.click(); });
+  $('dscore').addEventListener('input', () => { $('dscoreV').textContent = (+$('dscore').value).toFixed(2); applyDisease(); });
+  $('dcap').addEventListener('input', applyDisease);
+  $('dclear').addEventListener('click', clearGroup);
+
   const dbs = new THREE.Vector2();
   function frame(now) {
     requestAnimationFrame(frame);
