@@ -137,8 +137,16 @@ async function main() {
   const lower = new Array(N), tmp = new THREE.Color();
   const tierOf = new Array(N), hasOn = new Array(N).fill(false), typeMask = new Int32Array(N);
   const kindCount = {}, regCount = {};
+  const abEffN = (n) => {
+    const t = n.t === 'protein' ? tract[n.k.slice(2)] : null;
+    if (!t) return 0;
+    const a = t[1];
+    if (a >= 3) return a;
+    return (a === 2 && (n.r === 'plasma_membrane' || n.r === 'extracellular')) ? 2 : Math.min(a, 1);
+  };
+  const abEff = (i) => abEffN(nodes[i]);
   const TRACT_COLORS = ['#363d4a', '#facc15', '#4ade80', '#38bdf8', '#38bdf8', '#38bdf8'];
-  const bestTractLevel = (n) => { if (n.t !== 'protein') return 0; const t = tract[n.k.slice(2)]; return t ? Math.max(t[0], t[1]) : 0; };
+  const bestTractLevel = (n) => { if (n.t !== 'protein') return 0; const t = tract[n.k.slice(2)]; return t ? Math.max(t[0], abEffN(n)) : 0; };
   nodes.forEach((n, i) => {
     pos[i * 3] = n.x; pos[i * 3 + 1] = n.y; pos[i * 3 + 2] = n.z;
     baseSize[i] = Math.min(16, 2.2 + 0.8 * Math.sqrt(Math.max(n.d, 1)));
@@ -163,7 +171,7 @@ async function main() {
     kinds: new Set(Object.keys(kindCount).filter((k) => k !== 'chemical')),
     regions: new Set(Object.keys(meta.region_colors)), noise: false,
     selected: new Set(), forced: new Set(), highlight: null,
-    focus: new Set(), conn: new Set(), dcat: 'all', dconn: 'all', ongoing: 'any', typeSel: 0, devid: 'any', tract: 'any',
+    focus: new Set(), conn: new Set(), dcat: 'all', dconn: 'all', ongoing: 'any', typeSel: 0, devid: 'any', tract: 'any', hit: new Map(), sizeBy: 'dis', evmin: 6,
     tiers: new Set(['approved', 'approvedc', 'trial', 'earlier', 'Tchem', 'Tbio', 'Tdark', 'none']),
     colorby: 'region', sizeMul: 1, labels: true, shells: true, shown: 0,
   };
@@ -349,7 +357,7 @@ async function main() {
     let shown = 0;
     for (let i = 0; i < N; i++) {
       const v = vis(i), s = S.selected.has(i);
-      const gs = S.group ? S.group.score.get(i) : undefined;
+      const gs = S.group ? ((S.sizeBy === 'hit' && S.hit.has(i)) ? S.hit.get(i) : S.group.score.get(i)) : undefined;
       aSize[i] = v ? baseSize[i] * S.sizeMul * (s ? 1.7 : 1) * (gs === undefined ? 1 : 0.8 + 3.2 * gs) : 0;
       aAlpha[i] = !v ? 0 : (hl && !hl.has(i) ? 0.08 : 1);
       aSel[i] = s ? 1 : 0;
@@ -561,7 +569,7 @@ async function main() {
     if (n.t !== 'protein') return false;
     const t = tract[n.k.slice(2)];
     if (!t) return false;
-    const sm = t[0] >= 2, ab = t[1] >= 2;
+    const sm = t[0] >= 2, ab = abEff(i) >= 2;
     if (S.tract === 'sm') return sm;
     if (S.tract === 'ab') return ab;
     if (S.tract === 'open') { const x = tierOf[i]; return (x === 'Tchem' || x === 'Tbio' || x === 'Tdark' || x === 'none') && (sm || ab); }
@@ -573,7 +581,7 @@ async function main() {
     const t = tract[n.k.slice(2)];
     if (!t) return '';
     let h = '<div class="desc"><div><b>Tractability</b> <span class="m">could this target be drugged, and how?</span></div>';
-    h += MOD.map(([c, nm], k) => `<div><span class="sw" style="background:${TRACT_COLORS[t[k]]}"></span> ${esc(nm)}: <span class="m">${TLV[t[k]]}</span></div>`).join('');
+    h += MOD.map(([c, nm], k) => `<div><span class="sw" style="background:${TRACT_COLORS[t[k]]}"></span> ${esc(nm)}: <span class="m">${TLV[t[k]]}${k === 1 && t[1] === 2 && abEff(i) < 2 ? ' (but location data say it is not on the cell surface, so treated as weak)' : ''}</span></div>`).join('');
     const pc = t[9] ? ` (${t[8]}% of ${t[9]} screened)` : '';
     if (t[4] === 2) h += `<div style="margin-top:4px"><b>Common essential gene</b> <span class="m">(DepMap) loss slows growth in most cancer cell lines${pc}. Inhibiting it may carry toxicity risk; this is context dependent.</span></div>`;
     else if (t[4] === 1 && t[9]) h += `<div class="m" style="margin-top:4px">Not a common essential gene: ${t[8]}% of ${t[9]} screened cancer cell lines depend strongly on it (gene effect ≤ −0.5).</div>`;
@@ -671,6 +679,7 @@ async function main() {
   let lastDrawn = 0;
   function update() {
     S.conn = connSet();
+    computeHit();
     const list = collectEdges();
     drawEdges(list);
     lastDrawn = Math.min(list.length, MAXE);
@@ -679,7 +688,7 @@ async function main() {
       for (const e of list.slice(0, MAXE)) { hl.add(eSrc(e)); hl.add(eTgt(e)); }
       S.highlight = hl;
     } else S.highlight = null;
-    refreshNodes(); setLabels(list); renderDetail(list); renderDCard(); renderEvLine(); afterUpdate();
+    refreshNodes(); setLabels(list); renderDetail(list); renderDCard(); renderEvLine(); renderHitList(); afterUpdate();
     $('status').textContent = `${S.shown.toLocaleString()} of ${N.toLocaleString()} nodes shown · ${lastDrawn.toLocaleString()} edges drawn`;
   }
   function selectOnly(i, fly) {
@@ -1046,10 +1055,10 @@ async function main() {
   function evMatch(i) {
     if (evLevel(i, 0) < 0) return true;
     const gen = Math.max(evLevel(i, 0), evLevel(i, 1)), ani = evLevel(i, 7), som = evLevel(i, 2), drg = evLevel(i, 3);
-    if (S.devid === 'gen') return gen >= 3;
-    if (S.devid === 'animal') return ani >= 3;
-    if (S.devid === 'drug') return drg >= 3;
-    if (S.devid === 'weak') return gen < 3 && ani < 3 && som < 3 && drg < 3;
+    if (S.devid === 'gen') return gen >= S.evmin;
+    if (S.devid === 'animal') return ani >= S.evmin;
+    if (S.devid === 'drug') return drg >= S.evmin;
+    if (S.devid === 'weak') return gen < S.evmin && ani < S.evmin && som < S.evmin && drg < S.evmin;
     return true;
   }
   function evBars(i) {
@@ -1076,14 +1085,14 @@ async function main() {
       const gl = Math.max(evLevel(i, 0), evLevel(i, 1));
       if (gl < 0) return;
       const an = evLevel(i, 7), so = evLevel(i, 2), dr = evLevel(i, 3);
-      if (gl >= 3) gen++;
-      if (an >= 3) ani++;
-      if (gl < 3 && an < 3 && so < 3 && dr < 3) weak++;
-      if (g.cat.get(i) === 'none' && gl >= 3) und++;
+      if (gl >= S.evmin) gen++;
+      if (an >= S.evmin) ani++;
+      if (gl < S.evmin && an < S.evmin && so < S.evmin && dr < S.evmin) weak++;
+      if (g.cat.get(i) === 'none' && gl >= S.evmin) und++;
     });
     d.insertAdjacentHTML('beforeend',
       `<div class="catrow${S.devid === 'gen' && S.dcat === 'none' ? ' on' : ''}" data-cat="none" data-ev="gen"><span class="cnt">${und}</span><span>no clinical-stage drug, but genetic evidence <span class="m">(click)</span></span></div>`
-      + `<div class="m">Evidence among shown targets (level ≥ 0.17): genetic ${gen} · animal model ${ani} · weak only ${weak}.</div>`);
+      + `<div class="m">Evidence among shown targets (level ≥ ${(S.evmin / 15).toFixed(2)}): genetic ${gen} · animal model ${ani} · weak only ${weak}.</div>`);
   }
   const DZ = { index: null, blob: null, off: null, low: null, loading: null };
   function loadDiseases() {
@@ -1184,14 +1193,14 @@ async function main() {
     ['Ongoing trials (furthest)', (r) => r.ongoing], ['Linked in set', (r) => r.linked, '', 'g'], ['Regulation edges', (r) => r.reg, 'num'],
     ['Region', (r) => r.region], ['UniProt', (r) => r.acc], ['SM tractability', (r) => r.smt], ['AB tractability', (r) => r.abt],
     ['Essential (DepMap)', (r) => r.ess], ['Safety events', (r) => r.saf, 'num'], ['Tool compounds', (r) => r.prb, 'num'],
-    ['Genetic ev.', (r) => r.evg, 'num', 'g'], ['Animal ev.', (r) => r.eva, 'num', 'g'], ['Literature ev.', (r) => r.evl, 'num', 'g'], ['Top drugs', (r) => r.top]];
+    ['Genetic ev.', (r) => r.evg, 'num', 'g'], ['Animal ev.', (r) => r.eva, 'num', 'g'], ['Literature ev.', (r) => r.evl, 'num', 'g'], ['Top drugs', (r) => r.top], ['Hit score', (r) => r.hit, 'num', 'g']];
   function rowOf(i) {
     const n = nodes[i], r = n.t === 'protein' ? drugs[n.k.slice(2)] : null, g = S.group;
     const inG = g && g.score.has(i);
     return { i, gene: n.l, score: inG ? +g.score.get(i).toFixed(3) : '', cat: inG ? CAT_TXT[g.cat.get(i)] : '',
       tier: TIER_SHORT[tierOf[i]] || '', pharos: (r && r.t) || '', best: r && r.s ? (STAGE_TXT[r.s] || r.s) : '',
       ndrugs: (r && r.n) || 0, ongoing: r && r.o ? (STAGE_TXT[r.o] || r.o) : '', linked: inG ? (S.conn.has(i) ? 'yes' : 'no') : '',
-      reg: n.dr, ...rowExtra(i), region: n.r, acc: n.t === 'protein' ? n.k.slice(2) : '', top: r && r.d ? r.d.slice(0, 3).map((x) => x[0]).join('; ') : '' };
+      reg: n.dr, ...rowExtra(i), hit: S.hit.has(i) ? Math.round(S.hit.get(i) * 100) : '', region: n.r, acc: n.t === 'protein' ? n.k.slice(2) : '', top: r && r.d ? r.d.slice(0, 3).map((x) => x[0]).join('; ') : '' };
   }
   function tableSet() {
     if (S.group) return [...S.group.set].filter(vis);
@@ -1205,7 +1214,7 @@ async function main() {
     const rows = tableSet().map(rowOf);
     const cols = COLS.map((x, k) => k).filter((k) => S.group || COLS[k][3] !== 'g');
     const user = tsort.c >= 0 && cols.includes(tsort.c);
-    const c = user ? tsort.c : (S.group ? 1 : 9), d = user ? tsort.d : -1, f = COLS[c][1];
+    const c = user ? tsort.c : (S.group ? COLS.findIndex((x) => x[0] === 'Hit score') : 9), d = user ? tsort.d : -1, f = COLS[c][1];
     rows.sort((a, b) => {
       const x = f(a), y = f(b);
       return (typeof x === 'number' && typeof y === 'number' ? x - y : String(x).localeCompare(String(y))) * d || a.gene.localeCompare(b.gene);
@@ -1265,6 +1274,9 @@ async function main() {
     if (S.ongoing !== 'any') p.set('on', S.ongoing);
     if (S.typeSel) p.set('ty', String(S.typeSel));
     if (S.tract !== 'any') p.set('tr', S.tract);
+    if (S.group && JSON.stringify(HW) !== JSON.stringify(HW0)) p.set('hw', HITDEF.map(([k]) => HW[k]).join(','));
+    if (S.sizeBy !== 'dis') p.set('sb', S.sizeBy);
+    if (S.evmin !== 6) p.set('em', String(S.evmin));
     if (S.devid !== 'any' && S.group) p.set('ev', S.devid);
     if (S.cls.size !== 1 || !S.cls.has('regulation')) p.set('cls', [...S.cls].join(','));
     if (S.scope !== 'sel') p.set('sc', S.scope);
@@ -1293,6 +1305,12 @@ async function main() {
       }
       if (p.get('on')) { S.ongoing = p.get('on'); $('ongoing').value = S.ongoing; }
       if (p.get('tr')) { S.tract = p.get('tr'); $('tract').value = S.tract; }
+      if (p.get('hw')) {
+        const v = p.get('hw').split(',').map(Number);
+        HITDEF.forEach(([k], j) => { if (isFinite(v[j])) { HW[k] = v[j]; hitSliders[k][0].value = v[j]; hitSliders[k][1].textContent = v[j].toFixed(1); } });
+      }
+      if (p.get('sb')) { S.sizeBy = p.get('sb'); $('sizeby').value = S.sizeBy; }
+      if (p.get('em')) { S.evmin = +p.get('em') || 6; if ($('evmin')) $('evmin').value = String(S.evmin); }
       if (p.get('ty')) { S.typeSel = +p.get('ty') || 0; typeBox.forEach((b, k) => { b.checked = !!(S.typeSel & (1 << k)); }); }
       if (p.get('cls')) {
         S.cls = new Set(p.get('cls').split(',').filter((c) => meta.cls.includes(c)));
@@ -1323,6 +1341,104 @@ async function main() {
       console.warn('could not restore the link state', err);
     } finally { hashReady = true; scheduleHash(); }
   }
+
+  // ---------------------------------------------------------------- hit list (transparent triage score)
+  const HW0 = { dis: 1, gen: 0.5, tr: 0.5, prec: 0.3, ess: 0.3, saf: 0.2 };
+  const HW = { ...HW0 };
+  const HITDEF = [
+    ['dis', 'Disease score', 0, 1.5, 0.1, 'Open Targets association score for the open disease'],
+    ['gen', 'Genetic evidence', 0, 1.5, 0.1, 'strongest of genetic association and curated genetic literature'],
+    ['tr', 'Tractability', 0, 1.5, 0.1, 'clinical precedent or a high-confidence prediction for small molecules, or for antibodies on surface or secreted proteins'],
+    ['prec', 'Clinical precedent (negative favours undrugged)', -1, 1, 0.1, 'approved for this disease 1, in trials for it 0.8, approved for another disease 0.7, in trials for another disease 0.4, none 0'],
+    ['ess', 'Penalty: common essential', 0, 1, 0.1, 'DepMap common essential gene'],
+    ['saf', 'Penalty: safety liabilities', 0, 1, 0.1, 'reported liabilities from curated sources (ToxCast-only readouts ignored)']];
+  const PRECV = { appr_dis: 1, trial_dis: 0.8, appr_other: 0.7, trial_other: 0.4, none: 0 };
+  const CAT_SHORT = { appr_dis: 'approved here', trial_dis: 'in trials here', appr_other: 'approved elsewhere', trial_other: 'trials elsewhere', none: 'no drug' };
+  const hitSliders = {};
+  function trVal(i) {
+    const n = nodes[i];
+    if (n.t !== 'protein') return 0;
+    const t = tract[n.k.slice(2)];
+    if (!t) return 0;
+    const m = Math.max(t[0], abEff(i));
+    return m >= 3 ? 1 : m === 2 ? 0.7 : m === 1 ? 0.3 : 0;
+  }
+  function hitParts(i) {
+    const g = S.group;
+    if (!g || !g.score.has(i)) return null;
+    const n = nodes[i], t = n.t === 'protein' ? tract[n.k.slice(2)] : null;
+    return { dis: g.score.get(i), gen: Math.max(evLevel(i, 0), evLevel(i, 1), 0) / 15, tr: trVal(i),
+      prec: PRECV[g.cat.get(i)] || 0, ess: t && t[4] === 2 ? 1 : 0, saf: t && t[5] > 0 ? 1 : 0 };
+  }
+  function computeHit() {
+    S.hit = new Map();
+    const g = S.group;
+    if (!g) return;
+    const w = HW, den = (w.dis + w.gen + w.tr + Math.abs(w.prec)) || 1, raw = new Map();
+    let lo = 1e9, hi = -1e9;
+    g.set.forEach((i) => {
+      const p = hitParts(i);
+      const s = (w.dis * p.dis + w.gen * p.gen + w.tr * p.tr + w.prec * p.prec - w.ess * p.ess - w.saf * p.saf) / den;
+      raw.set(i, s);
+      if (s < lo) lo = s;
+      if (s > hi) hi = s;
+    });
+    raw.forEach((s, i) => S.hit.set(i, hi > lo ? (s - lo) / (hi - lo) : 0.5));
+  }
+  function renderHitList() {
+    const box = $('hitlist');
+    if (!box) return;
+    const g = S.group;
+    if (!g) { box.innerHTML = '<div class="m">Pick a disease to rank its targets.</div>'; return; }
+    const rows = [...g.set].filter(vis).map((i) => [i, S.hit.get(i) || 0]).sort((a, b) => b[1] - a[1]).slice(0, 12);
+    if (!rows.length) { box.innerHTML = '<div class="m">No targets match the current filters.</div>'; return; }
+    box.innerHTML = '<div class="m">Top targets under the current weights and filters (0-100):</div>' + rows.map(([i, s], k) =>
+      `<div class="hitrow"><span class="cnt">${k + 1}</span><a data-hit="${i}">${esc(nodes[i].l)}</a> <b>${Math.round(s * 100)}</b> <span class="m">disease ${g.score.get(i).toFixed(2)} · ${esc(CAT_SHORT[g.cat.get(i)])} · ${esc(TIER_SHORT[tierOf[i]] || '')}</span></div>`).join('');
+  }
+  function buildHitPanel() {
+    const side = $('side');
+    const anchor = [...side.querySelectorAll('details.panel > summary')].find((x) => x.textContent.trim() === 'Drug filters');
+    const d = document.createElement('details');
+    d.className = 'panel'; d.open = true;
+    d.innerHTML = '<summary>Hit list (triage)</summary>'
+      + '<div class="hint">Ranks the open disease\'s targets with a transparent score. Move the weights to match what you look for. A negative precedent weight favours undrugged targets.</div>'
+      + '<div id="hitpresets"></div><div id="hitsl"></div>'
+      + '<label class="row2">Size dots by <select id="sizeby"><option value="dis">disease score</option><option value="hit">hit score</option></select></label>'
+      + '<div id="hitlist"></div>'
+      + '<div class="hint">Hit score = (w1 disease + w2 genetic + w3 tractability + w4 precedent − w5 essential − w6 safety) ÷ (w1 + w2 + w3 + |w4|), then scaled 0-100 across the open disease\'s selected targets. A ranking aid for triage, not a prediction of success. Hover a slider for what it measures.</div>';
+    if (anchor) anchor.parentElement.before(d); else side.append(d);
+    HITDEF.forEach(([k, lab, mn, mx, st, tip]) => {
+      const r = document.createElement('label');
+      r.className = 'row2'; r.title = tip;
+      r.innerHTML = `<span>${esc(lab)}</span><input type="range" min="${mn}" max="${mx}" step="${st}" value="${HW[k]}"><span class="hv">${HW[k].toFixed(1)}</span>`;
+      const inp = r.querySelector('input'), val = r.querySelector('.hv');
+      inp.addEventListener('input', () => { HW[k] = +inp.value; val.textContent = HW[k].toFixed(1); update(); });
+      hitSliders[k] = [inp, val];
+      d.querySelector('#hitsl').append(r);
+    });
+    const setW = (w, cat) => {
+      Object.assign(HW, w);
+      HITDEF.forEach(([k]) => { hitSliders[k][0].value = HW[k]; hitSliders[k][1].textContent = HW[k].toFixed(1); });
+      if (S.group) { S.dcat = cat; $('dcat').value = cat; }
+      update();
+    };
+    [['Balanced', HW0, 'all'],
+     ['Repurposing', { dis: 1, gen: 0.3, tr: 0.2, prec: 1, ess: 0.3, saf: 0.3 }, 'appr_other'],
+     ['First-in-class', { dis: 1, gen: 1, tr: 1, prec: -0.6, ess: 0.6, saf: 0.4 }, 'none']].forEach(([t, w, cat]) => {
+      const b = document.createElement('button');
+      b.className = 'preset'; b.textContent = t;
+      b.title = cat === 'all' ? 'default weights' : 'sets the weights and the Show filter to: ' + CAT_TXT[cat];
+      b.addEventListener('click', () => setW(w, cat));
+      d.querySelector('#hitpresets').append(b);
+    });
+    $('sizeby').addEventListener('change', (ev) => { S.sizeBy = ev.target.value; update(); });
+  }
+  buildHitPanel();
+  $('hitlist').addEventListener('click', (ev) => {
+    const a = ev.target.closest('a[data-hit]');
+    if (a) selectOnly(+a.dataset.hit, true);
+  });
+  { const em = $('evmin'); if (em) em.addEventListener('change', (ev) => { S.evmin = +ev.target.value; update(); }); }
 
   const dbs = new THREE.Vector2();
   function frame(now) {

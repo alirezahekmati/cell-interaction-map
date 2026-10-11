@@ -120,14 +120,14 @@ for e, accs in ens2acc.items():
 
 tract_out, risk_out = {}, {}
 for acc, rec in T.items():
-    nsf, npb = len(rec["ev"]), len(rec["pb"])
+    nsf, npb = sum(1 for v in rec["ev"].values() if v - {"ToxCast"}), len(rec["pb"])
     nhq = sum(1 for v in rec["pb"].values() if v[0])
     if not (any(rec["lv"]) or rec["ess"] or nsf or npb):
         continue
     tract_out[acc] = rec["lv"] + [rec["ess"], nsf, npb, nhq, rec["pct"], rec["n"]]
     r = {}
     if nsf:
-        evs = sorted(rec["ev"].items(), key=lambda kv: (-len([s for s in kv[1] if s != "ToxCast"]), -len(kv[1]), kv[0]))
+        evs = sorted(((k, v) for k, v in rec["ev"].items() if v - {"ToxCast"}), key=lambda kv: (-len([s for s in kv[1] if s != "ToxCast"]), -len(kv[1]), kv[0]))
         r["s"] = [[k, ", ".join(sorted(v))] for k, v in evs[:8]]
         r["ns"] = nsf
     if npb:
