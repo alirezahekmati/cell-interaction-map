@@ -80,3 +80,13 @@ details > summary.m { cursor: pointer; }
   border: 1px solid #2b3442; border-radius: 4px; padding: 5px 10px; cursor: pointer; }
 #backbtn:hover { background: #1d2635; }
 #backbtn[hidden] { display: none; }
+
+#presets { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+button.preset { background: #151b26; color: #d8dee9; border: 1px solid #2b3442; border-radius: 4px; padding: 3px 8px; cursor: pointer; font-size: 12px; }
+button.preset:hover { background: #1d2635; }
+.catrow { display: flex; gap: 8px; padding: 3px 4px; cursor: pointer; border-radius: 3px; }
+.catrow:hover { background: #151b26; }
+.catrow.on { background: #16324a; }
+.catrow .cnt { min-width: 34px; text-align: right; color: #fff; flex: none; }
+.drug { margin: 5px 0; }
+.ind { margin: 1px 0 1px 10px; }

@@ -37,12 +37,13 @@ const CAP = 6;          // arrow / T-bar size in world units
 
 const DRUG_COLORS = { approved: '#22d3ee', approvedc: '#67e8b0', Tclin: '#67e8b0', trial: '#5b8def', earlier: '#3b5fa8', Tchem: '#ffa94d', Tbio: '#8a93a3', Tdark: '#4a5468', none: '#363d4a' };
 const REG_SRC = new Set(['FDA', 'DailyMed', 'EMA', 'EMA Human Drugs', 'PMDA']);
+const DTYPES = ['Small molecule', 'Antibody', 'Antibody drug conjugate', 'Protein', 'Enzyme', 'Oligonucleotide', 'Gene', 'Vaccine component', 'Cell', 'Oligosaccharide', 'Unknown'];
 function drugClass(n, drugs) {
   if (n.t !== 'protein') return 'none';
   const r = drugs[n.k.slice(2)];
   if (!r) return 'none';
   if (r.d && r.d.length) {
-    if (r.d.some((x) => x[3] === 'APPROVAL' && String(x[6]).split(',').some((s) => REG_SRC.has(s)))) return 'approved';
+    if (r.d.some((x) => x[3] === 'APPROVAL' && x[7] !== 2 && String(x[6]).split(',').some((s) => REG_SRC.has(s)))) return 'approved';
     if (r.s === 'APPROVAL') return 'approvedc';
     if (r.o) return 'trial';
     if (r.s) return 'earlier';
@@ -52,7 +53,7 @@ function drugClass(n, drugs) {
 }
 
 // each sidebar section (an h2 plus what follows it) becomes an open/close panel
-const OPEN_PANELS = new Set(['Edge layers', 'Disease targets']);
+const OPEN_PANELS = new Set(['Disease targets', 'Drug filters', 'Edge layers']);
 function makePanels() {
   const side = $('side');
   let cur = null;
@@ -70,6 +71,31 @@ function makePanels() {
   }
 }
 
+function injectUI() {
+  const side = $('side');
+  const edgeH2 = [...side.children].find((el) => el.tagName === 'H2' && el.textContent.trim() === 'Edge layers');
+  if (edgeH2 && !$('tiers')) edgeH2.insertAdjacentHTML('beforebegin', `
+    <h2>Drug filters</h2>
+    <div class="hint">Show only targets by clinical status. Applies to the whole map and to disease selections.</div>
+    <div id="presets"></div>
+    <div id="tiers"></div>
+    <label class="row2">Ongoing trials <select id="ongoing"><option value="any">any</option><option value="yes">only with</option><option value="no">only without</option></select></label>
+    <div class="hint">Drug type: a target must have a drug of a ticked type.</div>
+    <div id="dtypes"></div>`);
+  const clr = $('dclear');
+  if (clr && !$('dsum')) clr.insertAdjacentHTML('beforebegin', `
+    <div id="dsum"></div>
+    <label class="row2">Show <select id="dcat">
+      <option value="all">all targets</option>
+      <option value="appr_dis">approved drug for this disease</option>
+      <option value="trial_dis">drug in trials for this disease</option>
+      <option value="appr_other">approved drug, other diseases</option>
+      <option value="trial_other">drug in trials, other diseases only</option>
+      <option value="none">no clinical-stage drug</option></select></label>
+    <label class="row2">Connections <select id="dconn">
+      <option value="all">all</option><option value="conn">only connected</option><option value="iso">only unconnected</option></select></label>`);
+}
+
 async function getEdges() {
   const bin = atob(await get('edges_b64.json'));
   const u = new Uint8Array(bin.length);
@@ -78,9 +104,11 @@ async function getEdges() {
 }
 
 async function main() {
+  injectUI();
   makePanels();
-  const [meta, nodes, regions, buf, drugs] = await Promise.all([
-    get('meta.json'), get('nodes.json'), get('regions.json'), getEdges(), get('node_drugs_ot.json').catch(() => ({}))]);
+  const [meta, nodes, regions, buf, drugs, ind] = await Promise.all([
+    get('meta.json'), get('nodes.json'), get('regions.json'), getEdges(), get('node_drugs_ot.json').catch(() => ({})),
+    get('drug_indications.json').catch(() => ({}))]);
   const N = nodes.length, E = meta.n_edges;
   if (buf.byteLength !== E * 20) throw new Error(`edges.bin is ${buf.byteLength} bytes, expected ${E * 20}`);
 
@@ -101,13 +129,20 @@ async function main() {
   const pos = new Float32Array(N * 3), baseSize = new Float32Array(N);
   const colReg = new Float32Array(N * 3), colKind = new Float32Array(N * 3), colDrug = new Float32Array(N * 3);
   const lower = new Array(N), tmp = new THREE.Color();
+  const tierOf = new Array(N), hasOn = new Array(N).fill(false), typeMask = new Int32Array(N);
   const kindCount = {}, regCount = {};
   nodes.forEach((n, i) => {
     pos[i * 3] = n.x; pos[i * 3 + 1] = n.y; pos[i * 3 + 2] = n.z;
     baseSize[i] = Math.min(16, 2.2 + 0.8 * Math.sqrt(Math.max(n.d, 1)));
     tmp.set(meta.region_colors[n.r] || '#adb5bd'); colReg.set([tmp.r, tmp.g, tmp.b], i * 3);
     tmp.set(KIND_COLORS[n.t] || '#adb5bd'); colKind.set([tmp.r, tmp.g, tmp.b], i * 3);
-    tmp.set(DRUG_COLORS[drugClass(n, drugs)]); colDrug.set([tmp.r, tmp.g, tmp.b], i * 3);
+    const dc = drugClass(n, drugs); tierOf[i] = dc;
+    const dr = n.t === 'protein' ? drugs[n.k.slice(2)] : null;
+    if (dr) {
+      hasOn[i] = !!dr.o;
+      for (const x of (dr.d || [])) { const ti = DTYPES.indexOf(x[1]); typeMask[i] |= 1 << (ti < 0 ? DTYPES.length - 1 : ti); }
+    }
+    tmp.set(DRUG_COLORS[dc]); colDrug.set([tmp.r, tmp.g, tmp.b], i * 3);
     lower[i] = n.l.toLowerCase();
     kindCount[n.t] = (kindCount[n.t] || 0) + 1;
     regCount[n.r] = (regCount[n.r] || 0) + 1;
@@ -119,13 +154,24 @@ async function main() {
     kinds: new Set(Object.keys(kindCount).filter((k) => k !== 'chemical')),
     regions: new Set(Object.keys(meta.region_colors)), noise: false,
     selected: new Set(), forced: new Set(), highlight: null,
+    focus: new Set(), conn: new Set(), dcat: 'all', dconn: 'all', ongoing: 'any', typeSel: 0,
+    tiers: new Set(['approved', 'approvedc', 'trial', 'earlier', 'Tchem', 'Tbio', 'Tdark', 'none']),
     colorby: 'region', sizeMul: 1, labels: true, shells: true, shown: 0,
   };
   const vis = (i) => {
     if (S.forced.has(i)) return true;
     const n = nodes[i];
     if (n.h === 2 && !S.noise) return false;
-    return S.kinds.has(n.t) && S.regions.has(n.r);
+    if (!(S.kinds.has(n.t) && S.regions.has(n.r))) return false;
+    if (!S.tiers.has(tierOf[i])) return false;
+    if (S.ongoing !== 'any' && (S.ongoing === 'yes') !== hasOn[i]) return false;
+    if (S.typeSel && !(typeMask[i] & S.typeSel)) return false;
+    const g = S.group;
+    if (g && g.set.has(i)) {
+      if (S.dcat !== 'all' && g.cat.get(i) !== S.dcat) return false;
+      if (S.dconn !== 'all' && S.conn.has(i) !== (S.dconn === 'conn')) return false;
+    }
+    return true;
   };
 
   // ---------------------------------------------------------------- three.js scene
@@ -259,9 +305,10 @@ async function main() {
   const edgePass = (e) => S.cls.has(meta.cls[eCls(e)]) && S.net.has(meta.net[eNet(e)])
     && eEv(e) >= S.minEv && eRes(e) >= S.minRes && vis(eSrc(e)) && vis(eTgt(e));
   function collectEdges() {
-    if (!S.selected.size) return [];
+    if (!S.selected.size && !S.focus.size) return [];
     const set = new Set();
     const add = (n) => { for (let q = adjOff[n]; q < adjOff[n + 1]; q++) { const e = inc[q]; if (edgePass(e)) set.add(e); } };
+    S.focus.forEach(add);
     if (S.scope === 'among' && S.selected.size > 1) {
       S.selected.forEach((n) => {
         for (let q = adjOff[n]; q < adjOff[n + 1]; q++) {
@@ -307,7 +354,7 @@ async function main() {
   function setLabels(list) {
     labelBox.querySelectorAll('.nlabel').forEach((x) => x.remove());
     labelEls = []; labelNodes = [];
-    if (!S.labels || !S.selected.size) return;
+    if (!S.labels || (!S.selected.size && !S.focus.size)) return;
     const nb = new Set(); list.forEach((e) => { nb.add(eSrc(e)); nb.add(eTgt(e)); });
     const rest = [...nb].filter((i) => !S.selected.has(i)).sort((a, b) => nodes[b].d - nodes[a].d).slice(0, 30);
     const selList = [...S.selected];
@@ -316,10 +363,10 @@ async function main() {
       selList.sort((a, b) => gsc(b) - gsc(a) || nodes[b].d - nodes[a].d);
       selList.length = 40;
     }
-    labelNodes = [...selList, ...rest];
+    labelNodes = [...new Set([...S.focus, ...selList, ...rest])];
     for (const i of labelNodes) {
       const el = document.createElement('div');
-      el.className = 'nlabel' + (S.selected.has(i) ? ' sel' : '');
+      el.className = 'nlabel' + ((S.selected.has(i) || S.focus.has(i)) ? ' sel' : '');
       el.textContent = nodes[i].l; labelBox.append(el); labelEls.push(el);
     }
   }
@@ -355,7 +402,7 @@ async function main() {
   const STAGE_ORDER = ['APPROVAL', 'PREAPPROVAL', 'PHASE_4', 'PHASE_3', 'PHASE_2_3', 'PHASE_2', 'PHASE_1_2', 'PHASE_1', 'EARLY_PHASE_1', 'IND', 'PRECLINICAL', 'UNKNOWN'];
   const REG_NAME = { FDA: 'FDA', DailyMed: 'FDA label', EMA: 'EMA', 'EMA Human Drugs': 'EMA', PMDA: 'PMDA' };
   function drugRow(x) {
-    const [name, type, act, stage, nOn, onStage, srcs, wd] = x;
+    const [name, type, act, stage, nOn, onStage, srcs, wd, cid] = x;
     const all = String(srcs || '').split(',').filter(Boolean);
     const reg = [...new Set(all.filter((s) => REG_NAME[s]).map((s) => REG_NAME[s]))];
     const cur = all.filter((s) => !REG_NAME[s] && s !== 'manual');
@@ -363,8 +410,15 @@ async function main() {
     if (nOn) parts.push(`${nOn} ongoing trial${nOn > 1 ? 's' : ''}${onStage && onStage !== stage ? ' (up to ' + (STAGE_TXT[onStage] || onStage) + ')' : ''}`);
     if (stage === 'APPROVAL') parts.push(reg.length ? reg.join(', ') : cur.length ? 'approval listed by ' + cur.join(', ') + ' only' : 'source n/a');
     if (all.includes('manual')) parts.push('link curated by hand: acts through FKBP12');
-    if (wd) parts.push('withdrawn in some products');
-    return `<div>${esc(name)} <span class="m">${esc(parts.join(' · '))}</span></div>`;
+    if (wd === 2) parts.push('linked only through withdrawal records; stage is the drug overall stage');
+    else if (wd) parts.push('withdrawn in some products');
+    const di = ind[cid];
+    let extra = '';
+    if (di) {
+      if (di.na) extra += `<div class="m ind">approved for: ${esc(di.a.join(', '))}${di.na > di.a.length ? ' +' + (di.na - di.a.length) + ' more' : ''}</div>`;
+      if (di.nt) extra += `<div class="m ind">in trials for: ${esc(di.t.map((t) => t[0] + ' (' + (STAGE_TXT[t[1]] || t[1]) + ')').join(', '))}${di.nt > di.t.length ? ' +' + (di.nt - di.t.length) + ' more' : ''}</div>`;
+    }
+    return `<div class="drug">${esc(name)} <span class="m">${esc(parts.join(' · '))}</span>${extra}</div>`;
   }
   function drugBox(i) {
     const n = nodes[i];
@@ -395,7 +449,7 @@ async function main() {
     const acc = n.k.slice(2);
     let all;
     try { infoP = infoP || get('node_info.json'); all = await infoP; } catch (err) { infoP = null; return; }
-    if (!(S.selected.size === 1 && S.selected.has(i))) return;
+    if (oneNode() !== i) return;
     const box = $('info'), d = all[acc];
     if (!box || !d) return;
     let h = '';
@@ -451,19 +505,21 @@ async function main() {
     return h ? `<div class="desc">${h}<div class="m">All regulation edges, ignoring the filters.</div></div>` : '';
   }
   let details = null;
-  function renderDetail(list) {
+  function renderDetail(listAll) {
+    const list = S.focus.size ? listAll.filter((e) => S.focus.has(eSrc(e)) || S.focus.has(eTgt(e))) : listAll;
     const el = $('detail');
-    if (!S.selected.size) { el.hidden = true; return; }
+    if (!S.selected.size && !S.focus.size) { el.hidden = true; return; }
     el.hidden = false;
     const sel = [...S.selected];
     let h = chipsHtml(sel);
-    if (sel.length === 1) {
-      const n = nodes[sel[0]];
+    const one = oneNode();
+    if (one >= 0) {
+      const n = nodes[one];
       h += `<h2>${esc(n.l)}</h2><div class="sub">${esc(n.t)} · ${esc(n.r)}${n.u ? ' · UniProt ' + esc(n.u) : ''}${n.c ? ' · ' + esc(n.c) : ''}</div>`;
       h += `<div class="sub">${n.d} edges in total (${n.dr} regulation)${n.m ? ' · ' + n.m + ' members' : ''}</div>`;
-      h += '<div id="info"></div>';
-      h += drugBox(sel[0]);
-      h += nodeSummary(sel[0]);
+      h += diseaseLine(one) + '<div id="info"></div>';
+      h += drugBox(one);
+      h += nodeSummary(one);
     } else {
       h += `<h2>${sel.length} nodes selected</h2><div class="sub">${sel.slice(0, 8).map((i) => esc(nodes[i].l)).join(', ')}${sel.length > 8 ? '…' : ''}</div>`;
     }
@@ -474,7 +530,7 @@ async function main() {
         + `<div class="m">${meta.cls[eCls(e)]} · ${eEv(e)} ev · ${eRes(e)} res</div><div class="more" hidden></div></div>`;
     }
     el.innerHTML = h + '</div>';
-    if (sel.length === 1) fillInfo(sel[0]);
+    if (one >= 0) fillInfo(one);
   }
   $('detail').addEventListener('click', async (ev) => {
     const rg = ev.target.closest('button[data-rmgroup]');
@@ -502,21 +558,23 @@ async function main() {
   // ---------------------------------------------------------------- central update
   let lastDrawn = 0;
   function update() {
+    S.conn = connSet();
     const list = collectEdges();
     drawEdges(list);
     lastDrawn = Math.min(list.length, MAXE);
-    if (S.selected.size) {
-      const hl = new Set(S.selected);
+    if (S.selected.size || S.focus.size) {
+      const hl = new Set([...S.selected, ...S.focus]);
       for (const e of list.slice(0, MAXE)) { hl.add(eSrc(e)); hl.add(eTgt(e)); }
       S.highlight = hl;
     } else S.highlight = null;
-    refreshNodes(); setLabels(list); renderDetail(list);
+    refreshNodes(); setLabels(list); renderDetail(list); renderDCard();
     $('status').textContent = `${S.shown.toLocaleString()} of ${N.toLocaleString()} nodes shown · ${lastDrawn.toLocaleString()} edges drawn`;
   }
   function selectOnly(i, fly) {
     remember();
     if (!vis(i)) S.forced.add(i);
-    S.selected = new Set([i]); S.group = null;
+    if (S.group) S.focus = new Set([i]);
+    else { S.selected = new Set([i]); S.focus = new Set(); }
     update();
     if (fly) flyTo(new THREE.Vector3(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]), 120);
   }
@@ -525,13 +583,14 @@ async function main() {
   backBtn.id = 'backbtn'; backBtn.textContent = '↩ Back'; backBtn.title = 'return to the previous selection (Backspace)'; backBtn.hidden = true;
   view.append(backBtn);
   function sameSel(a) {
-    return a.group === S.group && a.sel.size === S.selected.size && [...S.selected].every((x) => a.sel.has(x));
+    return a.group === S.group && a.sel.size === S.selected.size && [...S.selected].every((x) => a.sel.has(x))
+      && (a.focus ? a.focus.size : 0) === S.focus.size && [...S.focus].every((x) => a.focus && a.focus.has(x));
   }
   function remember() {
-    if (!S.selected.size) return;
+    if (!S.selected.size && !S.focus.size) return;
     const last = hist[hist.length - 1];
     if (last && sameSel(last)) return;
-    hist.push({ sel: new Set(S.selected), forced: new Set(S.forced), group: S.group, scope: S.scope, d: curD });
+    hist.push({ sel: new Set(S.selected), forced: new Set(S.forced), group: S.group, scope: S.scope, d: curD, focus: new Set(S.focus) });
     if (hist.length > 30) hist.shift();
     backBtn.hidden = false;
   }
@@ -539,7 +598,7 @@ async function main() {
     const h = hist.pop();
     backBtn.hidden = hist.length === 0;
     if (!h) return;
-    S.selected = h.sel; S.forced = h.forced; S.group = h.group; S.scope = h.scope; curD = h.d;
+    S.selected = h.sel; S.forced = h.forced; S.group = h.group; S.scope = h.scope; curD = h.d; S.focus = h.focus || new Set();
     $('scope').value = h.scope;
     if (h.d) $('dq').value = h.d.name;
     update();
@@ -550,7 +609,13 @@ async function main() {
     const t = document.activeElement && document.activeElement.tagName;
     if (ev.key === 'Backspace' && t !== 'INPUT' && t !== 'SELECT' && t !== 'TEXTAREA') { ev.preventDefault(); goBack(); }
   });
-  function clearSel() { remember(); S.selected = new Set(); S.forced.clear(); S.group = null; update(); }
+  function clearSel() { remember(); S.selected = new Set(); S.forced.clear(); S.group = null; S.focus = new Set(); S.dcat = 'all'; S.dconn = 'all'; $('dcat').value = 'all'; $('dconn').value = 'all'; update(); }
+  // an empty click or Esc first drops the focused node; a disease set is removed by a second Esc (or its x)
+  function clearFocusOrAll(hard) {
+    if (S.group && S.focus.size) { remember(); S.focus = new Set(); update(); return; }
+    if (S.group && !hard) return;
+    clearSel();
+  }
   function addToSel(i, fly) {
     remember();
     if (!vis(i)) S.forced.add(i);
@@ -609,7 +674,7 @@ async function main() {
     if (i >= 0) {
       if (ev.shiftKey) { S.selected.has(i) ? S.selected.delete(i) : S.selected.add(i); S.selected = new Set(S.selected); update(); }
       else selectOnly(i, false);
-    } else if (!ev.shiftKey) clearSel();
+    } else if (!ev.shiftKey) clearFocusOrAll(false);
   });
   canvas.addEventListener('pointermove', (ev) => {
     if (ev.buttons) return;
@@ -625,7 +690,7 @@ async function main() {
     });
   });
   canvas.addEventListener('pointerleave', () => { $('tip').hidden = true; });
-  window.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') { document.activeElement?.blur(); clearSel(); } });
+  window.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') { document.activeElement?.blur(); clearFocusOrAll(true); } });
 
   // ---------------------------------------------------------------- sidebar
   function addCheck(parent, text, checked, onChange, color, count) {
@@ -683,6 +748,35 @@ async function main() {
     legend.innerHTML = S.colorby === 'drug'
       ? DRUG_TXT.map(([k, t]) => `<div class="leg"><span class="sw" style="background:${DRUG_COLORS[k]}"></span><span>${t}</span></div>`).join('') : '';
   }
+  // ---------------------------------------------------------------- drug filters
+  const TIER_KEYS = ['approved', 'approvedc', 'trial', 'earlier', 'Tchem', 'Tbio', 'Tdark', 'none'];
+  const tierN = {};
+  tierOf.forEach((t) => { tierN[t] = (tierN[t] || 0) + 1; });
+  const tierBox = {}, typeBox = [];
+  TIER_KEYS.forEach((k) => {
+    const txt = (DRUG_TXT.find((d) => d[0] === k) || [k, k])[1];
+    const l = addCheck($('tiers'), txt, true, (on) => { on ? S.tiers.add(k) : S.tiers.delete(k); update(); }, DRUG_COLORS[k], tierN[k] || 0);
+    tierBox[k] = l.querySelector('input');
+  });
+  function setTiers(list, ongoing) {
+    S.tiers = new Set(list);
+    TIER_KEYS.forEach((k) => { tierBox[k].checked = S.tiers.has(k); });
+    S.ongoing = ongoing || 'any'; $('ongoing').value = S.ongoing;
+    S.typeSel = 0; typeBox.forEach((b) => { b.checked = false; });
+    update();
+  }
+  const typeN = new Array(DTYPES.length).fill(0);
+  for (let i = 0; i < N; i++) for (let b = 0; b < DTYPES.length; b++) if (typeMask[i] & (1 << b)) typeN[b]++;
+  DTYPES.forEach((t, b) => {
+    const l = addCheck($('dtypes'), t, false, (on) => { S.typeSel = on ? (S.typeSel | (1 << b)) : (S.typeSel & ~(1 << b)); update(); }, null, typeN[b]);
+    typeBox.push(l.querySelector('input'));
+  });
+  const DRUGGED = ['approved', 'approvedc', 'trial', 'earlier'];
+  [['All', () => setTiers(TIER_KEYS)], ['With a drug', () => setTiers(DRUGGED)], ['Approved', () => setTiers(['approved', 'approvedc'])],
+   ['Ongoing trials', () => setTiers(DRUGGED, 'yes')], ['No drug or trial', () => setTiers(['Tchem', 'Tbio', 'Tdark'])]].forEach(([t, f]) => {
+    const b = document.createElement('button'); b.className = 'preset'; b.textContent = t; b.addEventListener('click', f); $('presets').append(b);
+  });
+  $('ongoing').addEventListener('change', (ev) => { S.ongoing = ev.target.value; update(); });
   $('labels').addEventListener('change', (ev) => { S.labels = ev.target.checked; update(); });
 
   // search
@@ -722,14 +816,72 @@ async function main() {
     S.selected = new Set(S.selected);
     S.group = null;
     $('dinfo').textContent = 'Disease selection removed.';
+    S.focus = new Set(); S.dcat = 'all'; S.dconn = 'all'; $('dcat').value = 'all'; $('dconn').value = 'all';
     update();
   }
+  const CAT_TXT = { appr_dis: 'Approved drug for this disease', trial_dis: 'Drug in trials for this disease',
+    appr_other: 'Approved drug for other diseases (repurposing)', trial_other: 'Drug in trials, only for other diseases', none: 'No clinical-stage drug' };
+  function catOf(i, f) {
+    if (f === 1) return 'appr_dis';
+    if (f === 2) return 'trial_dis';
+    const t = tierOf[i];
+    if (t === 'approved' || t === 'approvedc') return 'appr_other';
+    if (t === 'trial' || t === 'earlier') return 'trial_other';
+    return 'none';
+  }
+  function oneNode() {
+    if (S.focus.size === 1) return [...S.focus][0];
+    if (!S.group && S.selected.size === 1) return [...S.selected][0];
+    return -1;
+  }
+  function connSet() {
+    const out = new Set(), g = S.group;
+    if (!g) return out;
+    g.set.forEach((n) => {
+      for (let q = adjOff[n]; q < adjOff[n + 1]; q++) {
+        const e = inc[q], o = eSrc(e) === n ? eTgt(e) : eSrc(e);
+        if (o !== n && g.set.has(o) && S.cls.has(meta.cls[eCls(e)]) && S.net.has(meta.net[eNet(e)]) && eEv(e) >= S.minEv && eRes(e) >= S.minRes) { out.add(n); break; }
+      }
+    });
+    return out;
+  }
+  function renderDCard() {
+    const box = $('dsum'), g = S.group;
+    if (!g) { box.innerHTML = ''; return; }
+    const cnt = {}; let hi = 0, nc = 0;
+    g.set.forEach((i) => {
+      const c = g.cat.get(i); cnt[c] = (cnt[c] || 0) + 1;
+      if (c === 'none' && g.score.get(i) >= 0.6) hi++;
+      if (S.conn.has(i)) nc++;
+    });
+    const rows = ['appr_dis', 'trial_dis', 'appr_other', 'trial_other', 'none'].filter((k) => cnt[k])
+      .map((k) => `<div class="catrow${S.dcat === k ? ' on' : ''}" data-cat="${k}"><span class="cnt">${cnt[k]}</span><span>${CAT_TXT[k]}${k === 'none' && hi ? ` <span class="m">(${hi} with score ≥ 0.6)</span>` : ''}</span></div>`).join('');
+    box.innerHTML = `<div class="desc"><div><b>${esc(g.name)}</b> · ${g.set.size} targets</div>${rows}`
+      + `<div class="catrow${S.dconn === 'conn' ? ' on' : ''}" data-conn="conn"><span class="cnt">${nc}</span><span>linked to another target of this set</span></div>`
+      + `<div class="catrow${S.dconn === 'iso' ? ' on' : ''}" data-conn="iso"><span class="cnt">${g.set.size - nc}</span><span>no link to the others (in the shown edge layers)</span></div>`
+      + '<div class="catrow" data-cat="all" data-conn="all"><span class="cnt"></span><span>show everything</span></div>'
+      + '<div class="m">Click a line to filter. Links use the edge layers and cut-offs set below.</div></div>';
+  }
+  function diseaseLine(i) {
+    const g = S.group;
+    if (!g || !g.score.has(i)) return '';
+    return `<div class="desc"><div><b>${esc(g.name)}</b> <span class="m">score ${g.score.get(i).toFixed(2)} · ${CAT_TXT[g.cat.get(i)]}</span></div></div>`;
+  }
+  $('dsum').addEventListener('click', (ev) => {
+    const el = ev.target.closest('.catrow');
+    if (!el) return;
+    if (el.dataset.cat !== undefined) { S.dcat = el.dataset.cat; $('dcat').value = S.dcat; }
+    if (el.dataset.conn !== undefined) { S.dconn = el.dataset.conn; $('dconn').value = S.dconn; }
+    update();
+  });
+  $('dcat').addEventListener('change', (ev) => { S.dcat = ev.target.value; update(); });
+  $('dconn').addEventListener('change', (ev) => { S.dconn = ev.target.value; update(); });
   const DZ = { index: null, blob: null, off: null, low: null, loading: null };
   function loadDiseases() {
     if (DZ.loading) return DZ.loading;
     $('dinfo').textContent = 'loading disease data…';
     DZ.loading = (async () => {
-      const [idx, b64] = await Promise.all([get('disease_index.json'), get('disease_targets_b64.json')]);
+      const [idx, b64] = await Promise.all([get('disease_index.json'), get('disease_targets4_b64.json')]);
       const bin = atob(b64), u = new Uint8Array(bin.length);
       for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
       const off = new Array(idx.length);
@@ -746,12 +898,12 @@ async function main() {
     if (!curD) return;
     const minS = +$('dscore').value, cap = Math.max(1, Math.floor(+$('dcap').value) || 1);
     if (S.group) S.group.set.forEach((i) => { S.selected.delete(i); S.forced.delete(i); });
-    const set = new Set(), score = new Map();
+    const set = new Set(), score = new Map(), cat = new Map();
     for (let j = 0; j < curD.idxs.length && set.size < cap; j++) {
       if (curD.sc[j] < minS) break;
-      set.add(curD.idxs[j]); score.set(curD.idxs[j], curD.sc[j]);
+      set.add(curD.idxs[j]); score.set(curD.idxs[j], curD.sc[j]); cat.set(curD.idxs[j], catOf(curD.idxs[j], curD.fl[j]));
     }
-    S.group = { name: curD.name, set, score };
+    S.group = { name: curD.name, set, score, cat };
     set.forEach((i) => { if (!vis(i)) S.forced.add(i); S.selected.add(i); });
     S.selected = new Set(S.selected);
     S.scope = 'among'; $('scope').value = 'among';
@@ -761,13 +913,14 @@ async function main() {
   function pickDisease(k) {
     remember();
     const r = DZ.index[k], o = DZ.off[k], n = r[2];
-    const idxs = new Array(n), sc = new Array(n);
+    const idxs = new Array(n), sc = new Array(n), fl = new Array(n);
     for (let j = 0; j < n; j++) {
-      const b = (o + j) * 3;
+      const b = (o + j) * 4;
       idxs[j] = DZ.blob[b] | (DZ.blob[b + 1] << 8);
-      sc[j] = DZ.blob[b + 2] / 255;
+      sc[j] = DZ.blob[b + 2] / 255; fl[j] = DZ.blob[b + 3];
     }
-    curD = { id: r[0], name: r[1], idxs, sc };
+    curD = { id: r[0], name: r[1], idxs, sc, fl };
+    S.dcat = 'all'; S.dconn = 'all'; $('dcat').value = 'all'; $('dconn').value = 'all'; S.focus = new Set();
     $('dres').innerHTML = ''; $('dq').value = r[1];
     $('dscore').max = String(Math.max(0.2, Math.ceil(sc[0] * 100) / 100));
     $('dscore').value = '0.1'; $('dscoreV').textContent = '0.10';

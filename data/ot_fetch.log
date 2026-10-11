@@ -83,3 +83,80 @@ still to download: 2.53 GB | free disk: 995.66 GB
 == association_overall_indirect finished | elapsed 9.1 min | failures so far: 0 ==
 
 DONE.
+Open Targets release 26.09
+  association_by_datatype_indirect     41 files    2.70 GB   (already have 0.00 GB)
+  target_safety_event                   1 files    0.00 GB   (already have 0.00 GB)
+  target_tractability                   2 files    0.00 GB   (already have 0.00 GB)
+  chemical_probe                        1 files    0.00 GB   (already have 0.00 GB)
+  target_essentiality                   4 files    0.25 GB   (already have 0.00 GB)
+
+still to download: 2.94 GB | free disk: 993.12 GB
+
+== association_by_datatype_indirect: 41 of 41 files to download ==
+    ok  part-00000-10181acd-244f-4d33-87fb-a2d902b95546-     64.7 MB    2.78 MB/s
+    ok  part-00001-10181acd-244f-4d33-87fb-a2d902b95546-     64.7 MB    2.60 MB/s
+    ok  part-00002-10181acd-244f-4d33-87fb-a2d902b95546-     65.4 MB    2.62 MB/s
+    ok  part-00004-10181acd-244f-4d33-87fb-a2d902b95546-     64.7 MB    2.64 MB/s
+    ok  part-00005-10181acd-244f-4d33-87fb-a2d902b95546-     70.1 MB    2.57 MB/s
+    ok  part-00003-10181acd-244f-4d33-87fb-a2d902b95546-     64.5 MB    2.06 MB/s
+    ok  part-00008-10181acd-244f-4d33-87fb-a2d902b95546-     64.5 MB    2.77 MB/s
+    ok  part-00006-10181acd-244f-4d33-87fb-a2d902b95546-     64.5 MB    1.99 MB/s
+    ok  part-00007-10181acd-244f-4d33-87fb-a2d902b95546-     64.4 MB    2.17 MB/s
+    ok  part-00009-10181acd-244f-4d33-87fb-a2d902b95546-     64.5 MB    2.50 MB/s
+    ok  part-00011-10181acd-244f-4d33-87fb-a2d902b95546-     65.1 MB    2.43 MB/s
+    ok  part-00010-10181acd-244f-4d33-87fb-a2d902b95546-     69.6 MB    1.59 MB/s
+    ok  part-00012-10181acd-244f-4d33-87fb-a2d902b95546-     64.4 MB    1.64 MB/s
+    ok  part-00013-10181acd-244f-4d33-87fb-a2d902b95546-     64.3 MB    1.61 MB/s
+    ok  part-00015-10181acd-244f-4d33-87fb-a2d902b95546-     69.9 MB    3.43 MB/s
+    ok  part-00016-10181acd-244f-4d33-87fb-a2d902b95546-     64.8 MB    2.86 MB/s
+    ok  part-00014-10181acd-244f-4d33-87fb-a2d902b95546-     65.9 MB    1.25 MB/s
+    retry 1/8 part-00018-10181acd-244f-4d33-87fb-a2d90: RemoteProtocolError('peer closed connection without sending complete message body (received 33631726 bytes, expected 65049817)'); waiting 5s
+    retry 1/8 part-00019-10181acd-244f-4d33-87fb-a2d90: RemoteProtocolError('peer closed connection without sending complete message body (received 14031726 bytes, expected 65288173)'); waiting 5s
+    retry 1/8 part-00017-10181acd-244f-4d33-87fb-a2d90: RemoteProtocolError('peer closed connection without sending complete message body (received 49743726 bytes, expected 65054588)'); waiting 5s
+    ok  part-00017-10181acd-244f-4d33-87fb-a2d902b95546-     65.1 MB    1.67 MB/s
+    ok  part-00018-10181acd-244f-4d33-87fb-a2d902b95546-     65.0 MB    1.84 MB/s
+    ok  part-00019-10181acd-244f-4d33-87fb-a2d902b95546-     65.3 MB    1.76 MB/s
+    ok  part-00020-10181acd-244f-4d33-87fb-a2d902b95546-     69.5 MB    2.59 MB/s
+    ok  part-00021-10181acd-244f-4d33-87fb-a2d902b95546-     65.2 MB    2.51 MB/s
+    ok  part-00022-10181acd-244f-4d33-87fb-a2d902b95546-     64.5 MB    2.82 MB/s
+    ok  part-00024-10181acd-244f-4d33-87fb-a2d902b95546-     64.8 MB    2.97 MB/s
+    ok  part-00023-10181acd-244f-4d33-87fb-a2d902b95546-     64.6 MB    2.38 MB/s
+    ok  part-00025-10181acd-244f-4d33-87fb-a2d902b95546-     70.0 MB    2.76 MB/s
+    ok  part-00027-10181acd-244f-4d33-87fb-a2d902b95546-     64.7 MB    2.02 MB/s
+    ok  part-00026-10181acd-244f-4d33-87fb-a2d902b95546-     64.6 MB    1.65 MB/s
+    ok  part-00028-10181acd-244f-4d33-87fb-a2d902b95546-     64.3 MB    1.65 MB/s
+    ok  part-00029-10181acd-244f-4d33-87fb-a2d902b95546-     64.6 MB    2.47 MB/s
+    ok  part-00030-10181acd-244f-4d33-87fb-a2d902b95546-     70.1 MB    2.75 MB/s
+    ok  part-00031-10181acd-244f-4d33-87fb-a2d902b95546-     64.7 MB    2.88 MB/s
+    ok  part-00033-10181acd-244f-4d33-87fb-a2d902b95546-     64.6 MB    2.84 MB/s
+    ok  part-00032-10181acd-244f-4d33-87fb-a2d902b95546-     64.7 MB    1.86 MB/s
+    ok  part-00034-10181acd-244f-4d33-87fb-a2d902b95546-     64.6 MB    2.40 MB/s
+    ok  part-00035-10181acd-244f-4d33-87fb-a2d902b95546-     69.6 MB    2.84 MB/s
+    ok  part-00037-10181acd-244f-4d33-87fb-a2d902b95546-     64.7 MB    2.34 MB/s
+    ok  part-00036-10181acd-244f-4d33-87fb-a2d902b95546-     64.6 MB    1.74 MB/s
+    ok  part-00038-10181acd-244f-4d33-87fb-a2d902b95546-     65.1 MB    1.95 MB/s
+    ok  part-00039-10181acd-244f-4d33-87fb-a2d902b95546-     64.6 MB    2.92 MB/s
+    ok  part-00040-10181acd-244f-4d33-87fb-a2d902b95546-     70.0 MB    2.80 MB/s
+== association_by_datatype_indirect finished | elapsed 6.9 min | failures so far: 0 ==
+
+== target_safety_event: 1 of 1 files to download ==
+    ok  part-00000-e457d966-d50e-4afc-841d-547765a1e4d7-      0.1 MB    0.70 MB/s
+== target_safety_event finished | elapsed 6.9 min | failures so far: 0 ==
+
+== target_tractability: 2 of 2 files to download ==
+    ok  part-00000-e2201205-916c-4b28-971d-6511ae9ea691-      0.1 MB    0.32 MB/s
+    ok  part-00001-e2201205-916c-4b28-971d-6511ae9ea691-      0.1 MB    0.08 MB/s
+== target_tractability finished | elapsed 7.0 min | failures so far: 0 ==
+
+== chemical_probe: 1 of 1 files to download ==
+    ok  part-00000-0e77f36c-1078-48bc-b3d3-7657c4d5881a-      0.0 MB    0.14 MB/s
+== chemical_probe finished | elapsed 7.0 min | failures so far: 0 ==
+
+== target_essentiality: 4 of 4 files to download ==
+    ok  part-00001-da3383ef-095e-40de-bb45-30e9e20c27bc-     62.2 MB    2.94 MB/s
+    ok  part-00000-da3383ef-095e-40de-bb45-30e9e20c27bc-     60.8 MB    2.79 MB/s
+    ok  part-00002-da3383ef-095e-40de-bb45-30e9e20c27bc-     61.0 MB    2.55 MB/s
+    ok  part-00003-da3383ef-095e-40de-bb45-30e9e20c27bc-     62.6 MB    4.04 MB/s
+== target_essentiality finished | elapsed 7.6 min | failures so far: 0 ==
+
+DONE.

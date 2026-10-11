@@ -5,7 +5,7 @@ from pathlib import Path
 src, dst = Path("data/export"), Path("viewer/public/data")
 dst.mkdir(parents=True, exist_ok=True)
 for f in src.iterdir():
-    if f.name != "edges.bin":
+    if f.name not in ("edges.bin", "disease_targets_b64.json"):
         shutil.copy(f, dst / f.name)
 raw = (src / "edges.bin").read_bytes()
 (dst / "edges_b64.json").write_text(json.dumps(base64.b64encode(raw).decode("ascii")), encoding="utf-8")

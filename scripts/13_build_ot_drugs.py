@@ -116,12 +116,12 @@ for acc in acc2lab:
                 rk = RANK.get(st, -1)
             if r.get("manual"):
                 act, srcs = "allosteric inhibitor (acts via FKBP12)", (srcs + ",manual").strip(",")
-            rows.append([disp(name_of.get(cd, cd)), type_of.get(cd) or "", act, st, on_n, on_stage, srcs, r["w"], rk])
+            rows.append([disp(name_of.get(cd, cd)), type_of.get(cd) or "", act, st, on_n, on_stage, srcs, (2 if r["rank"] == -99 else r["w"]), rk, cd])
         rows.sort(key=lambda x: (-x[8], -RANK.get(x[5], -9), x[0]))
         rec["n"] = len(rows)
         n_rows += len(rows)
-        rec["d"] = [x[:8] for x in rows]
-        known = [x[8] for x in rows if x[8] >= 0]
+        rec["d"] = [x[:8] + [x[9]] for x in rows]
+        known = [x[8] for x in rows if x[8] >= 0 and x[7] != 2]
         if known:
             rec["s"] = INV[max(known)]
         og_r = [RANK[x[5]] for x in rows if x[4] and x[5] in RANK]

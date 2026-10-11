@@ -1,0 +1,23 @@
+disease terms: 45896 | therapeutic-area terms excluded as 'broader parents': 26
+related-disease pairs: 591,311
+drug-disease indication pairs (approved or trial): 73,237
+drug-target links used: 9,233
+(disease, target) pairs with an approved or trial drug for that disease: 1,677,218
+
+disease_targets4_b64.json: 7,857,330 bytes raw / 5,022,317 gzip
+flags over all pairs: approved-for-disease: 106171 | trial-for-disease: 108498
+drug_indications.json: 3727 drugs, 737,039 bytes raw / 110,362 gzip
+
+--- type 2 diabetes mellitus (MONDO_0005148): 1438 stored targets, 627 with score >= 0.3
+   405  no clinical-stage drug   e.g. [('HNF1A', 0.85), ('HNF1B', 0.78), ('SLC2A2', 0.75), ('NEUROD1', 0.69), ('CDKAL1', 0.69), ('TCF7L2', 0.68)]
+    82  drug in trials for this disease   e.g. [('MTNR1B', 0.64), ('FGFR4', 0.58), ('HDAC9', 0.57), ('SLC5A1', 0.55), ('LEPR', 0.51), ('IGF1R', 0.51)]
+    79  approved drug, but for other diseases (repurposing)   e.g. [('HNF4A', 0.8), ('AKT2', 0.72), ('NDUFS4', 0.68), ('MT-ND1', 0.65), ('NDUFB8', 0.65), ('KCNQ1', 0.64)]
+    31  drug in trials, only for other diseases   e.g. [('IRS1', 0.66), ('FTO', 0.63), ('CCND1', 0.53), ('RSPO3', 0.51), ('PPP3CA', 0.48), ('ALDH2', 0.46)]
+    30  approved drug for this disease   e.g. [('KCNJ11', 0.87), ('ABCC8', 0.87), ('GCK', 0.87), ('PPARG', 0.85), ('INSR', 0.76), ('GLP1R', 0.76)]
+
+--- asthma (MONDO_0004979): 680 stored targets, 263 with score >= 0.3
+   172  no clinical-stage drug   e.g. [('FLG', 0.75), ('IL7R', 0.6), ('BACH2', 0.58), ('GATA3', 0.58), ('IRAG1', 0.58), ('TLR1', 0.58)]
+    33  approved drug for this disease   e.g. [('IL4R', 0.75), ('TSLP', 0.74), ('ADORA1', 0.73), ('IL5', 0.73), ('PDE4D', 0.68), ('CHRM2', 0.64)]
+    23  drug in trials for this disease   e.g. [('IL33', 0.73), ('IL13', 0.7), ('IL1RL1', 0.61), ('IL6', 0.59), ('TNFSF4', 0.56), ('CSF2', 0.53)]
+    21  drug in trials, only for other diseases   e.g. [('TNFRSF8', 0.6), ('PTPRC', 0.55), ('SERPING1', 0.53), ('FTO', 0.53), ('ITGB8', 0.5), ('IL18R1', 0.5)]
+    14  approved drug, but for other diseases (repurposing)   e.g. [('IL6R', 0.58), ('PRKCQ', 0.57), ('IL2RA', 0.54), ('NOD2', 0.53), ('RPS26', 0.49), ('HDAC7', 0.48)]
