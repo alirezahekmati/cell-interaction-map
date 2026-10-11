@@ -90,3 +90,21 @@ button.preset:hover { background: #1d2635; }
 .catrow .cnt { min-width: 34px; text-align: right; color: #fff; flex: none; }
 .drug { margin: 5px 0; }
 .ind { margin: 1px 0 1px 10px; }
+
+#toolbar { position: absolute; top: 10px; right: 10px; z-index: 5; display: flex; gap: 6px; }
+#toolbar button, #tablebox button { background: #151b26; color: #d8dee9; border: 1px solid #2b3442; border-radius: 4px; padding: 5px 10px; cursor: pointer; }
+#toolbar button:hover, #tablebox button:hover { background: #1d2635; }
+#tablebox { position: absolute; left: 0; right: 0; bottom: 0; height: 42%; background: #0f131bf2; border-top: 1px solid #2b3442; z-index: 6; display: flex; flex-direction: column; }
+#tablebox[hidden] { display: none; }
+#tablebox .tbar { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-bottom: 1px solid #1c2330; }
+#tablebox .grow { flex: 1; }
+#tablebox .twrap { overflow: auto; flex: 1; }
+#tablebox table { border-collapse: collapse; width: 100%; font-size: 12px; }
+#tablebox th { position: sticky; top: 0; background: #151b26; text-align: left; padding: 4px 8px; cursor: pointer; white-space: nowrap; border-bottom: 1px solid #2b3442; }
+#tablebox td { padding: 3px 8px; border-bottom: 1px solid #1c2330; white-space: nowrap; max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+#tablebox td.num { text-align: right; }
+#tablebox tbody tr { cursor: pointer; }
+#tablebox tbody tr:hover { background: #151b26; }
+#tip { white-space: normal; max-width: 340px; }
+#tip .m { color: #8a93a3; }
+details.desc > summary { cursor: pointer; }

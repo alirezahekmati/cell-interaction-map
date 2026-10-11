@@ -124,6 +124,8 @@ async function main() {
   for (let i = 0; i < N; i++) adjOff[i + 1] += adjOff[i];
   const fillp = adjOff.slice(0, N), inc = new Uint32Array(adjOff[N]);
   for (let e = 0; e < E; e++) { inc[fillp[eSrc(e)]++] = e; inc[fillp[eTgt(e)]++] = e; }
+  const regOut = new Uint16Array(N), regIn = new Uint16Array(N);
+  for (let e = 0; e < E; e++) if (meta.cls[eCls(e)] === 'regulation' && eDir(e)) { regOut[eSrc(e)]++; regIn[eTgt(e)]++; }
 
   // ---------------------------------------------------------------- node data
   const pos = new Float32Array(N * 3), baseSize = new Float32Array(N);
@@ -504,6 +506,45 @@ async function main() {
       + part(cnt.in, top.iS, top.iI, 'Regulated by', 'activated by', 'inhibited by');
     return h ? `<div class="desc">${h}<div class="m">All regulation edges, ignoring the filters.</div></div>` : '';
   }
+  const TIER_SHORT = { approved: 'approved drug', approvedc: 'approved (curated lists only)', trial: 'drug in ongoing trial',
+    earlier: 'drug reached trials', Tchem: 'small molecules bind it', Tbio: 'no compounds', Tdark: 'little known', none: 'no data' };
+  const TIER_RANK = { approved: 5, approvedc: 4, trial: 3, earlier: 2, Tchem: 1, Tbio: 0, Tdark: 0, none: 0 };
+  function drugDirection(acc) {
+    const r = drugs[acc];
+    if (!r || !r.d) return 0;
+    let lower = 0, raise = 0;
+    for (const x of r.d) {
+      if (!['APPROVAL', 'PREAPPROVAL', 'PHASE_4', 'PHASE_3'].includes(x[3]) || x[7] === 2) continue;
+      const a = String(x[2] || '').toLowerCase();
+      if (/inhibit|antagon|block|negative|inverse|degrad|disrupt/.test(a)) lower++;
+      else if (/agonist|activat|opener|positive|stabili|releas/.test(a)) raise++;
+    }
+    return lower > raise ? -1 : raise > lower ? 1 : 0;
+  }
+  function handlesBox(i) {
+    const n = nodes[i];
+    if (n.t !== 'protein') return '';
+    const dir = drugDirection(n.k.slice(2));
+    if (!dir) return '';
+    const want = dir < 0 ? 1 : -1;
+    const rows = [];
+    for (let q = adjOff[i]; q < adjOff[i + 1]; q++) {
+      const e = inc[q];
+      if (meta.cls[eCls(e)] !== 'regulation' || !eDir(e) || eTgt(e) !== i) continue;
+      const s = eSrc(e), nt = eNet(e);
+      if (s === i || nodes[s].t !== 'protein') continue;
+      if ((nt === 1 ? 1 : nt === 2 ? -1 : 0) !== want) continue;
+      rows.push({ s, ev: eEv(e), res: eRes(e) });
+    }
+    rows.sort((a, b) => TIER_RANK[tierOf[b.s]] - TIER_RANK[tierOf[a.s]] || regOut[a.s] - regOut[b.s] || b.res - a.res || b.ev - a.ev);
+    const sym = want > 0 ? '→' : '⊣', col = want > 0 ? meta.net_colors.stim : meta.net_colors.inhib;
+    const lead = dir < 0
+      ? `Clinical drugs lower ${n.l} activity. Proteins that raise it (inhibiting them could act in a similar direction):`
+      : `Clinical drugs raise ${n.l} activity. Proteins that lower it (inhibiting them could act in a similar direction):`;
+    if (!rows.length) return `<div class="desc"><div class="m">${esc(lead)}</div><div class="m">none found in the signed network.</div></div>`;
+    const items = rows.slice(0, 10).map((r) => `<div><a data-node="${r.s}">${esc(nodes[r.s].l)}</a> <b style="color:${col}">${sym}</b> ${esc(n.l)} <span class="m">${esc(TIER_SHORT[tierOf[r.s]])} · regulates ${regOut[r.s]} proteins · ${r.res} resources</span></div>`).join('');
+    return `<details class="desc"><summary><b>Upstream handles (${rows.length})</b></summary><div class="m">${esc(lead)}</div>${items}<div class="m">Rough guide only: fewer regulated proteins hints at narrower effects, but it is not selectivity data. Signs come from curated literature.</div></details>`;
+  }
   let details = null;
   function renderDetail(listAll) {
     const list = S.focus.size ? listAll.filter((e) => S.focus.has(eSrc(e)) || S.focus.has(eTgt(e))) : listAll;
@@ -519,6 +560,7 @@ async function main() {
       h += `<div class="sub">${n.d} edges in total (${n.dr} regulation)${n.m ? ' · ' + n.m + ' members' : ''}</div>`;
       h += diseaseLine(one) + '<div id="info"></div>';
       h += drugBox(one);
+      h += handlesBox(one);
       h += nodeSummary(one);
     } else {
       h += `<h2>${sel.length} nodes selected</h2><div class="sub">${sel.slice(0, 8).map((i) => esc(nodes[i].l)).join(', ')}${sel.length > 8 ? '…' : ''}</div>`;
@@ -567,7 +609,7 @@ async function main() {
       for (const e of list.slice(0, MAXE)) { hl.add(eSrc(e)); hl.add(eTgt(e)); }
       S.highlight = hl;
     } else S.highlight = null;
-    refreshNodes(); setLabels(list); renderDetail(list); renderDCard();
+    refreshNodes(); setLabels(list); renderDetail(list); renderDCard(); afterUpdate();
     $('status').textContent = `${S.shown.toLocaleString()} of ${N.toLocaleString()} nodes shown · ${lastDrawn.toLocaleString()} edges drawn`;
   }
   function selectOnly(i, fly) {
@@ -645,6 +687,30 @@ async function main() {
       fromP: camera.position.clone(), toP: target.clone().addScaledVector(dir, dist) };
   }
 
+  let hoverNode = -1, hoverTimer = 0;
+  function tipHtml(i, deep) {
+    const n = nodes[i], g = S.group;
+    let h = `<b>${esc(n.l)}</b> <span class="m">${esc(n.t)} · ${esc(n.r)} · ${n.d} edges</span>`;
+    if (g && g.score.has(i)) h += `<div>${esc(g.name)}: score ${g.score.get(i).toFixed(2)} · ${esc(CAT_TXT[g.cat.get(i)])}</div>`;
+    if (!deep) return h;
+    if (n.t === 'protein') {
+      const r = drugs[n.k.slice(2)];
+      h += `<div class="m">drug status: ${esc(TIER_SHORT[tierOf[i]] || 'no data')}${r && r.t ? ' · Pharos ' + esc(r.t) : ''}</div>`;
+      if (r && r.d && r.d.length) {
+        h += `<div class="m">${r.n} drug${r.n > 1 ? 's' : ''}: ${esc(r.d.slice(0, 3).map((x) => x[0] + ' (' + (STAGE_TXT[x[3]] || x[3]) + ')').join(', '))}${r.n > 3 ? ', …' : ''}</div>`;
+        h += `<div class="m">${r.o ? 'trials running, furthest: ' + esc(STAGE_TXT[r.o] || r.o) : 'no trials currently running'}</div>`;
+      }
+    }
+    h += `<div class="m">regulates ${regOut[i]} · regulated by ${regIn[i]} (signed edges) · click for details</div>`;
+    return h;
+  }
+  function showTip(i, tip) {
+    if (i === hoverNode) return;
+    hoverNode = i;
+    clearTimeout(hoverTimer);
+    tip.innerHTML = tipHtml(i, false);
+    hoverTimer = setTimeout(() => { if (hoverNode === i && !tip.hidden) tip.innerHTML = tipHtml(i, true); }, 500);
+  }
   // ---------------------------------------------------------------- picking + pointer handling
   function pick(mx, my) {
     const W = view.clientWidth, H = view.clientHeight;
@@ -665,7 +731,7 @@ async function main() {
   }
   const rel = (ev) => { const r = canvas.getBoundingClientRect(); return [ev.clientX - r.left, ev.clientY - r.top]; };
   let down = null, hoverRaf = 0, hoverEv = null;
-  canvas.addEventListener('pointerdown', (ev) => { down = { x: ev.clientX, y: ev.clientY }; $('tip').hidden = true; });
+  canvas.addEventListener('pointerdown', (ev) => { down = { x: ev.clientX, y: ev.clientY }; hoverNode = -1; clearTimeout(hoverTimer); $('tip').hidden = true; });
   canvas.addEventListener('pointerup', (ev) => {
     if (!down) return;
     const moved = Math.hypot(ev.clientX - down.x, ev.clientY - down.y); down = null;
@@ -683,13 +749,13 @@ async function main() {
     hoverRaf = requestAnimationFrame(() => {
       hoverRaf = 0;
       const [mx, my] = rel(hoverEv), i = pick(mx, my), tip = $('tip');
-      if (i < 0) { tip.hidden = true; canvas.style.cursor = 'default'; return; }
+      if (i < 0) { hoverNode = -1; clearTimeout(hoverTimer); tip.hidden = true; canvas.style.cursor = 'default'; return; }
       const n = nodes[i];
-      tip.textContent = `${n.l} · ${n.t} · ${n.r} · ${n.d} edges`;
+      showTip(i, tip);
       tip.style.left = mx + 'px'; tip.style.top = my + 'px'; tip.hidden = false; canvas.style.cursor = 'pointer';
     });
   });
-  canvas.addEventListener('pointerleave', () => { $('tip').hidden = true; });
+  canvas.addEventListener('pointerleave', () => { hoverNode = -1; clearTimeout(hoverTimer); $('tip').hidden = true; });
   window.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') { document.activeElement?.blur(); clearFocusOrAll(true); } });
 
   // ---------------------------------------------------------------- sidebar
@@ -956,6 +1022,158 @@ async function main() {
   $('dcap').addEventListener('input', applyDisease);
   $('dclear').addEventListener('click', clearGroup);
 
+  // ---------------------------------------------------------------- table, CSV, share link
+  const tbox = document.createElement('div');
+  tbox.id = 'tablebox'; tbox.hidden = true;
+  tbox.innerHTML = '<div class="tbar"><b id="ttitle">Table</b><span id="tcount" class="m"></span><span class="grow"></span>'
+    + '<button id="tcsv">Download CSV</button><button id="tcopy">Copy for spreadsheet</button><button id="tclose">Close</button></div>'
+    + '<div class="twrap"><table><thead></thead><tbody></tbody></table></div>';
+  view.append(tbox);
+  const tbar = document.createElement('div');
+  tbar.id = 'toolbar';
+  tbar.innerHTML = '<button id="btable">Table</button><button id="blink">Copy link</button>';
+  view.append(tbar);
+
+  const COLS = [
+    ['Gene', (r) => r.gene], ['Score', (r) => r.score, 'num', 'g'], ['Category', (r) => r.cat, '', 'g'],
+    ['Drug status', (r) => r.tier], ['Pharos', (r) => r.pharos], ['Best stage', (r) => r.best], ['Drugs', (r) => r.ndrugs, 'num'],
+    ['Ongoing trials (furthest)', (r) => r.ongoing], ['Linked in set', (r) => r.linked, '', 'g'], ['Regulation edges', (r) => r.reg, 'num'],
+    ['Region', (r) => r.region], ['UniProt', (r) => r.acc], ['Top drugs', (r) => r.top]];
+  function rowOf(i) {
+    const n = nodes[i], r = n.t === 'protein' ? drugs[n.k.slice(2)] : null, g = S.group;
+    const inG = g && g.score.has(i);
+    return { i, gene: n.l, score: inG ? +g.score.get(i).toFixed(3) : '', cat: inG ? CAT_TXT[g.cat.get(i)] : '',
+      tier: TIER_SHORT[tierOf[i]] || '', pharos: (r && r.t) || '', best: r && r.s ? (STAGE_TXT[r.s] || r.s) : '',
+      ndrugs: (r && r.n) || 0, ongoing: r && r.o ? (STAGE_TXT[r.o] || r.o) : '', linked: inG ? (S.conn.has(i) ? 'yes' : 'no') : '',
+      reg: n.dr, region: n.r, acc: n.t === 'protein' ? n.k.slice(2) : '', top: r && r.d ? r.d.slice(0, 3).map((x) => x[0]).join('; ') : '' };
+  }
+  function tableSet() {
+    if (S.group) return [...S.group.set].filter(vis);
+    if (S.selected.size) return [...S.selected];
+    const out = [];
+    for (let i = 0; i < N; i++) if (nodes[i].t === 'protein' && vis(i)) out.push(i);
+    return out;
+  }
+  let tsort = { c: -1, d: -1 };
+  function currentRows() {
+    const rows = tableSet().map(rowOf);
+    const cols = COLS.map((x, k) => k).filter((k) => S.group || COLS[k][3] !== 'g');
+    const user = tsort.c >= 0 && cols.includes(tsort.c);
+    const c = user ? tsort.c : (S.group ? 1 : 9), d = user ? tsort.d : -1, f = COLS[c][1];
+    rows.sort((a, b) => {
+      const x = f(a), y = f(b);
+      return (typeof x === 'number' && typeof y === 'number' ? x - y : String(x).localeCompare(String(y))) * d || a.gene.localeCompare(b.gene);
+    });
+    return { rows, cols, c, d };
+  }
+  function renderTable() {
+    if (tbox.hidden) return;
+    const { rows, cols, c, d } = currentRows();
+    $('ttitle').textContent = S.group ? S.group.name : (S.selected.size ? 'Selected nodes' : 'Visible proteins');
+    $('tcount').textContent = `${rows.length.toLocaleString()} rows${rows.length > 400 ? ' (first 400 shown; the download has all)' : ''}`;
+    tbox.querySelector('thead').innerHTML = '<tr>' + cols.map((k) => `<th data-c="${k}">${esc(COLS[k][0])}${k === c ? (d < 0 ? ' ▼' : ' ▲') : ''}</th>`).join('') + '</tr>';
+    tbox.querySelector('tbody').innerHTML = rows.slice(0, 400).map((r) => `<tr data-i="${r.i}">` + cols.map((k) => `<td class="${COLS[k][2] || ''}">${esc(COLS[k][1](r))}</td>`).join('') + '</tr>').join('');
+  }
+  function tableText(sep) {
+    const { rows, cols } = currentRows();
+    const q = sep === ',' ? (v) => { v = String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; } : (v) => String(v).replace(/[\t\n]/g, ' ');
+    return [cols.map((k) => q(COLS[k][0])).join(sep)].concat(rows.map((r) => cols.map((k) => q(COLS[k][1](r))).join(sep))).join('\n');
+  }
+  $('btable').addEventListener('click', () => { tbox.hidden = !tbox.hidden; renderTable(); });
+  $('tclose').addEventListener('click', () => { tbox.hidden = true; });
+  tbox.querySelector('thead').addEventListener('click', (ev) => {
+    const th = ev.target.closest('th'); if (!th) return;
+    const k = +th.dataset.c;
+    tsort = { c: k, d: tsort.c === k ? -tsort.d : (COLS[k][2] === 'num' ? -1 : 1) };
+    renderTable();
+  });
+  tbox.querySelector('tbody').addEventListener('click', (ev) => {
+    const tr = ev.target.closest('tr'); if (tr) selectOnly(+tr.dataset.i, true);
+  });
+  $('tcsv').addEventListener('click', () => {
+    const blob = new Blob(['\ufeff' + tableText(',')], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'cell-map-' + (S.group ? S.group.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase() : 'selection') + '.csv';
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  });
+  $('tcopy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(tableText('\t')); $('tcount').textContent = 'copied: paste into a spreadsheet'; }
+    catch (e) { $('tcount').textContent = 'clipboard not allowed here; use Download CSV'; }
+  });
+
+  let hashReady = false, hashT = 0;
+  function stateHash() {
+    const p = new URLSearchParams();
+    if (curD && S.group) {
+      p.set('d', curD.id); p.set('ms', $('dscore').value); p.set('cap', $('dcap').value);
+      if (S.dcat !== 'all') p.set('cat', S.dcat);
+      if (S.dconn !== 'all') p.set('conn', S.dconn);
+    }
+    const manual = [...S.selected].filter((i) => !(S.group && S.group.set.has(i))).slice(0, 60);
+    if (manual.length) p.set('sel', manual.map((i) => nodes[i].k).join('|'));
+    if (S.focus.size) p.set('foc', nodes[[...S.focus][0]].k);
+    if (S.colorby !== 'region') p.set('col', S.colorby);
+    if (S.tiers.size !== TIER_KEYS.length) p.set('tiers', [...S.tiers].join(','));
+    if (S.ongoing !== 'any') p.set('on', S.ongoing);
+    if (S.typeSel) p.set('ty', String(S.typeSel));
+    if (S.cls.size !== 1 || !S.cls.has('regulation')) p.set('cls', [...S.cls].join(','));
+    if (S.scope !== 'sel') p.set('sc', S.scope);
+    return p.toString();
+  }
+  function writeHash() {
+    const h = stateHash();
+    history.replaceState(null, '', location.pathname + location.search + (h ? '#' + h : ''));
+  }
+  function scheduleHash() { if (!hashReady) return; clearTimeout(hashT); hashT = setTimeout(writeHash, 400); }
+  function afterUpdate() { if (!tbox.hidden) renderTable(); scheduleHash(); }
+  $('blink').addEventListener('click', async () => {
+    writeHash();
+    try { await navigator.clipboard.writeText(location.href); $('status').textContent = 'Link copied to the clipboard.'; }
+    catch (e) { window.prompt('Copy this link:', location.href); }
+  });
+  async function restoreHash() {
+    const raw = location.hash.slice(1);
+    if (!raw) { hashReady = true; return; }
+    const p = new URLSearchParams(raw);
+    try {
+      if (p.get('col')) { S.colorby = p.get('col'); $('colorby').value = S.colorby; setLegend(); }
+      if (p.get('tiers')) {
+        S.tiers = new Set(p.get('tiers').split(',').filter((k) => TIER_KEYS.includes(k)));
+        TIER_KEYS.forEach((k) => { tierBox[k].checked = S.tiers.has(k); });
+      }
+      if (p.get('on')) { S.ongoing = p.get('on'); $('ongoing').value = S.ongoing; }
+      if (p.get('ty')) { S.typeSel = +p.get('ty') || 0; typeBox.forEach((b, k) => { b.checked = !!(S.typeSel & (1 << k)); }); }
+      if (p.get('cls')) {
+        S.cls = new Set(p.get('cls').split(',').filter((c) => meta.cls.includes(c)));
+        document.querySelectorAll('#cls input').forEach((b, k) => { b.checked = S.cls.has(meta.cls[k]); });
+      }
+      const keyIdx = new Map(nodes.map((n, i) => [n.k, i]));
+      if (p.get('d')) {
+        await loadDiseases();
+        const k = DZ.index.findIndex((r) => r[0] === p.get('d'));
+        if (k >= 0) {
+          pickDisease(k);
+          if (p.get('ms')) { $('dscore').value = p.get('ms'); $('dscoreV').textContent = (+p.get('ms')).toFixed(2); }
+          if (p.get('cap')) $('dcap').value = p.get('cap');
+          S.dcat = p.get('cat') || 'all'; S.dconn = p.get('conn') || 'all';
+          $('dcat').value = S.dcat; $('dconn').value = S.dconn;
+          applyDisease();
+        }
+      }
+      (p.get('sel') || '').split('|').filter(Boolean).map((k) => keyIdx.get(k)).filter((x) => x !== undefined)
+        .forEach((i) => { if (!vis(i)) S.forced.add(i); S.selected.add(i); });
+      S.selected = new Set(S.selected);
+      if (p.get('foc') && keyIdx.has(p.get('foc'))) S.focus = new Set([keyIdx.get(p.get('foc'))]);
+      if (p.get('sc')) { S.scope = p.get('sc'); $('scope').value = S.scope; }
+      update();
+      if (S.selected.size) frameSelection();
+    } catch (err) {
+      console.warn('could not restore the link state', err);
+    } finally { hashReady = true; scheduleHash(); }
+  }
+
   const dbs = new THREE.Vector2();
   function frame(now) {
     requestAnimationFrame(frame);
@@ -977,6 +1195,7 @@ async function main() {
   }
   update();
   requestAnimationFrame(frame);
+  restoreHash();
 }
 
 main().catch((e) => {

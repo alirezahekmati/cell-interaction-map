@@ -1,0 +1,80 @@
+
+===== target_tractability =====
+rows: 528,332
+  targetId: String
+  modality: String
+  category: String
+  value: Boolean
+  values of modality: [('AB', 64287), ('SM', 57144), ('PR', 57143), ('OC', 21426)]
+  values of category: [('Advanced Clinical', 28571), ('Approved Drug', 28571), ('Phase 1 Clinical', 28571), ('High-Quality Pocket', 7143), ('Med-Quality Pocket', 7143), ('Druggable Family', 7143), ('UniProt SigP or TMHMM', 7143), ('High-Quality Ligand', 7143), ('GO CC med conf', 7143), ('Human Protein Atlas loc', 7143), ('Database Ubiquitination', 7143), ('UniProt loc high conf', 7143), ('GO CC high conf', 7143), ('UniProt Ubiquitination', 7143), ('Half-life Data', 7143)]
+sample: {'targetId': 'ENSG00000146648', 'modality': 'SM', 'category': 'Approved Drug', 'value': True}
+
+===== target_safety_event =====
+rows: 4,387
+  targetId: String
+  event: String
+  eventId: String
+  effects: List(Struct({'direction': String, 'dosing': String}))
+  biosamples: List(Struct({'tissueLabel': String, 'tissueId': String, 'cellLabel': String, 'cellFormat': String, 'cellId': String}))
+  datasource: String
+  literature: String
+  url: String
+  studies: List(Struct({'description': String, 'name': String, 'type': String}))
+  values of datasource: [('ClinPGx', 1590), ('Lynch et al. (2017)', 1341), ('ToxCast', 375), ('Bowes et al. (2012)', 313), ('Urban et al. (2012)', 254), ('AOP-Wiki', 227), ('Brennan et al. (2024)', 210), ('Force et al. (2011)', 47), ('Lamore et al. (2017)', 30)]
+  values of literature: [(None, 2446), ('28216264', 1341), ('23197038', 313), ('38773351', 210), ('21283106', 47), ('28453775', 30)]
+sample: {'targetId': 'ENSG00000085563', 'event': 'regulation of transcription factor activity', 'eventId': None, 'effects': None, 'biosamples': [{'tissueLabel': None, 'tissueId': None, 'cellLabel': 'HepaRG', 'cellFormat': 'cell line', 'cellId': None}], 'datasource': 'ToxCast', 'literature': None, 'url': 'https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data', 'studies': [{'description': 'LTEA_HepaRG_ABCB1is one of 100 assay component(s) measured in the LTEA HepaRG cell culture assay. It is a marker of Steatosis/NR mediated transport.', 'name': 'LTEA_HepaRG_ABCB1_up', 'type': 'cell-based'}, {'description': 'LTEA_HepaRG_ABCB1is one of 100 assay component(s) measured in the LTEA HepaRG cell culture assay. It is a marker of Steatosis/NR mediated transport.', 'name': 'LTEA_HepaRG_ABCB1_dn', 'type': 'cell-based'}]}
+
+===== chemical_probe =====
+rows: 1,265
+  targetFromSourceId: String
+  drugFromSource: String
+  drugFromSourceId: String
+  drugId: String
+  mechanismOfAction: List(String)
+  origin: List(String)
+  control: String
+  isHighQuality: Boolean
+  probesDrugsScore: Float64
+  scoreInCells: Float64
+  scoreInOrganisms: Float64
+  urls: List(Struct({'niceName': String, 'url': String}))
+  targetId: String
+sample: {'targetFromSourceId': 'B2RXH2', 'drugFromSource': 'ML001', 'drugFromSourceId': 'PD016117', 'drugId': 'CHEMBL1612647', 'mechanismOfAction': None, 'origin': ['experimental'], 'control': None, 'isHighQuality': False, 'probesDrugsScore': 20.0, 'scoreInCells': nan, 'scoreInOrganisms': nan, 'urls': [{'niceName': 'MLP Probes', 'url': 'http://www.ncbi.nlm.nih.gov/books/NBK47352/'}], 'targetId': 'ENSG00000235268'}
+
+===== target_essentiality =====
+rows: 18,464
+  targetId: String
+  isEssential: Boolean
+  depMapEssentiality: List(Struct({'tissueId': String, 'tissueName': String, 'screens': List(Struct({'depmapId': String, 'cellLineName': String, 'diseaseFromSource': String, 'diseaseCellLineId': String,
+sample: {'targetId': 'ENSG00000109851', 'isEssential': False, 'depMapEssentiality': [{'tissueId': 'UBERON_0002097', 'tissueName': 'skin of body', 'screens': [{'depmapId': 'ACH-002928', 'cellLineName': 'MM100511', 'diseaseFromSource': 'Melanoma', 'diseaseCellLineId': None, 'mutation': None, 'geneEffect': 0.2033737748861313, 'expression': 0.0}, {'depmapId': 'ACH-000881', 'cellLineName': 'MEL-JUSO', 'diseaseFromSource': 'Melanoma', 'diseaseCellLineId': 'SIDM00336', 'mutation': None, 'geneEffect': 0.28426384925842285, 'expression': 0.0}, {'depmapId': 'ACH-000219', 'cellLineName': 'A-375', 'diseaseFromSource': 'Melanoma', 'diseaseCellLineId': 'SIDM00795', 'mutation': None, 'geneEffect': 0.3852745294570923, 'expression': 0.0}, {'depmapId': 'ACH-000404', 'cellLineName': 'K029AX', 'diseaseFromSource': 'Melanoma', 'diseaseCellLineId': None, 'mutation': None, 'geneEffect': 0.2301773577928543, 'expression': 0.0}, {'depmapId': 'ACH-001975', 'cellLineName': 'MM576', 'diseaseFromSource': 'Melanoma', 'diseaseCellLineId': None, 'mutation': None, 'geneEffect': -0.409183531999588, 'expression': 0.0}]}, {'tissueId': 'UBERON_0002481', 'tissueName': 'bone tissue', 'screens': [{'depmapId': 'ACH-001428', 'cellLineName': 'CCLF_PEDS_0010_T', 'diseaseFromSource': 'Ewing Sarcoma', 'diseaseCellLineId': None, 'mutation': None, 'geneEffect': 0.03486601263284683, 'expression': 0.0}, {'depmapId': 'ACH-003191', 'cellLineName': 'NRH-GCT2', 'diseaseFromSource': 'Giant Cell Tumor of Bone', 'diseaseCellLineId': None, 'mutation': None, 'geneEffect': 0.23810426890850067, 'expression': 0.0}, {'depmapId': 'ACH-002142', 'cellLineName': 'HuO-3N1', 'diseaseFromSource': 'Osteosarcoma', 'diseaseCellLineId': 'SIDM00584', 'mutation': None, 'geneEffect': 0.09746900945901871, 'expression': 0.0}, {'depmapId': 'ACH-003171', 'cellLineName': 'NRH-OS1', 'diseaseFromSource': 'Osteosarcoma', 'diseaseCellLineId': None, 'mutation': None, 'geneEffect': 0.14872899651527405, 'expression': 0.0}, {'depmapId': 'ACH-002470', 'cellLineName': 'OS186', 'diseaseFromSource': 'Osteosarcoma', 'diseaseCellLineId': None, 'mutation': None, 'geneEffect': 0.16380904614925385, 'expression': 0.0}, {'depmapId': 'ACH-003064', 'cellLineName': 'TE 130.
+
+===== association_by_datatype_indirect =====
+rows: 20,453,173
+  diseaseId: String
+  targetId: String
+  aggregationType: String
+  aggregationValue: String
+  associationScore: Float64
+  evidenceCount: Int64
+  timeseries: List(Struct({'year': Int32, 'associationScore': Float64, 'novelty': Float64, 'yearlyEvidenceCount': Int64}))
+  currentNovelty: Float64
+  values of aggregationType: [('datatypeId', 200000)]
+  values of aggregationValue: [('literature', 81140), ('animal_model', 76561), ('genetic_association', 30866), ('somatic_mutation', 4106), ('known_drug', 3551), ('rna_expression', 1682), ('genetic_literature', 1224), ('affected_pathway', 870)]
+sample: {'diseaseId': 'EFO_0000180', 'targetId': 'ENSG00000159216', 'aggregationType': 'datatypeId', 'aggregationValue': 'literature', 'associationScore': 0.15511566285435666, 'evidenceCount': 2, 'timeseries': [{'year': 2019, 'associationScore': 0.15207417926897712, 'novelty': 0.002735238118144574, 'yearlyEvidenceCount': None}, {'year': 2010, 'associationScore': 0.0, 'novelty': 0.0, 'yearlyEvidenceCount': None}, {'year': 2024, 'associationScore': 0.15511566285435666, 'novelty': 0.0029867788230166425, 'yearlyEvidenceCount': None}, {'year': 2012, 'associationScore': 0.0, 'novelty': 0.0, 'yearlyEvidenceCount': None}, {'year': 2016, 'associationScore': 0.15207417926897712, 'novelty': 0.1339464927359997, 'yearlyEvidenceCount': None}, {'year': 2009, 'associationScore': 0.0, 'novelty': 0.0, 'yearlyEvidenceCount': None}, {'year': 2018, 'associationScore': 0.15207417926897712, 'novelty': 0.018127686532977406, 'yearlyEvidenceCount': None}, {'year': 2014, 'associationScore': 0.15207417926897712, 'novelty': 0.15169815713179044, 'yearlyEvidenceCount': 1}, {'year': 2023, 'associationScore': 0.15511566285435666, 'novelty': 0.0030339631426358005, 'yearlyEvidenceCount': 1}, {'year': None, 'associationScore': 0.15511566285435666, 'novelty': None, 'yearlyEvidenceCount': None}, {'year': 2017, 'associationScore': 0.15207417926897712, 'novelty': 0.07603708963448856, 'yearlyEvidenceCount': None}, {'year': 2013, 'associationScore': 0.0, 'novelty': 0.0, 'yearlyEvidenceCount': None}, {'year': 2022, 'associationScore': 0.15207417926897712, 'novelty': 6.9038436234834934e-06, 'yearlyEvidenceCount': None}, {'year': 2025, 'associationScore': 0.15511566285435666, 'novelty': 0.0026789298547199867, 'yearlyEvidenceCount': None}, {'year': 2021, 'associationScore': 0.15207417926897712, 'novelty': 5.099809585843406e-05, 'yearlyEvidenceCount': None}, {'year': 2020, 'associationScore': 0.15207417926897712, 'novelty': 0.0003760221371867008, 'yearlyEvidenceCount': None}, {'year': 2026, 'associationScore': 0.15511566285435666, 'novelty': 0.001520741792689767, 'yearlyEvidenceCount': None}, {'year': 2015, 'associationScore': 0.15207417926897712, 'novelty': 0.14933894115083254, 'yearlyEvidenceCount': None}, {'year'
+
+datatype values (all rows):
+shape: (8, 2)
+┌─────────────────────┬─────────┐
+│ aggregationValue    ┆ len     │
+│ ---                 ┆ ---     │
+│ str                 ┆ u32     │
+╞═════════════════════╪═════════╡
+│ literature          ┆ 8180465 │
+│ animal_model        ┆ 7905951 │
+│ genetic_association ┆ 3203003 │
+│ somatic_mutation    ┆ 407135  │
+│ known_drug          ┆ 372927  │
+│ rna_expression      ┆ 168029  │
+│ genetic_literature  ┆ 129639  │
+│ affected_pathway    ┆ 86024   │
+└─────────────────────┴─────────┘
