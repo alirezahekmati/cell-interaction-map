@@ -262,7 +262,7 @@ async function main() {
     if (!S.selected.size) return [];
     const set = new Set();
     const add = (n) => { for (let q = adjOff[n]; q < adjOff[n + 1]; q++) { const e = inc[q]; if (edgePass(e)) set.add(e); } };
-    if (S.scope === 'among') {
+    if (S.scope === 'among' && S.selected.size > 1) {
       S.selected.forEach((n) => {
         for (let q = adjOff[n]; q < adjOff[n + 1]; q++) {
           const e = inc[q];
@@ -514,13 +514,45 @@ async function main() {
     $('status').textContent = `${S.shown.toLocaleString()} of ${N.toLocaleString()} nodes shown · ${lastDrawn.toLocaleString()} edges drawn`;
   }
   function selectOnly(i, fly) {
+    remember();
     if (!vis(i)) S.forced.add(i);
     S.selected = new Set([i]); S.group = null;
     update();
     if (fly) flyTo(new THREE.Vector3(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]), 120);
   }
-  function clearSel() { S.selected = new Set(); S.forced.clear(); S.group = null; update(); }
+  const hist = [];
+  const backBtn = document.createElement('button');
+  backBtn.id = 'backbtn'; backBtn.textContent = '↩ Back'; backBtn.title = 'return to the previous selection (Backspace)'; backBtn.hidden = true;
+  view.append(backBtn);
+  function sameSel(a) {
+    return a.group === S.group && a.sel.size === S.selected.size && [...S.selected].every((x) => a.sel.has(x));
+  }
+  function remember() {
+    if (!S.selected.size) return;
+    const last = hist[hist.length - 1];
+    if (last && sameSel(last)) return;
+    hist.push({ sel: new Set(S.selected), forced: new Set(S.forced), group: S.group, scope: S.scope, d: curD });
+    if (hist.length > 30) hist.shift();
+    backBtn.hidden = false;
+  }
+  function goBack() {
+    const h = hist.pop();
+    backBtn.hidden = hist.length === 0;
+    if (!h) return;
+    S.selected = h.sel; S.forced = h.forced; S.group = h.group; S.scope = h.scope; curD = h.d;
+    $('scope').value = h.scope;
+    if (h.d) $('dq').value = h.d.name;
+    update();
+    if (S.selected.size) frameSelection();
+  }
+  backBtn.addEventListener('click', goBack);
+  window.addEventListener('keydown', (ev) => {
+    const t = document.activeElement && document.activeElement.tagName;
+    if (ev.key === 'Backspace' && t !== 'INPUT' && t !== 'SELECT' && t !== 'TEXTAREA') { ev.preventDefault(); goBack(); }
+  });
+  function clearSel() { remember(); S.selected = new Set(); S.forced.clear(); S.group = null; update(); }
   function addToSel(i, fly) {
+    remember();
     if (!vis(i)) S.forced.add(i);
     S.selected = new Set([...S.selected, i]);
     update();
@@ -684,6 +716,7 @@ async function main() {
     return h + '</div>';
   }
   function clearGroup() {
+    remember();
     if (!S.group) return;
     S.group.set.forEach((i) => { S.selected.delete(i); S.forced.delete(i); });
     S.selected = new Set(S.selected);
@@ -726,6 +759,7 @@ async function main() {
     update();
   }
   function pickDisease(k) {
+    remember();
     const r = DZ.index[k], o = DZ.off[k], n = r[2];
     const idxs = new Array(n), sc = new Array(n);
     for (let j = 0; j < n; j++) {

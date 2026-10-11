@@ -1,0 +1,9 @@
+Open Targets release 26.09
+  association_by_datatype_indirect     41 files    2.70 GB   (already have 0.00 GB)
+  target_safety_event                   1 files    0.00 GB   (already have 0.00 GB)
+  target_tractability                   2 files    0.00 GB   (already have 0.00 GB)
+  chemical_probe                        1 files    0.00 GB   (already have 0.00 GB)
+  interaction                           2 files    0.25 GB   (already have 0.00 GB)
+  target_essentiality                   4 files    0.25 GB   (already have 0.00 GB)
+
+still to download: 3.19 GB | free disk: 993.12 GB

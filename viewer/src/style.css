@@ -75,3 +75,8 @@ details.panel[open] > summary::before { content: '▾ '; }
 .chip.group { background: #16324a; border-color: #2b5d86; }
 .row2 span#dscoreV { width: 34px; text-align: right; }
 details > summary.m { cursor: pointer; }
+
+#backbtn { position: absolute; top: 10px; left: 10px; z-index: 5; background: #151b26; color: #d8dee9;
+  border: 1px solid #2b3442; border-radius: 4px; padding: 5px 10px; cursor: pointer; }
+#backbtn:hover { background: #1d2635; }
+#backbtn[hidden] { display: none; }
