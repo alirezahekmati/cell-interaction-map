@@ -108,3 +108,9 @@ button.preset:hover { background: #1d2635; }
 #tip { white-space: normal; max-width: 340px; }
 #tip .m { color: #8a93a3; }
 details.desc > summary { cursor: pointer; }
+
+.evb { margin-top: 6px; }
+.evrow { display: flex; align-items: center; gap: 6px; font-size: 12px; margin: 1px 0; }
+.evn { width: 150px; flex: none; color: #aab2c0; }
+.evbar { flex: 1; height: 7px; background: #1c2330; border-radius: 3px; overflow: hidden; }
+.evbar > span { display: block; height: 100%; background: #5b8def; }

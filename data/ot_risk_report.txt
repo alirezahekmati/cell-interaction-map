@@ -1,0 +1,101 @@
+== tractability categories that are TRUE, for targets in your map ==
+shape: (27, 3)
+┌──────────┬─────────────────────────┬──────┐
+│ modality ┆ category                ┆ len  │
+│ ---      ┆ ---                     ┆ ---  │
+│ str      ┆ str                     ┆ u32  │
+╞══════════╪═════════════════════════╪══════╡
+│ AB       ┆ UniProt SigP or TMHMM   ┆ 3358 │
+│ AB       ┆ GO CC high conf         ┆ 3262 │
+│ AB       ┆ UniProt loc high conf   ┆ 2068 │
+│ AB       ┆ UniProt loc med conf    ┆ 1698 │
+│ AB       ┆ Human Protein Atlas loc ┆ 985  │
+│ AB       ┆ GO CC med conf          ┆ 894  │
+│ AB       ┆ Advanced Clinical       ┆ 182  │
+│ AB       ┆ Approved Drug           ┆ 65   │
+│ AB       ┆ Phase 1 Clinical        ┆ 20   │
+│ OC       ┆ Advanced Clinical       ┆ 251  │
+│ OC       ┆ Approved Drug           ┆ 207  │
+│ OC       ┆ Phase 1 Clinical        ┆ 7    │
+│ PR       ┆ Database Ubiquitination ┆ 6694 │
+│ PR       ┆ Half-life Data          ┆ 5162 │
+│ PR       ┆ Small Molecule Binder   ┆ 2492 │
+│ PR       ┆ UniProt Ubiquitination  ┆ 2064 │
+│ PR       ┆ Literature              ┆ 257  │
+│ PR       ┆ Phase 1 Clinical        ┆ 2    │
+│ PR       ┆ Advanced Clinical       ┆ 2    │
+│ SM       ┆ Structure with Ligand   ┆ 3449 │
+│ SM       ┆ High-Quality Ligand     ┆ 1993 │
+│ SM       ┆ Druggable Family        ┆ 1751 │
+│ SM       ┆ High-Quality Pocket     ┆ 769  │
+│ SM       ┆ Approved Drug           ┆ 687  │
+│ SM       ┆ Med-Quality Pocket      ┆ 434  │
+│ SM       ┆ Advanced Clinical       ┆ 280  │
+│ SM       ┆ Phase 1 Clinical        ┆ 18   │
+└──────────┴─────────────────────────┴──────┘
+essentiality file done: part-00000-da3383ef-095e-40de-bb45-30e9e20c27bc-c000.zstd.parquet
+essentiality file done: part-00001-da3383ef-095e-40de-bb45-30e9e20c27bc-c000.zstd.parquet
+essentiality file done: part-00002-da3383ef-095e-40de-bb45-30e9e20c27bc-c000.zstd.parquet
+essentiality file done: part-00003-da3383ef-095e-40de-bb45-30e9e20c27bc-c000.zstd.parquet
+
+node_tract.json: 9528 proteins, 325,832 bytes raw / 64,553 gzip
+node_risk.json: 3062 proteins, 369,438 bytes raw / 63,391 gzip
+
+== tractability levels over your proteins (0..5) ==
+  SM: 0:5037, 1:2038, 2:1467, 3:18, 4:280, 5:688
+  AB: 0:4298, 1:1473, 2:3490, 3:20, 4:182, 5:65
+  PR: 0:1518, 1:8006, 2:0, 3:2, 4:2, 5:0
+  OC: 0:9063, 1:0, 2:0, 3:7, 4:251, 5:207
+
+== essentiality ==
+targets with essentiality data: 9425 | common essential: 1365
+percent of cell lines depending (p10/p50/p90/p99): [0.0, 0.0, 80.0, 100.0]
+  mean % of lines depending, common essential: 84.3  (n=1365)
+  mean % of lines depending, not common essential: 2.9  (n=8060)
+
+== safety ==
+proteins with safety events: 783
+top events: [('regulation of transcription factor activity', 139), ('regulation of catalytic activity', 108), ('decreased pain', 57), ('receptor binding', 52), ('decreased blood pressure', 50), ('drug toxicity', 48), ('heart disease', 47), ('cardiac arrhythmia', 45)]
+by source: [('ClinPGx', 1292), ('Lynch et al. (2017)', 1259), ('ToxCast', 352), ('Bowes et al. (2012)', 313), ('Urban et al. (2012)', 254), ('AOP-Wiki', 221), ('Brennan et al. (2024)', 210), ('Force et al. (2011)', 47), ('Lamore et al. (2017)', 30)]
+
+== tool compounds ==
+proteins with a probe: 593 | with a high-quality probe: 456
+
+== triage numbers ==
+no clinical-stage drug: 8287 | ... and tractable (SM or AB predicted high or better): 3630
+... and with a high-quality tool compound: 196
+... and common essential (likely toxic to hit): 286
+
+== samples ==
+
+--- EGFR (P00533)
+  tract: [5, 5, 1, 4, 1, 20, 12, 10, 17, 1258]
+  risk: {"s": [["hypertension", "Brennan et al. (2024), ClinPGx"], ["ALT increase", "Brennan et al. (2024)"], ["AST increase", "Brennan et al. (2024)"], ["Diarrhea", "ClinPGx"], ["Hepatotoxicity", "Brennan et al. (2024)"], ["Skin rash", "Brennan et al. (2024)"], ["alopecia", "Brennan et al. (2024)"], ["cardiomyopathy", "Brennan et al. (2024)"]], "ns": 20, "p": [["LAPATINIB", 1, "http://www.chemicalprobes.org/"], ["AFATINIB", 1, "http://www.chemicalprobes.org/"], ["DDC-01-163", 1, "https://graylab.stanford.edu/probe-resources/"], ["DDC-03-024-01", 1, "http://www.chemicalprobes.org/"], ["JBJ-04-125-02",
+
+--- MTOR (P42345)
+  tract: [5, 2, 1, 0, 2, 1, 4, 4, 98, 1258]
+  risk: {"s": [["heart disease", "Force et al. (2011)"]], "ns": 1, "p": [["vistusertib", 1, "http://www.chemicalprobes.org/"], ["eCF309", 1, "http://www.chemicalprobes.org/"], ["AZD-8055", 1, "http://www.chemicalprobes.org/"], ["torin 1", 1, "https://graylab.stanford.edu/probe-resources/"]], "t": [["subdivision of digestive tract", 100, 77], ["internal female genitalia", 100, 59], ["bone tissue", 100, 59]]}
+
+--- TSC2 (P49815)
+  tract: [0, 2, 1, 0, 1, 0, 0, 0, 18, 1258]
+  risk: {"t": [["lymphoid tissue", 43, 97], ["hematopoietic tissue", 42, 50], ["intestine", 41, 64]]}
+
+--- TP53 (P04637)
+  tract: [4, 0, 1, 4, 1, 4, 0, 0, 0, 1258]
+  risk: {"s": [["Tumorigenesis, Hepatocellular carcinoma", "AOP-Wiki"], ["drug toxicity", "ClinPGx"], ["neutropenia", "ClinPGx"], ["regulation of transcription factor activity", "ToxCast"]], "ns": 4}
+
+--- STK11 (Q15831)
+  tract: [2, 0, 1, 0, 1, 1, 0, 0, 19, 1258]
+  risk: {"s": [["heart disease", "Force et al. (2011)"]], "ns": 1, "t": [["lymphoid tissue", 54, 97], ["hematopoietic tissue", 44, 50], ["kidney", 40, 35]]}
+
+--- GCK (P35557)
+  tract: [4, 0, 1, 0, 1, 0, 1, 1, 0, 1247]
+  risk: {"p": [["BMS-820132", 1, "http://www.chemicalprobes.org/"]]}
+
+--- KRAS (P01116)
+  tract: [5, 2, 1, 0, 2, 0, 7, 6, 53, 1258]
+  risk: {"p": [["sotorasib", 1, "http://www.chemicalprobes.org/"], ["ACBI3", 1, "http://www.chemicalprobes.org/"], ["MRTX1133", 1, "http://www.chemicalprobes.org/"], ["BI-0474", 1, "https://opnme.com/"], ["FRF-01-116", 1, "https://graylab.stanford.edu/probe-resources/"], ["XY-02-082", 1, "https://graylab.stanford.edu/probe-resources/"]], "t": [["pancreas", 96, 50], ["intestine", 86, 64], ["eye", 81, 16]]}
+
+--- PLK1 (P53350)
+  tract: [4, 0, 1, 0, 2, 1, 1, 1, 100, 1258]
+  risk: {"s": [["heart disease", "Force et al. (2011)"]], "ns": 1, "p": [["BI 2536", 1, "http://www.chemicalprobes.org/"]], "t": [["lung", 100, 136], ["lymphoid tissue", 100, 97], ["other", 100, 95]]}

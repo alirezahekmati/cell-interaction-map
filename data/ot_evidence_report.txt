@@ -1,0 +1,25 @@
+pairs: 1,473,249 | pair x gene rows: 1,482,097
+evidence rows matched: 2,569,231
+disease_evidence_b64.json: 7,857,330 bytes raw / 1,670,459 gzip
+pairs with no evidence rows at all: 0
+share of pairs with level >= 3 (score >= 0.17):
+  genetic_association     59.6%
+  genetic_literature       5.9%
+  somatic_mutation        23.3%
+  known_drug              11.1%
+  affected_pathway         3.3%
+  rna_expression           0.1%
+  literature              27.7%
+  animal_model            16.9%
+
+type 2 diabetes mellitus: top 10 targets, evidence levels 0-15
+  KCNJ11 {'geneti': 13, 'somati': 11, 'known_': 15, 'litera': 14}
+  ABCC8 {'geneti': 13, 'somati': 9, 'known_': 15, 'litera': 12, 'animal': 8}
+  GCK {'geneti': 12, 'known_': 9, 'litera': 14, 'animal': 11}
+  PPARG {'geneti': 14, 'known_': 15, 'litera': 14, 'animal': 9}
+  HNF1A {'geneti': 12, 'somati': 4, 'litera': 15, 'animal': 8}
+  HNF4A {'geneti': 10, 'somati': 3, 'litera': 10, 'animal': 7}
+  HNF1B {'geneti': 12, 'litera': 12, 'animal': 5}
+  INSR {'geneti': 5, 'somati': 3, 'known_': 15, 'litera': 8, 'animal': 8}
+  GLP1R {'geneti': 12, 'known_': 15, 'litera': 15, 'animal': 4}
+  SLC2A2 {'geneti': 12, 'somati': 3, 'litera': 11, 'animal': 7}
