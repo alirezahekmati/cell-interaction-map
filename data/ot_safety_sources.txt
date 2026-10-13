@@ -1,0 +1,12 @@
+top events per source:
+  AOP-Wiki (227): [('Decrease, Population growth rate', 34), ('Increased, Liver Steatosis', 33), ('Increased Mortality', 12), ('Reduced, Reproductive Success', 10)]
+  Bowes et al. (2012) (313): [('decreased blood pressure', 11), ('increased blood pressure', 10), ('increased heart rate', 8), ('decreased heart rate', 8)]
+  Brennan et al. (2024) (210): [('weight loss', 5), ('anxiety', 4), ('nausea', 4), ('Hypertension', 4)]
+  ClinPGx (1590): [('drug toxicity', 65), ('neutropenia', 46), ('adverse events', 30), ('alcoholism', 25)]
+  Force et al. (2011) (47): [('heart disease', 47)]
+  Lamore et al. (2017) (30): [('cardiac arrhythmia', 30)]
+  Lynch et al. (2017) (1341): [('decreased pain', 62), ('decreased blood pressure', 46), ('decreased convulsions', 41), ('increased heart rate', 35)]
+  ToxCast (375): [('regulation of transcription factor activity', 155), ('regulation of catalytic activity', 113), ('receptor binding', 54), ('regulation of gene expression', 31)]
+  Urban et al. (2012) (254): [('hypotension', 9), ('dizziness', 5), ('tachycardia', 5), ('vasoconstriction', 5)]
+
+most common events in the shipped list: [('drug toxicity', 45), ('cardiac arrhythmia', 44), ('heart disease', 44), ('decreased blood pressure', 40), ('neutropenia', 28), ('decreased convulsions', 28), ('convulsions', 26), ('decreased pain', 26)]

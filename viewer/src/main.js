@@ -96,7 +96,8 @@ function injectUI() {
       <option value="none">no clinical-stage drug</option></select></label>
     <label class="row2">Connections <select id="dconn">
       <option value="all">all</option><option value="conn">only connected</option><option value="iso">only unconnected</option></select></label>
-    <label class="row2">Evidence <select id="devid"><option value="any">any</option><option value="gen">has genetic evidence</option><option value="animal">has animal-model evidence</option><option value="drug">has known-drug evidence</option><option value="weak">weak evidence only</option></select></label>`);
+    <label class="row2">Evidence <select id="devid"><option value="any">any</option><option value="gen">has genetic evidence</option><option value="animal">has animal-model evidence</option><option value="drug">has known-drug evidence</option><option value="weak">weak evidence only</option></select></label>
+      <label class="row2">Evidence strength <select id="evmin"><option value="3">≥ 0.2 (any)</option><option value="6" selected>≥ 0.4 (moderate)</option><option value="9">≥ 0.6 (strong)</option></select></label>`);
 }
 
 async function getEdges() {
@@ -688,7 +689,7 @@ async function main() {
       for (const e of list.slice(0, MAXE)) { hl.add(eSrc(e)); hl.add(eTgt(e)); }
       S.highlight = hl;
     } else S.highlight = null;
-    refreshNodes(); setLabels(list); renderDetail(list); renderDCard(); renderEvLine(); renderHitList(); afterUpdate();
+    refreshNodes(); setLabels(list); renderDetail(list); renderDCard(); renderEvLine(); renderHitList(); renderExtras(); afterUpdate();
     $('status').textContent = `${S.shown.toLocaleString()} of ${N.toLocaleString()} nodes shown · ${lastDrawn.toLocaleString()} edges drawn`;
   }
   function selectOnly(i, fly) {
@@ -1439,6 +1440,168 @@ async function main() {
     if (a) selectOnly(+a.dataset.hit, true);
   });
   { const em = $('evmin'); if (em) em.addEventListener('change', (ev) => { S.evmin = +ev.target.value; update(); }); }
+
+  // ---------------------------------------------------------------- bridge proteins
+  function bridgeBase() {
+    if (S.group) {
+      const set = new Set([...S.group.set].filter(vis));
+      return set.size > 1 ? { set, name: S.group.name } : null;
+    }
+    return S.selected.size > 1 ? { set: S.selected, name: 'the selected nodes' } : null;
+  }
+  function computeBridges(G) {
+    const cnt = new Map();
+    G.forEach((n) => {
+      for (let q = adjOff[n]; q < adjOff[n + 1]; q++) {
+        const e = inc[q], cl = meta.cls[eCls(e)];
+        if (cl === 'membership' || !S.cls.has(cl) || !S.net.has(meta.net[eNet(e)]) || eEv(e) < S.minEv || eRes(e) < S.minRes) continue;
+        const a = eSrc(e), b = eTgt(e), o = a === n ? b : a;
+        if (o === n || G.has(o)) continue;
+        const t = nodes[o];
+        if (t.h !== 0 || !(t.t === 'protein' || t.t === 'complex' || t.t === 'family')) continue;
+        let r = cnt.get(o);
+        if (!r) { r = { m: new Set(), up: 0, down: 0, inb: 0 }; cnt.set(o, r); }
+        r.m.add(n);
+        if (eDir(e)) {
+          if (a === o) { if (eNet(e) === 1) r.up++; else if (eNet(e) === 2) r.down++; } else r.inb++;
+        }
+      }
+    });
+    const rows = [];
+    cnt.forEach((r, o) => { if (r.m.size >= 2) rows.push({ o, k: r.m.size, up: r.up, down: r.down, inb: r.inb }); });
+    rows.sort((x, y) => y.k - x.k || TIER_RANK[tierOf[y.o]] - TIER_RANK[tierOf[x.o]] || x.o - y.o);
+    return rows;
+  }
+  const BR = { top: [] };
+  function renderBridges() {
+    const det = $('bridgepanel');
+    if (!det || !det.open) return;
+    const box = $('bridgelist'), base = bridgeBase();
+    if (!base) { BR.top = []; box.innerHTML = '<div class="m">Pick a disease, or select two or more nodes, to find proteins that connect them.</div>'; return; }
+    const rows = computeBridges(base.set);
+    BR.top = rows.slice(0, 10).map((r) => r.o);
+    if (!rows.length) { box.innerHTML = `<div class="m">No protein outside ${esc(base.name)} links to two or more of its ${base.set.size} shown members in the current edge layers.</div>`; return; }
+    box.innerHTML = `<div class="m">${rows.length} proteins link to two or more of the ${base.set.size} shown members of ${esc(base.name)} (current edge layers and cut-offs). Top 15:</div>`
+      + rows.slice(0, 15).map((r) => `<div class="hitrow"><a data-br="${r.o}">${esc(nodes[r.o].l)}</a> <b>${r.k}</b> <span class="m">links · activates ${r.up}, inhibits ${r.down}, regulated by ${r.inb} · ${esc(TIER_SHORT[tierOf[r.o]] || '')}</span></div>`).join('')
+      + '<button class="preset" id="bradd">Add the top 10 to the view</button>'
+      + '<div class="m">Adds them to the selection so the links between them and the targets are drawn (edge scope switches to "only edges between selected nodes").</div>';
+  }
+  (function buildBridgePanel() {
+    const side = $('side');
+    const anchor = [...side.querySelectorAll('details.panel > summary')].find((x) => x.textContent.trim() === 'Drug filters');
+    const d = document.createElement('details');
+    d.className = 'panel'; d.id = 'bridgepanel';
+    d.innerHTML = '<summary>Bridge proteins</summary>'
+      + '<div class="hint">Proteins outside your set that link to two or more of its members through the edge layers you have on. They show how the targets are wired together. Needs a disease, or two or more selected nodes.</div>'
+      + '<div id="bridgelist"></div>';
+    if (anchor) anchor.parentElement.before(d); else side.append(d);
+    d.addEventListener('toggle', renderBridges);
+  })();
+  $('bridgelist').addEventListener('click', (ev) => {
+    const a = ev.target.closest('a[data-br]');
+    if (a) { if (S.group) selectOnly(+a.dataset.br, true); else addToSel(+a.dataset.br, false); return; }
+    if (ev.target.closest('#bradd')) {
+      remember();
+      BR.top.forEach((i) => { if (!vis(i)) S.forced.add(i); S.selected.add(i); });
+      S.selected = new Set(S.selected);
+      S.scope = 'among'; $('scope').value = 'among';
+      update();
+    }
+  });
+
+  // ---------------------------------------------------------------- drug search
+  const DRANK = (s) => { const k = STAGE_ORDER.indexOf(s); return k < 0 ? 99 : k; };
+  const drugIdx = new Map();
+  for (let i = 0; i < N; i++) {
+    const n = nodes[i];
+    if (n.t !== 'protein') continue;
+    const r = drugs[n.k.slice(2)];
+    if (!r || !r.d) continue;
+    for (const x of r.d) {
+      const cid = x[8];
+      if (!cid) continue;
+      let d = drugIdx.get(cid);
+      if (!d) { d = { id: cid, name: x[0], type: x[1], stage: x[3], targets: [], low: String(x[0]).toLowerCase() }; drugIdx.set(cid, d); }
+      d.targets.push({ i, act: x[2] });
+      if (DRANK(x[3]) < DRANK(d.stage)) d.stage = x[3];
+    }
+  }
+  const drugList = [...drugIdx.values()];
+  let curDrug = null, dnamesP = null;
+  function loadDrugNames() {
+    if (dnamesP) return dnamesP;
+    dnamesP = get('drug_names.json').then((m) => { drugList.forEach((d) => { d.low = (d.name + ' ' + (m[d.id] || '')).toLowerCase(); }); }).catch(() => {});
+    return dnamesP;
+  }
+  (function buildDrugPanel() {
+    const side = $('side');
+    const anchor = [...side.querySelectorAll('details.panel > summary')].find((x) => x.textContent.trim() === 'Disease targets');
+    const d = document.createElement('details');
+    d.className = 'panel'; d.open = true;
+    d.innerHTML = '<summary>Drug search</summary>'
+      + '<div class="hint">Find a drug by generic or trade name: its targets, the diseases it is approved or in trials for, and which of its targets are among the open disease\'s.</div>'
+      + '<input id="drq" type="search" placeholder="e.g. sirolimus, semaglutide" autocomplete="off"><div id="drres"></div><div id="drugcard"></div>';
+    if (anchor) anchor.parentElement.before(d); else side.append(d);
+  })();
+  function openDrug(id) {
+    curDrug = drugIdx.get(id) || null;
+    $('drres').innerHTML = '';
+    if (curDrug) $('drq').value = curDrug.name;
+    renderDrugCard();
+  }
+  function renderDrugCard() {
+    const box = $('drugcard'), d = curDrug;
+    if (!d) { box.innerHTML = ''; return; }
+    const di = ind[d.id], g = S.group;
+    let h = `<div class="desc"><div><b>${esc(d.name)}</b> <span class="m">${esc(d.type || 'type n/a')} · best stage: ${esc(STAGE_TXT[d.stage] || d.stage)}</span></div>`;
+    if (di && di.na) h += `<div class="m ind">approved for: ${esc(di.a.join(', '))}${di.na > di.a.length ? ' +' + (di.na - di.a.length) + ' more' : ''}</div>`;
+    if (di && di.nt) h += `<div class="m ind">in trials for: ${esc(di.t.map((t) => t[0] + ' (' + (STAGE_TXT[t[1]] || t[1]) + ')').join(', '))}${di.nt > di.t.length ? ' +' + (di.nt - di.t.length) + ' more' : ''}</div>`;
+    if (!di) h += '<div class="m">No indication data for this drug.</div>';
+    h += `<div style="margin-top:4px"><b>${d.targets.length} target${d.targets.length > 1 ? 's' : ''} in this map</b></div>`;
+    const ts = d.targets.slice().sort((a, b) => ((g && g.score.get(b.i)) || 0) - ((g && g.score.get(a.i)) || 0) || nodes[b.i].d - nodes[a.i].d);
+    h += ts.slice(0, 25).map((t) => `<div><a data-dt="${t.i}">${esc(nodes[t.i].l)}</a> <span class="m">${esc(t.act || 'action n/a')}${g && g.score.has(t.i) ? ' · ' + esc(g.name) + ' score ' + g.score.get(t.i).toFixed(2) + ' (' + esc(CAT_SHORT[g.cat.get(t.i)]) + ')' : ''}</span></div>`).join('');
+    if (ts.length > 25) h += `<div class="m">+${ts.length - 25} more</div>`;
+    if (g) {
+      const k = d.targets.filter((t) => g.score.has(t.i)).length;
+      h += `<div class="m" style="margin-top:4px">${k ? k + ' of its targets are among the shown targets of ' + esc(g.name) + '.' : 'None of its targets are among the shown targets of ' + esc(g.name) + '.'}</div>`;
+    }
+    box.innerHTML = h + '<button class="preset" id="drsel">Select its targets</button></div>';
+  }
+  $('drq').addEventListener('focus', () => { loadDrugNames(); });
+  $('drq').addEventListener('input', async () => {
+    const box = $('drres'), q = $('drq').value.trim().toLowerCase();
+    box.innerHTML = '';
+    if (q.length < 2) return;
+    await loadDrugNames();
+    if ($('drq').value.trim().toLowerCase() !== q) return;
+    const m = [];
+    drugList.forEach((d) => {
+      const p = d.name.toLowerCase().indexOf(q);
+      const s = p === 0 ? 0 : p > 0 ? 1 : d.low.indexOf(q) >= 0 ? 2 : -1;
+      if (s >= 0) m.push([d, s]);
+    });
+    m.sort((a, b) => a[1] - b[1] || DRANK(a[0].stage) - DRANK(b[0].stage) || b[0].targets.length - a[0].targets.length);
+    if (!m.length) { box.textContent = 'No drug with a target in this map matches.'; return; }
+    m.slice(0, 12).forEach(([d]) => {
+      const b = document.createElement('button');
+      b.innerHTML = `${esc(d.name)} <small>${esc(d.type || '')} · ${esc(STAGE_TXT[d.stage] || d.stage)} · ${d.targets.length} target${d.targets.length > 1 ? 's' : ''}</small>`;
+      b.addEventListener('click', () => openDrug(d.id));
+      box.append(b);
+    });
+  });
+  $('drq').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') $('drres').querySelector('button')?.click(); });
+  $('drugcard').addEventListener('click', (ev) => {
+    const a = ev.target.closest('a[data-dt]');
+    if (a) { selectOnly(+a.dataset.dt, true); return; }
+    if (ev.target.closest('#drsel') && curDrug) {
+      remember();
+      curDrug.targets.forEach((t) => { if (!vis(t.i)) S.forced.add(t.i); S.selected.add(t.i); });
+      S.selected = new Set(S.selected);
+      update();
+      frameSelection();
+    }
+  });
+  function renderExtras() { renderBridges(); renderDrugCard(); }
 
   const dbs = new THREE.Vector2();
   function frame(now) {

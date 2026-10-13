@@ -114,3 +114,16 @@ details.desc > summary { cursor: pointer; }
 .evn { width: 150px; flex: none; color: #aab2c0; }
 .evbar { flex: 1; height: 7px; background: #1c2330; border-radius: 3px; overflow: hidden; }
 .evbar > span { display: block; height: 100%; background: #5b8def; }
+
+#hitpresets { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+.hitrow { padding: 3px 4px; font-size: 12px; border-bottom: 1px solid #1c2330; }
+.hitrow .cnt { display: inline-block; width: 22px; text-align: right; color: #fff; margin-right: 6px; }
+.hitrow a { color: #9ecbff; cursor: pointer; }
+.row2 .hv { width: 28px; text-align: right; flex: none; }
+
+#drres button { display: block; width: 100%; text-align: left; background: #151b26; color: inherit; border: 0;
+  border-bottom: 1px solid #222a36; padding: 5px 8px; cursor: pointer; }
+#drres button:hover { background: #1d2635; }
+#drres small { color: #6b7588; }
+#drugcard a, #bridgelist a { color: #9ecbff; cursor: pointer; }
+#drugcard button.preset, #bridgelist button.preset { margin-top: 6px; }
