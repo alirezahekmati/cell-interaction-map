@@ -2,6 +2,7 @@
 (Open Targets, CC0). Used only for searching."""
 import gzip
 import json
+import re
 import warnings
 
 import polars as pl
@@ -29,7 +30,7 @@ for r in dm.iter_rows(named=True):
                 cand.append(it.get("label"))
     for x in cand:
         x = (x or "").strip().lower()
-        if x and len(x) <= 40 and x != primary[c] and x not in s:
+        if x and len(x) <= 40 and not re.search(r"[\[\]*]|\d,\d", x) and x != primary[c] and x not in s:
             s.append(x)
 out = {c: "|".join(v[:14]) for c, v in names.items() if v}
 blob = json.dumps(out, separators=(",", ":"), ensure_ascii=False).encode("utf-8")

@@ -127,3 +127,40 @@ details.desc > summary { cursor: pointer; }
 #drres small { color: #6b7588; }
 #drugcard a, #bridgelist a { color: #9ecbff; cursor: pointer; }
 #drugcard button.preset, #bridgelist button.preset { margin-top: 6px; }
+
+/* accessibility pass: stronger contrast, visible focus, not colour alone */
+:root { color-scheme: dark; }
+.m, .desc .m, .row .m, .hint, #tip .m, .sub, .chk .cnt, #results small, #dres small, #drres small, details > summary.m, #status { color: #a9b3c4; }
+h2, details.panel > summary { color: #b4bfd0; }
+details.panel > summary { font-size: 12px; }
+input[type=search], input[type=number], select { border-color: #7d8aa3; }
+button.preset, #toolbar button, #tablebox button, #backbtn, #dclear, #pertchip button { background: #223046; color: #f3f6fb; border: 1px solid #7d8aa3; }
+button.preset:hover, #toolbar button:hover, #tablebox button:hover, #backbtn:hover, #dclear:hover, #pertchip button:hover { background: #2f4260; border-color: #a9b6cc; }
+.chip { border-color: #6f7c93; }
+.chip button, .clearall, .chk button { color: #c3ccdb; }
+.chip button:hover { color: #ffb4b4; }
+#detail a, .desc a, #bridgelist a, #drugcard a, .hitrow a, #pertbox a { text-decoration: underline; text-underline-offset: 2px; }
+input[type=checkbox], input[type=range] { accent-color: #5aa9ff; }
+:focus-visible { outline: 2px solid #8cc8ff; outline-offset: 2px; }
+/* perturbation preview */
+#pertchip { position: absolute; top: 48px; left: 10px; z-index: 5; display: flex; align-items: center; gap: 10px;
+  background: #3a2a05; border: 1px solid #ffb347; color: #fff; border-radius: 4px; padding: 5px 10px; }
+#pertchip[hidden] { display: none; }
+.arr { display: inline-block; width: 1.2em; font-weight: 700; }
+.arr.up { color: #ffb347; } .arr.down { color: #6bbcff; } .arr.conf { color: #d7a6ff; }
+.pk { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-size: 12px; flex-wrap: wrap; }
+/* high-contrast mode */
+body.hc { background: #000; color: #fff; }
+body.hc aside, body.hc #tablebox, body.hc #tip, body.hc .desc, body.hc .chip { background: #000; }
+body.hc #side { border-right: 2px solid #fff; }
+body.hc #detail { border-left: 2px solid #fff; }
+body.hc .desc, body.hc #tablebox, body.hc #tip, body.hc .chip { border: 1px solid #fff; }
+body.hc .m, body.hc .desc .m, body.hc .row .m, body.hc .hint, body.hc #tip .m, body.hc .sub, body.hc .chk .cnt, body.hc #status, body.hc h2, body.hc details.panel > summary { color: #f0f4fa; }
+body.hc button.preset, body.hc #toolbar button, body.hc #tablebox button, body.hc #backbtn, body.hc #dclear, body.hc #pertchip button { background: #000; color: #fff; border: 2px solid #fff; }
+body.hc button.preset:hover, body.hc #toolbar button:hover, body.hc #tablebox button:hover, body.hc #backbtn:hover, body.hc #dclear:hover, body.hc #pertchip button:hover { background: #fff; color: #000; }
+body.hc input[type=search], body.hc input[type=number], body.hc select { background: #000; color: #fff; border: 2px solid #fff; }
+body.hc a, body.hc #detail a[data-node] { color: #9fd6ff; }
+body.hc .catrow.on { background: #fff; color: #000; }
+body.hc .catrow.on .cnt, body.hc .catrow.on .m { color: #000; }
+body.hc #tablebox th { background: #000; color: #fff; border-bottom: 2px solid #fff; }
+body.hc #pertchip { background: #000; border: 2px solid #fff; }

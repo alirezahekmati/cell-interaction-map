@@ -6,6 +6,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 THREE.ColorManagement.enabled = false;
 
 const BASE = import.meta.env.BASE_URL;
+const REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 async function get(f, type = 'json') {
@@ -100,6 +101,16 @@ function injectUI() {
       <label class="row2">Evidence strength <select id="evmin"><option value="3">≥ 0.2 (any)</option><option value="6" selected>≥ 0.4 (moderate)</option><option value="9">≥ 0.6 (strong)</option></select></label>`);
 }
 
+// the browser restores form fields on reload; start every visit from the default controls
+function resetStaticControls() {
+  document.querySelectorAll('input, select').forEach((el) => {
+    if (el.type === 'checkbox' || el.type === 'radio') el.checked = el.defaultChecked;
+    else if (el.tagName === 'SELECT') { const k = [...el.options].findIndex((o) => o.defaultSelected); el.selectedIndex = k >= 0 ? k : 0; }
+    else el.value = el.defaultValue;
+    el.setAttribute('autocomplete', 'off');
+  });
+}
+
 async function getEdges() {
   const bin = atob(await get('edges_b64.json'));
   const u = new Uint8Array(bin.length);
@@ -108,6 +119,7 @@ async function getEdges() {
 }
 
 async function main() {
+  resetStaticControls();
   injectUI();
   makePanels();
   const [meta, nodes, regions, buf, drugs, ind, tract] = await Promise.all([
@@ -172,12 +184,13 @@ async function main() {
     kinds: new Set(Object.keys(kindCount).filter((k) => k !== 'chemical')),
     regions: new Set(Object.keys(meta.region_colors)), noise: false,
     selected: new Set(), forced: new Set(), highlight: null,
-    focus: new Set(), conn: new Set(), dcat: 'all', dconn: 'all', ongoing: 'any', typeSel: 0, devid: 'any', tract: 'any', hit: new Map(), sizeBy: 'dis', evmin: 6,
+    focus: new Set(), conn: new Set(), dcat: 'all', dconn: 'all', ongoing: 'any', typeSel: 0, devid: 'any', tract: 'any', hit: new Map(), sizeBy: 'dis', evmin: 6, pert: null, pertDepth: 2, cvd: false, hc: false,
     tiers: new Set(['approved', 'approvedc', 'trial', 'earlier', 'Tchem', 'Tbio', 'Tdark', 'none']),
     colorby: 'region', sizeMul: 1, labels: true, shells: true, shown: 0,
   };
   const vis = (i) => {
     if (S.forced.has(i)) return true;
+    if (S.pert && S.pert.all.has(i)) return true;
     const n = nodes[i];
     if (n.h === 2 && !S.noise) return false;
     if (!(S.kinds.has(n.t) && S.regions.has(n.r))) return false;
@@ -365,6 +378,7 @@ async function main() {
       if (v) shown++;
     }
     aCol.set(cols);
+    paintPert();
     bCol.needsUpdate = bSize.needsUpdate = bAlpha.needsUpdate = bSel.needsUpdate = true;
     S.shown = shown;
   }
@@ -379,7 +393,7 @@ async function main() {
     const rest = [...nb].filter((i) => !S.selected.has(i)).sort((a, b) => nodes[b].d - nodes[a].d).slice(0, 30);
     const selList = [...S.selected];
     if (selList.length > 60) {
-      const gsc = (i) => (S.group && S.group.score.get(i)) || 0;
+      const gsc = (i) => (S.group && ((S.sizeBy === 'hit' && S.hit.has(i)) ? S.hit.get(i) : S.group.score.get(i))) || 0;
       selList.sort((a, b) => gsc(b) - gsc(a) || nodes[b].d - nodes[a].d);
       selList.length = 40;
     }
@@ -586,7 +600,7 @@ async function main() {
     const pc = t[9] ? ` (${t[8]}% of ${t[9]} screened)` : '';
     if (t[4] === 2) h += `<div style="margin-top:4px"><b>Common essential gene</b> <span class="m">(DepMap) loss slows growth in most cancer cell lines${pc}. Inhibiting it may carry toxicity risk; this is context dependent.</span></div>`;
     else if (t[4] === 1 && t[9]) h += `<div class="m" style="margin-top:4px">Not a common essential gene: ${t[8]}% of ${t[9]} screened cancer cell lines depend strongly on it (gene effect ≤ −0.5).</div>`;
-    if (t[5]) h += `<div style="margin-top:4px"><b>${t[5]} reported safety liabilit${t[5] > 1 ? 'ies' : 'y'}</b> <span class="m">from curated sources, not a clinical verdict</span></div>`;
+    if (t[5]) h += `<div style="margin-top:4px"><b>${t[5]} reported safety liabilit${t[5] > 1 ? 'ies' : 'y'}</b> <span class="m">from curated sources: adverse effects and potential effects of modulating the target; not a clinical verdict</span></div>`;
     if (t[6]) h += `<div><b>${t[6]} tool compound${t[6] > 1 ? 's' : ''}</b> <span class="m">${t[7] ? t[7] + ' rated high quality' : 'none rated high quality'}</span></div>`;
     return h + '<div id="riskmore"></div><div class="m">Open Targets (CC0): tractability, safety events, DepMap essentiality, chemical probes.</div></div>';
   }
@@ -640,6 +654,7 @@ async function main() {
       h += drugBox(one);
       h += handlesBox(one);
       h += riskBox(one);
+      h += pertButtons(one);
       h += nodeSummary(one);
     } else {
       h += `<h2>${sel.length} nodes selected</h2><div class="sub">${sel.slice(0, 8).map((i) => esc(nodes[i].l)).join(', ')}${sel.length > 8 ? '…' : ''}</div>`;
@@ -654,6 +669,8 @@ async function main() {
     if (one >= 0) { fillInfo(one); fillRisk(one); }
   }
   $('detail').addEventListener('click', async (ev) => {
+    const pb = ev.target.closest('button[data-pert]');
+    if (pb) { const o1 = oneNode(); if (o1 >= 0) runPert(o1, +pb.dataset.pert); return; }
     const rg = ev.target.closest('button[data-rmgroup]');
     if (rg) { clearGroup(); return; }
     const rm = ev.target.closest('button[data-rm]');
@@ -689,7 +706,7 @@ async function main() {
       for (const e of list.slice(0, MAXE)) { hl.add(eSrc(e)); hl.add(eTgt(e)); }
       S.highlight = hl;
     } else S.highlight = null;
-    refreshNodes(); setLabels(list); renderDetail(list); renderDCard(); renderEvLine(); renderHitList(); renderExtras(); afterUpdate();
+    refreshNodes(); setLabels(list); renderDetail(list); renderDCard(); renderEvLine(); renderHitList(); renderExtras(); renderPert(); afterUpdate();
     $('status').textContent = `${S.shown.toLocaleString()} of ${N.toLocaleString()} nodes shown · ${lastDrawn.toLocaleString()} edges drawn`;
   }
   function selectOnly(i, fly) {
@@ -763,7 +780,7 @@ async function main() {
   let tween = null;
   function flyTo(target, dist) {
     const dir = camera.position.clone().sub(controls.target).normalize();
-    tween = { t0: performance.now(), dur: 700, fromT: controls.target.clone(), toT: target.clone(),
+    tween = { t0: performance.now(), dur: REDUCED ? 1 : 700, fromT: controls.target.clone(), toT: target.clone(),
       fromP: camera.position.clone(), toP: target.clone().addScaledVector(dir, dist) };
   }
 
@@ -1185,7 +1202,7 @@ async function main() {
   view.append(tbox);
   const tbar = document.createElement('div');
   tbar.id = 'toolbar';
-  tbar.innerHTML = '<button id="btable">Table</button><button id="blink">Copy link</button>';
+  tbar.innerHTML = '<button id="btable">Table</button><button id="blink">Copy link</button><button id="breset" title="clear everything and start fresh">Reset</button>';
   view.append(tbar);
 
   const COLS = [
@@ -1194,16 +1211,17 @@ async function main() {
     ['Ongoing trials (furthest)', (r) => r.ongoing], ['Linked in set', (r) => r.linked, '', 'g'], ['Regulation edges', (r) => r.reg, 'num'],
     ['Region', (r) => r.region], ['UniProt', (r) => r.acc], ['SM tractability', (r) => r.smt], ['AB tractability', (r) => r.abt],
     ['Essential (DepMap)', (r) => r.ess], ['Safety events', (r) => r.saf, 'num'], ['Tool compounds', (r) => r.prb, 'num'],
-    ['Genetic ev.', (r) => r.evg, 'num', 'g'], ['Animal ev.', (r) => r.eva, 'num', 'g'], ['Literature ev.', (r) => r.evl, 'num', 'g'], ['Top drugs', (r) => r.top], ['Hit score', (r) => r.hit, 'num', 'g']];
+    ['Genetic ev.', (r) => r.evg, 'num', 'g'], ['Animal ev.', (r) => r.eva, 'num', 'g'], ['Literature ev.', (r) => r.evl, 'num', 'g'], ['Top drugs', (r) => r.top], ['Hit score', (r) => r.hit, 'num', 'g'], ['Predicted change', (r) => r.pred, '', 'p'], ['Step', (r) => r.step, 'num', 'p']];
   function rowOf(i) {
     const n = nodes[i], r = n.t === 'protein' ? drugs[n.k.slice(2)] : null, g = S.group;
     const inG = g && g.score.has(i);
     return { i, gene: n.l, score: inG ? +g.score.get(i).toFixed(3) : '', cat: inG ? CAT_TXT[g.cat.get(i)] : '',
       tier: TIER_SHORT[tierOf[i]] || '', pharos: (r && r.t) || '', best: r && r.s ? (STAGE_TXT[r.s] || r.s) : '',
       ndrugs: (r && r.n) || 0, ongoing: r && r.o ? (STAGE_TXT[r.o] || r.o) : '', linked: inG ? (S.conn.has(i) ? 'yes' : 'no') : '',
-      reg: n.dr, ...rowExtra(i), hit: S.hit.has(i) ? Math.round(S.hit.get(i) * 100) : '', region: n.r, acc: n.t === 'protein' ? n.k.slice(2) : '', top: r && r.d ? r.d.slice(0, 3).map((x) => x[0]).join('; ') : '' };
+      reg: n.dr, ...rowExtra(i), hit: S.hit.has(i) ? Math.round(S.hit.get(i) * 100) : '', pred: predOf(i), step: S.pert ? (S.pert.depth.get(i) || '') : '', region: n.r, acc: n.t === 'protein' ? n.k.slice(2) : '', top: r && r.d ? r.d.slice(0, 3).map((x) => x[0]).join('; ') : '' };
   }
   function tableSet() {
+    if (S.pert) return [...S.pert.all];
     if (S.group) return [...S.group.set].filter(vis);
     if (S.selected.size) return [...S.selected];
     const out = [];
@@ -1213,7 +1231,7 @@ async function main() {
   let tsort = { c: -1, d: -1 };
   function currentRows() {
     const rows = tableSet().map(rowOf);
-    const cols = COLS.map((x, k) => k).filter((k) => S.group || COLS[k][3] !== 'g');
+    const cols = COLS.map((x, k) => k).filter((k) => COLS[k][3] === 'p' ? !!S.pert : (S.group || COLS[k][3] !== 'g'));
     const user = tsort.c >= 0 && cols.includes(tsort.c);
     const c = user ? tsort.c : (S.group ? COLS.findIndex((x) => x[0] === 'Hit score') : 9), d = user ? tsort.d : -1, f = COLS[c][1];
     rows.sort((a, b) => {
@@ -1225,7 +1243,7 @@ async function main() {
   function renderTable() {
     if (tbox.hidden) return;
     const { rows, cols, c, d } = currentRows();
-    $('ttitle').textContent = S.group ? S.group.name : (S.selected.size ? 'Selected nodes' : 'Visible proteins');
+    $('ttitle').textContent = S.pert ? 'Predicted effects: ' + (S.pert.dir < 0 ? 'inhibiting ' : 'activating ') + nodes[S.pert.src].l : S.group ? S.group.name : (S.selected.size ? 'Selected nodes' : 'Visible proteins');
     $('tcount').textContent = `${rows.length.toLocaleString()} rows${rows.length > 400 ? ' (first 400 shown; the download has all)' : ''}`;
     tbox.querySelector('thead').innerHTML = '<tr>' + cols.map((k) => `<th data-c="${k}">${esc(COLS[k][0])}${k === c ? (d < 0 ? ' ▼' : ' ▲') : ''}</th>`).join('') + '</tr>';
     tbox.querySelector('tbody').innerHTML = rows.slice(0, 400).map((r) => `<tr data-i="${r.i}">` + cols.map((k) => `<td class="${COLS[k][2] || ''}">${esc(COLS[k][1](r))}</td>`).join('') + '</tr>').join('');
@@ -1270,6 +1288,7 @@ async function main() {
     const manual = [...S.selected].filter((i) => !(S.group && S.group.set.has(i))).slice(0, 60);
     if (manual.length) p.set('sel', manual.map((i) => nodes[i].k).join('|'));
     if (S.focus.size) p.set('foc', nodes[[...S.focus][0]].k);
+    if (S.pert) p.set('pt', nodes[S.pert.src].k + '|' + S.pert.dir + '|' + S.pert.D);
     if (S.colorby !== 'region') p.set('col', S.colorby);
     if (S.tiers.size !== TIER_KEYS.length) p.set('tiers', [...S.tiers].join(','));
     if (S.ongoing !== 'any') p.set('on', S.ongoing);
@@ -1335,6 +1354,10 @@ async function main() {
         .forEach((i) => { if (!vis(i)) S.forced.add(i); S.selected.add(i); });
       S.selected = new Set(S.selected);
       if (p.get('foc') && keyIdx.has(p.get('foc'))) S.focus = new Set([keyIdx.get(p.get('foc'))]);
+      if (p.get('pt')) {
+        const [pk, pd, pdep] = p.get('pt').split('|'), psi = keyIdx.get(pk);
+        if (psi !== undefined) { S.pertDepth = Math.min(3, Math.max(1, +pdep || 2)); runPert(psi, +pd < 0 ? -1 : 1); }
+      }
       if (p.get('sc')) { S.scope = p.get('sc'); $('scope').value = S.scope; }
       update();
       if (S.selected.size) frameSelection();
@@ -1413,7 +1436,12 @@ async function main() {
       r.className = 'row2'; r.title = tip;
       r.innerHTML = `<span>${esc(lab)}</span><input type="range" min="${mn}" max="${mx}" step="${st}" value="${HW[k]}"><span class="hv">${HW[k].toFixed(1)}</span>`;
       const inp = r.querySelector('input'), val = r.querySelector('.hv');
-      inp.addEventListener('input', () => { HW[k] = +inp.value; val.textContent = HW[k].toFixed(1); update(); });
+      inp.addEventListener('input', () => {
+        /* hit-slider */
+        HW[k] = +inp.value; val.textContent = HW[k].toFixed(1);
+        if (S.group && S.sizeBy !== 'hit') { S.sizeBy = 'hit'; $('sizeby').value = 'hit'; }
+        update();
+      });
       hitSliders[k] = [inp, val];
       d.querySelector('#hitsl').append(r);
     });
@@ -1421,6 +1449,8 @@ async function main() {
       Object.assign(HW, w);
       HITDEF.forEach(([k]) => { hitSliders[k][0].value = HW[k]; hitSliders[k][1].textContent = HW[k].toFixed(1); });
       if (S.group) { S.dcat = cat; $('dcat').value = cat; }
+      /* hit-preset */
+      if (S.group && S.sizeBy !== 'hit') { S.sizeBy = 'hit'; $('sizeby').value = 'hit'; }
       update();
     };
     [['Balanced', HW0, 'all'],
@@ -1602,6 +1632,174 @@ async function main() {
     }
   });
   function renderExtras() { renderBridges(); renderDrugCard(); }
+
+  // ---------------------------------------------------------------- accessibility and display options
+  canvas.setAttribute('role', 'img');
+  canvas.setAttribute('aria-label', '3D map of molecular interactions. Use the search boxes, filters, table and details panel to work without the mouse.');
+  $('status').setAttribute('aria-live', 'polite');
+  $('detail').setAttribute('role', 'region'); $('detail').setAttribute('aria-label', 'Details');
+  [['q', 'Search proteins and metabolites'], ['dq', 'Search a disease'], ['drq', 'Search a drug by name']].forEach(([id, t]) => { const el = $(id); if (el) el.setAttribute('aria-label', t); });
+  $('labels').closest('label').insertAdjacentHTML('afterend',
+    '<label class="chk"><input type="checkbox" id="cvd"><span>Colour-blind-safe edge colours (blue / orange)</span></label>'
+    + '<label class="chk"><input type="checkbox" id="hc"><span>High-contrast interface</span></label>');
+  const CVD = { stim: '#56b4e9', inhib: '#e69f00', mixed: '#cc79a7', unsigned: '#a9b3c4' };
+  const NET0 = { ...meta.net_colors };
+  function applyCvd(on, redraw = true) {
+    S.cvd = on;
+    Object.assign(meta.net_colors, on ? CVD : NET0);
+    meta.net.forEach((n, k) => netRGB[k].set(meta.net_colors[n]));
+    document.querySelectorAll('#net label.chk').forEach((l) => {
+      const t = l.textContent;
+      const key = t.includes('stimulating') ? 'stim' : t.includes('inhibiting') ? 'inhib' : t.includes('mixed') ? 'mixed' : t.includes('unsigned') ? 'unsigned' : null;
+      const sw = l.querySelector('.sw');
+      if (key && sw) sw.style.background = meta.net_colors[key];
+    });
+    try { localStorage.setItem('cvd', on ? '1' : '0'); } catch (e) { /* storage may be blocked */ }
+    if (redraw) update();
+  }
+  function applyHc(on) {
+    S.hc = on;
+    document.body.classList.toggle('hc', on);
+    renderer.setClearColor(on ? 0x000000 : 0x0b0e14);
+    try { localStorage.setItem('hc', on ? '1' : '0'); } catch (e) { /* storage may be blocked */ }
+  }
+  $('cvd').addEventListener('change', (ev) => applyCvd(ev.target.checked));
+  $('hc').addEventListener('change', (ev) => applyHc(ev.target.checked));
+  try {
+    if (localStorage.getItem('cvd') === '1') { $('cvd').checked = true; applyCvd(true, false); }
+    if (localStorage.getItem('hc') === '1') { $('hc').checked = true; applyHc(true); }
+  } catch (e) { /* storage may be blocked */ }
+  $('breset').addEventListener('click', () => { location.replace(location.pathname + location.search); });
+
+  // ---------------------------------------------------------------- perturbation preview
+  const PCOL = { up: '#ff9f1c', down: '#3ea6ff', conf: '#c77dff' };
+  const PC = {};
+  Object.entries(PCOL).forEach(([k, c]) => { tmp.set(c); PC[k] = [tmp.r, tmp.g, tmp.b]; });
+  function runPert(src, dir) {
+    const D = S.pertDepth;
+    let P = new Set(dir > 0 ? [src] : []), Nn = new Set(dir < 0 ? [src] : []);
+    const pos_ = new Set(), neg_ = new Set(), depth = new Map(), sup = new Map(), skipped = new Set();
+    for (let d = 1; d <= D; d++) {
+      const nP = new Set(), nN = new Set();
+      const expand = (u, sign0) => {
+        for (let q = adjOff[u]; q < adjOff[u + 1]; q++) {
+          const e = inc[q];
+          if (eSrc(e) !== u || meta.cls[eCls(e)] !== 'regulation' || !eDir(e)) continue;
+          if (eEv(e) < S.minEv || eRes(e) < S.minRes) continue;
+          const nt = eNet(e), sg = nt === 1 ? 1 : nt === 2 ? -1 : 0;
+          if (!sg) { skipped.add(e); continue; }
+          const v = eTgt(e);
+          if (v === src || v === u || nodes[v].h !== 0) continue;
+          const eff = sign0 * sg;
+          (eff > 0 ? nP : nN).add(v);
+          (eff > 0 ? pos_ : neg_).add(v);
+          if (!depth.has(v)) depth.set(v, d);
+          sup.set(v, (sup.get(v) || 0) + 1);
+        }
+      };
+      P.forEach((u) => expand(u, 1));
+      Nn.forEach((u) => expand(u, -1));
+      P = nP; Nn = nN;
+      if (!P.size && !Nn.size) break;
+    }
+    const conf = new Set([...pos_].filter((x) => neg_.has(x)));
+    const up = new Set([...pos_].filter((x) => !neg_.has(x)));
+    const down = new Set([...neg_].filter((x) => !pos_.has(x)));
+    const all = new Set([...pos_, ...neg_]);
+    const rank = [...all].map((i) => ({ i, d: depth.get(i), s: sup.get(i) || 0, sign: conf.has(i) ? 0 : up.has(i) ? 1 : -1 }))
+      .sort((a, b) => a.d - b.d || b.s - a.s || TIER_RANK[tierOf[b.i]] - TIER_RANK[tierOf[a.i]] || nodes[b.i].d - nodes[a.i].d);
+    S.pert = { src, dir, D, up, down, conf, all, depth, sup, rank, skipped: skipped.size };
+    const det = $('pertpanel'); if (det) det.open = true;
+    update();
+  }
+  function clearPert() { if (S.pert) { S.pert = null; update(); } }
+  function paintPert() {
+    const p = S.pert;
+    if (!p) return;
+    for (let i = 0; i < N; i++) {
+      if (i === p.src) { aAlpha[i] = 1; continue; }
+      if (p.all.has(i)) {
+        const c = p.conf.has(i) ? PC.conf : p.up.has(i) ? PC.up : PC.down, dp = p.depth.get(i);
+        aCol[i * 3] = c[0]; aCol[i * 3 + 1] = c[1]; aCol[i * 3 + 2] = c[2];
+        aAlpha[i] = 1;
+        aSize[i] = Math.max(aSize[i], baseSize[i] * S.sizeMul * (dp === 1 ? 1.9 : dp === 2 ? 1.4 : 1.1));
+      } else aAlpha[i] = Math.min(aAlpha[i], 0.06);
+    }
+  }
+  function predOf(i) {
+    const p = S.pert;
+    if (!p) return '';
+    if (i === p.src) return p.dir < 0 ? 'source (inhibited)' : 'source (activated)';
+    return p.conf.has(i) ? 'conflicting' : p.up.has(i) ? 'rises' : p.down.has(i) ? 'falls' : '';
+  }
+  function pertButtons(i) {
+    if (!regOut[i]) return '';
+    const n = nodes[i], dir = n.t === 'protein' ? drugDirection(n.k.slice(2)) : 0;
+    return '<div class="desc"><div><b>Perturbation preview</b> <span class="m">what could move if this node is switched off or on (qualitative)</span></div>'
+      + `<button class="preset" data-pert="-1">Inhibit it${dir < 0 ? ' (like its drugs)' : ''}</button> <button class="preset" data-pert="1">Activate it${dir > 0 ? ' (like its drugs)' : ''}</button></div>`;
+  }
+  function pertRows(arr, limit) {
+    return arr.slice(0, limit).map((r) => `<div><span class="arr ${r.sign > 0 ? 'up' : r.sign < 0 ? 'down' : 'conf'}">${r.sign > 0 ? '↑' : r.sign < 0 ? '↓' : '↕'}</span><a data-pn="${r.i}">${esc(nodes[r.i].l)}</a> <span class="m">step ${r.d} · ${esc(nodes[r.i].t)} · ${esc(TIER_SHORT[tierOf[r.i]] || '')}${r.s > 1 ? ' · ' + r.s + ' supporting links' : ''}</span></div>`).join('');
+  }
+  (function buildPertPanel() {
+    const side = $('side');
+    const anchor = [...side.querySelectorAll('details.panel > summary')].find((x) => x.textContent.trim() === 'Drug filters');
+    const d = document.createElement('details');
+    d.className = 'panel'; d.id = 'pertpanel';
+    d.innerHTML = '<summary>Perturbation preview</summary>'
+      + '<div class="hint">Select one node and press "Inhibit it" or "Activate it" in the details panel. The map then shows which nodes could rise or fall, following the signs of directed regulation edges.</div>'
+      + '<div id="pertbox"></div>';
+    if (anchor) anchor.parentElement.before(d); else side.append(d);
+  })();
+  const pchip = document.createElement('div');
+  pchip.id = 'pertchip'; pchip.hidden = true;
+  pchip.innerHTML = '<span id="pertchipt"></span><button id="pertchipx">Clear preview</button>';
+  view.append(pchip);
+  function renderPert() {
+    const box = $('pertbox'), p = S.pert;
+    if (!box) return;
+    if (!p) { pchip.hidden = true; box.innerHTML = '<div class="m">No preview running.</div>'; return; }
+    const src = nodes[p.src], verb = p.dir < 0 ? 'Inhibiting' : 'Activating';
+    pchip.hidden = false;
+    $('pertchipt').textContent = `Preview: ${verb.toLowerCase()} ${src.l} · ${p.D} step${p.D > 1 ? 's' : ''}`;
+    const direct = p.rank.filter((r) => r.d === 1), further = p.rank.filter((r) => r.d > 1);
+    const ph = p.rank.filter((r) => nodes[r.i].t === 'phenotype');
+    let dis = '';
+    if (S.group) {
+      const hit = p.rank.filter((r) => S.group.set.has(r.i)).sort((a, b) => (S.group.score.get(b.i) || 0) - (S.group.score.get(a.i) || 0));
+      dis = `<div style="margin-top:6px"><b>${hit.length} reached node${hit.length === 1 ? ' is a' : 's are'} shown target${hit.length === 1 ? '' : 's'} of ${esc(S.group.name)}</b></div>` + (hit.length ? pertRows(hit, 8) : '<div class="m">none</div>');
+    }
+    box.innerHTML = `<div class="desc"><div><b>${verb} ${esc(src.l)}</b></div>`
+      + `<label class="row2">Steps downstream <select data-pdepth="1">${[1, 2, 3].map((k) => `<option value="${k}"${k === p.D ? ' selected' : ''}>${k}</option>`).join('')}</select></label>`
+      + `<div class="pk"><span class="sw" style="background:${PCOL.up}"></span>↑ rises <span class="sw" style="background:${PCOL.down}"></span>↓ falls <span class="sw" style="background:${PCOL.conf}"></span>↕ conflicting</div>`
+      + `<div>${p.up.size} predicted to rise · ${p.down.size} to fall · ${p.conf.size} conflicting</div>`
+      + `<div class="m">${p.all.size} nodes reached within ${p.D} step${p.D > 1 ? 's' : ''}, ${direct.length} directly. ${p.skipped} mixed or unsigned links were not followed.</div>`
+      + (direct.length ? '<div style="margin-top:6px"><b>Direct effects</b> <span class="m">(strongest first)</span></div>' + pertRows(direct, 8) : '')
+      + (further.length ? '<div style="margin-top:6px"><b>Further downstream</b></div>' + pertRows(further, 8) : '')
+      + (ph.length ? '<div style="margin-top:6px"><b>Phenotypes reached</b></div>' + pertRows(ph, 8) : '')
+      + dis
+      + '<div style="margin-top:6px"><button class="preset" id="pertdraw" title="selects the source and the 40 strongest effects and draws the links among them; Back returns">Draw the cascade (top 40)</button> <button class="preset" id="pertclear">Clear preview</button></div>'
+      + '<div class="m" style="margin-top:6px">A qualitative hypothesis from curated edge signs. It assumes each link passes its sign on, and ignores dose, timing, feedback and cell type. Mixed and unsigned links are not followed. Use it to generate questions, not as a prediction.</div></div>';
+  }
+  $('pertchipx').addEventListener('click', clearPert);
+  $('pertbox').addEventListener('click', (ev) => {
+    const a = ev.target.closest('a[data-pn]');
+    if (a) { selectOnly(+a.dataset.pn, true); return; }
+    if (ev.target.closest('#pertclear')) { clearPert(); return; }
+    if (ev.target.closest('#pertdraw') && S.pert) {
+      const p = S.pert;
+      remember();
+      S.group = null; S.focus = new Set();
+      S.selected = new Set([p.src, ...p.rank.slice(0, 40).map((r) => r.i)]);
+      S.scope = 'among'; $('scope').value = 'among';
+      update();
+      frameSelection();
+    }
+  });
+  $('pertbox').addEventListener('change', (ev) => {
+    const s = ev.target.closest('select[data-pdepth]');
+    if (s && S.pert) { S.pertDepth = +s.value; runPert(S.pert.src, S.pert.dir); }
+  });
 
   const dbs = new THREE.Vector2();
   function frame(now) {

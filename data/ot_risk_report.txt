@@ -38,8 +38,8 @@ essentiality file done: part-00001-da3383ef-095e-40de-bb45-30e9e20c27bc-c000.zst
 essentiality file done: part-00002-da3383ef-095e-40de-bb45-30e9e20c27bc-c000.zstd.parquet
 essentiality file done: part-00003-da3383ef-095e-40de-bb45-30e9e20c27bc-c000.zstd.parquet
 
-node_tract.json: 9528 proteins, 325,828 bytes raw / 64,348 gzip
-node_risk.json: 2947 proteins, 352,107 bytes raw / 61,420 gzip
+node_tract.json: 9528 proteins, 325,828 bytes raw / 64,279 gzip
+node_risk.json: 2914 proteins, 345,675 bytes raw / 59,385 gzip
 
 == tractability levels over your proteins (0..5) ==
   SM: 0:5037, 1:2038, 2:1467, 3:18, 4:280, 5:688
@@ -54,7 +54,7 @@ percent of cell lines depending (p10/p50/p90/p99): [0.0, 0.0, 80.0, 100.0]
   mean % of lines depending, not common essential: 2.9  (n=8060)
 
 == safety ==
-proteins with safety events: 609
+proteins with safety events: 564
 top events: [('regulation of transcription factor activity', 139), ('regulation of catalytic activity', 108), ('decreased pain', 57), ('receptor binding', 52), ('decreased blood pressure', 50), ('drug toxicity', 48), ('heart disease', 47), ('cardiac arrhythmia', 45)]
 by source: [('ClinPGx', 1292), ('Lynch et al. (2017)', 1259), ('ToxCast', 352), ('Bowes et al. (2012)', 313), ('Urban et al. (2012)', 254), ('AOP-Wiki', 221), ('Brennan et al. (2024)', 210), ('Force et al. (2011)', 47), ('Lamore et al. (2017)', 30)]
 
@@ -81,8 +81,8 @@ no clinical-stage drug: 8287 | ... and tractable (SM or AB predicted high or bet
   risk: {"t": [["lymphoid tissue", 43, 97], ["hematopoietic tissue", 42, 50], ["intestine", 41, 64]]}
 
 --- TP53 (P04637)
-  tract: [4, 0, 1, 4, 1, 3, 0, 0, 0, 1258]
-  risk: {"s": [["Tumorigenesis, Hepatocellular carcinoma", "AOP-Wiki"], ["drug toxicity", "ClinPGx"], ["neutropenia", "ClinPGx"]], "ns": 3}
+  tract: [4, 0, 1, 4, 1, 2, 0, 0, 0, 1258]
+  risk: {"s": [["drug toxicity", "ClinPGx"], ["neutropenia", "ClinPGx"]], "ns": 2}
 
 --- STK11 (Q15831)
   tract: [2, 0, 1, 0, 1, 1, 0, 0, 19, 1258]

@@ -1,5 +1,5 @@
-drug_names.json: 3667 of 3923 drugs have extra names, 387,630 bytes raw / 145,453 gzip
-  sirolimus -> fyarro|hyftor|rapamune|(-)-rapamycin|23r*,26s*,27s*,34ar*]]-rapamycin|9,10,12,13,14,21,22,23,24|ay 22989|ay-22989|ay-22989,sirolimus,wy-090217|l04aa10|npc-12g|n
+drug_names.json: 3661 of 3923 drugs have extra names, 384,991 bytes raw / 144,330 gzip
+  sirolimus -> fyarro|hyftor|rapamune|(-)-rapamycin|ay 22989|ay-22989|ay-22989,sirolimus,wy-090217|l04aa10|npc-12g|nsc-226080|nsc-2260804|nsc-2260804,ay-22989|rapalimus|rapamy
   semaglutide -> ozempic|rybelsus|semaglutide component of cagrisema|semaglutide component of nn1535 icosema|semaglutide component of nn1535 laisema|wegovy|nn-9535|nn9535|nnc 01
   metformin -> la-6023|metformin extended release|metformina|metformine|biguanides|cidophage|da-1229_01|efb0027|eucreas|glucophage long|glucophage xr 750 mg tablets|glucophage
   osimertinib -> tagrisso|azd-9291|azd-9291 free base|azd9291|mereletinib|egfr-tki|osimertinib mesylate tablets|third-generation egfr-tki|osimertinib mesylate|azd-9291 mesylate|
